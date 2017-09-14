@@ -1,0 +1,11 @@
+{
+  "end_with_newline": true,
+  "indent_inner_html": false,
+  "indent_level": 0,
+  "indent_size": 2,
+  "indent_with_tabs": false,
+  "preserve_newlines": true,
+  "max_preserve_newlines": 1,
+  "eval_code": true,
+  "space_after_anon_function": false
+}

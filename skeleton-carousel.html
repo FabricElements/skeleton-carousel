@@ -1,0 +1,432 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+
+<dom-module id="skeleton-carousel">
+  <template>
+    <!--suppress CssInvalidPseudoSelector -->
+    <style is="custom-style">
+      :host {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        contain: content;
+        @apply --layout-vertical;
+        @apply --layout-flex-auto;
+        /* Custom variables and mixins */
+        --skeleton-carousel: {
+        };
+        @apply --skeleton-carousel;
+        --skeleton-carousel-controls: {
+        };
+        --skeleton-carousel-dots: {
+        };
+        --skeleton-carousel-dot-color: var(--paper-grey-900);
+        --skeleton-carousel-prev: {
+        };
+        --skeleton-carousel-next: {
+        };
+        --skeleton-carousel-next-disabled: {
+        };
+        --skeleton-carousel-prev-disabled: {
+        };
+        --skeleton-carousel-dot: {
+        };
+        --skeleton-carousel-dot-selected: {
+        };
+      }
+
+      :host,
+      ::slotted(*) {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      #items {
+        display: block;
+        @apply --layout-inline;
+        @apply --layout-flex-auto;
+        transform: translateX(0%);
+        position: relative;
+        -webkit-transition: -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
+        transition: -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
+        transition: transform .3s cubic-bezier(.51, .92, .24, 1);
+        transition: transform .3s cubic-bezier(.51, .92, .24, 1), -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
+      }
+
+      ::slotted(*) {
+        display: block;
+        @apply --layout-vertical;
+        @apply --layout-flex-auto;
+        transition: all ease .3s;
+        min-width: 100%;
+        max-width: 100%;
+        width: 100%;
+      }
+
+      ::slotted(:not(.selected)) {
+        opacity: 0;
+      }
+
+      #controls {
+        display: block;
+        @apply --layout-horizontal;
+        @apply --layout-justified;
+        padding: .5rem;
+        @apply --skeleton-carousel-controls;
+      }
+
+      paper-icon-button {
+        transition: all .3s ease-in-out;
+        border-radius: 50%;
+      }
+
+      #dots {
+        @apply --layout-flex-auto;
+        @apply --layout-justified;
+        @apply --skeleton-carousel-dots;
+      }
+
+      #dots paper-icon-button {
+        color: var(--skeleton-carousel-dot-color);
+        opacity: .4;
+        @apply --skeleton-carousel-dot;
+      }
+
+      #dots paper-icon-button.selected {
+        opacity: 1;
+        @apply --skeleton-carousel-dot-selected;
+      }
+
+      #prev {
+        @apply --skeleton-carousel-prev;
+      }
+
+      #next {
+        @apply --skeleton-carousel-next;
+      }
+
+      #prev[disabled] {
+        @apply --skeleton-carousel-prev-disabled;
+      }
+
+      #next[disabled] {
+        @apply --skeleton-carousel-next-disabled;
+      }
+    </style>
+
+    <div id="items" style$="transform: translateX([[translate]]);">
+      <slot></slot>
+    </div>
+    <nav id="controls">
+      <paper-icon-button icon$="[[iconPrev]]"
+                         id="prev"
+                         on-tap="prev"
+                         disabled$="[[!showPrev]]"
+      ></paper-icon-button>
+      <iron-selector id="dots"
+                     attr-for-selected="name"
+                     selected="{{selected}}"
+                     fallback-selection="1"
+                     selected-class="selected">
+        <template is="dom-repeat" items="[[dots]]">
+          <paper-icon-button name$="[[item]]"
+                             icon="[[_iconDot(item, selected)]]"></paper-icon-button>
+        </template>
+      </iron-selector>
+      <paper-icon-button icon$="[[iconNext]]"
+                         id="next"
+                         on-tap="next"
+                         disabled$="[[!showNext]]"
+      ></paper-icon-button>
+    </nav>
+  </template>
+
+  <script>
+    /**
+     * `skeleton-carousel`
+     *
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class SkeletonCarousel extends Polymer.Element {
+      /**
+       * @return {string}
+       */
+      static get is() {
+        return 'skeleton-carousel';
+      }
+
+      /**
+       * @return {object}
+       */
+      static get properties() {
+        return {
+          /**
+           * Total number of slides
+           */
+          total: {
+            type: Number,
+            value: 1,
+          },
+          /**
+           * Selected slide
+           */
+          selected: {
+            type: Number,
+            value: 1,
+            notify: true,
+            reflectToAttribute: true,
+            observer: '_selectedObserver',
+          },
+          /**
+           * Determines ow mush the sliders container needs to move
+           */
+          translate: {
+            type: String,
+            computed: '_getTranslate(selected)',
+            readOnly: true,
+          },
+          /**
+           * Determines if the next button should be displayed.
+           */
+          showNext: {
+            type: Boolean,
+            value: false,
+            computed: '_computeShowNext(total, selected, loop)',
+            notify: true,
+            reflectToAttribute: true,
+            readOnly: true,
+          },
+          /**
+           * Determines if the previous button should be displayed.
+           */
+          showPrev: {
+            type: Boolean,
+            value: false,
+            computed: '_computeShowPrev(selected, loop)',
+            notify: true,
+            reflectToAttribute: true,
+            readOnly: true,
+          },
+          /**
+           * Icon for the previous button
+           */
+          iconPrev: {
+            type: String,
+            value: 'icons:chevron-left',
+          },
+          /**
+           * Icon for the next button
+           */
+          iconNext: {
+            type: String,
+            value: 'icons:chevron-right',
+          },
+          /**
+           * Returns an array with the slides.
+           * This will be used to create the dot controls.
+           */
+          dots: {
+            type: Array,
+            computed: '_computeDots(total)',
+            readOnly: true,
+          },
+          /**
+           * Determines if the carousel should be looped.
+           * This affects the controls and the drag and drop functionality.
+           * Set to `true` if you need to loop the slides.
+           */
+          loop: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Returns true when the carousel has reached the last slide.
+           */
+          end: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true,
+            readOnly: true,
+            computed: '_computeEnd(total, selected)',
+          },
+        };
+      }
+
+      /**
+       * Connected callback
+       */
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener('slotchange', this._slotChanged());
+      }
+
+      /**
+       * On slot change
+       *
+       * @private
+       */
+      _slotChanged() {
+        this.total = this.children.length;
+      }
+
+      /**
+       * Go to next slide
+       *
+       * @return {number}
+       */
+      next() {
+        if (this.selected < this.total) return this.selected++;
+        this.selected = 1;
+      }
+
+      /**
+       * Go to previous slide
+       *
+       * @return {number}
+       */
+      prev() {
+        if (this.selected >= 2) return this.selected--;
+        this.selected = this.total;
+      }
+
+      /**
+       * Switch the icon if the item is selected
+       *
+       * @param {number} item
+       * @param {number} selected
+       * @return {string}
+       * @private
+       */
+      _iconDot(item, selected) {
+        let icon = 'icons:radio-button-unchecked';
+        if (Number(item) === Number(selected)) icon = 'icons:radio-button-checked';
+        return icon;
+      }
+
+      /**
+       * Listen for changes on the selected item
+       *
+       * @param {number} selected
+       * @private
+       */
+      _selectedObserver(selected) {
+        this._selectSlotted(selected);
+        this._lazyContent(selected);
+        if (selected === 1 || selected < this.total) this._lazyContent(++selected);
+      }
+
+      /**
+       * Adds class `selected` to the current slide
+       *
+       * @param {number} selected
+       * @private
+       */
+      _selectSlotted(selected) {
+        let i = 0;
+        for (i; i < this.children.length; ++i) {
+          this.children[i].classList.remove('selected');
+        }
+        this.children[--selected].classList.add('selected');
+      }
+
+      /**
+       * Lazy load content for the given slider number
+       * Replaces 'data-src' attribute to 'src'.
+       *
+       * @param {number} selected
+       * @private
+       */
+      _lazyContent(selected) {
+        const child = this.children[--selected];
+        const content = child.querySelectorAll('[data-src]');
+        if (content.length <= 0) return;
+        let i = 0;
+        for (i; i < content.length; ++i) {
+          const value = content[i].getAttribute('data-src');
+          content[i].setAttribute('src', value);
+          content[i].removeAttribute('data-src');
+        }
+      }
+
+      /**
+       * Returns the percentage to translate
+       *
+       * @param {number} selected
+       * @return {string}
+       * @private
+       */
+      _getTranslate(selected) {
+        const rule = --selected * 100;
+        return `-${rule}%`;
+      }
+
+      /**
+       * Determine if it should show the next button
+       *
+       * @param {number} total
+       * @param {number} selected
+       * @param {boolean} loop
+       * @return {boolean}
+       * @private
+       */
+      _computeShowNext(total, selected, loop) {
+        if (loop) return true;
+        return selected < total;
+      }
+
+      /**
+       * Determine if it should show the next button
+       *
+       * @param {number} selected
+       * @param {boolean} loop
+       * @return {boolean}
+       * @private
+       */
+      _computeShowPrev(selected, loop) {
+        if (loop) return true;
+        return selected > 1;
+      }
+
+      /**
+       * Returns the dots array
+       *
+       * @param {number} total
+       * @return {Array}
+       * @private
+       */
+      _computeDots(total) {
+        let array = [];
+        if (total <= 0) return array;
+        let i = 1;
+        total = ++total;
+        for (i; i < total; ++i) {
+          array.push(i);
+        }
+        return array;
+      }
+
+      /**
+       * Determines if the current item is the last one on the list
+       *
+       * @param {number} total
+       * @param {number} selected
+       * @return {boolean}
+       * @private
+       */
+      _computeEnd(total, selected) {
+        return total === selected;
+      }
+    }
+
+    window.customElements.define(SkeletonCarousel.is, SkeletonCarousel);
+  </script>
+</dom-module>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>skeleton-carousel demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../../iron-image/iron-image.html">
+  <link rel="import" href="../skeleton-carousel.html">
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      body {
+        font-family: 'Roboto', sans-serif;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+      }
+
+      demo-snippet {
+        --demo-snippet-demo: {
+          min-height: 500px;
+          @apply --layout-vertical;
+        };
+      }
+
+      iron-image {
+        display: block;
+        background-color: var(--paper-grey-200);
+        @apply --layout-flex-auto;
+      }
+
+      skeleton-carousel {
+        --skeleton-carousel: {
+          background-color: var(--paper-grey-50);
+        };
+      }
+    </style>
+  </custom-style>
+</head>
+<body>
+<div class="vertical-section-container centered">
+  <h3>Basic skeleton-carousel demo</h3>
+  <demo-snippet>
+    <template>
+      <skeleton-carousel>
+        <div>
+          <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                      sizing="cover"
+                      preload
+                      fade
+          ></iron-image>
+          <h3>Title 1</h3>
+        </div>
+        <div>
+          <iron-image data-src="http://source.unsplash.com/category/food/400x400"
+                      sizing="cover"
+                      preload
+                      fade
+          ></iron-image>
+          <h3>Title 2</h3>
+        </div>
+        <div>
+          <iron-image data-src="http://source.unsplash.com/category/buildings/400x400"
+                      sizing="cover"
+                      preload
+                      fade
+          ></iron-image>
+          <h3>Title 3</h3>
+        </div>
+        <div>
+          <iron-image data-src="http://source.unsplash.com/category/people/400x400"
+                      sizing="cover"
+                      preload
+                      fade
+          ></iron-image>
+          <h3>Title 4</h3>
+        </div>
+      </skeleton-carousel>
+    </template>
+  </demo-snippet>
+</div>
+</body>
+</html>
