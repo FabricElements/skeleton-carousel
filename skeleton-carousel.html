@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
@@ -15,7 +16,7 @@
         contain: content;
         @apply --layout-vertical;
         @apply --layout-flex-auto;
-        /* Custom variables and mixins */
+        /* Custom letiables and mixins */
         --skeleton-carousel: {
         };
         @apply --skeleton-carousel;
@@ -23,7 +24,7 @@
         };
         --skeleton-carousel-dots: {
         };
-        --skeleton-carousel-dot-color: var(--paper-grey-900);
+        --skeleton-carousel-dot-color: let(--paper-grey-900);
         --skeleton-carousel-prev: {
         };
         --skeleton-carousel-next: {
@@ -69,7 +70,7 @@
       }
 
       ::slotted(:not(.selected)) {
-        opacity: 0;
+        opacity: .9;
       }
 
       #controls {
@@ -92,7 +93,7 @@
       }
 
       #dots paper-icon-button {
-        color: var(--skeleton-carousel-dot-color);
+        color: let(--skeleton-carousel-dot-color);
         opacity: .4;
         @apply --skeleton-carousel-dot;
       }
@@ -119,7 +120,9 @@
       }
     </style>
 
-    <div id="items" style$="transform: translateX([[translate]]);">
+    <div id="items"
+         on-track="_move"
+         style$="transform: translateX([[translate]]);">
       <slot></slot>
     </div>
     <nav id="controls">
@@ -155,7 +158,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    class SkeletonCarousel extends Polymer.Element {
+    class SkeletonCarousel extends Polymer.GestureEventListeners(Polymer.Element) {
       /**
        * @return {string}
        */
@@ -174,6 +177,9 @@
           total: {
             type: Number,
             value: 1,
+            notify: true,
+            reflectToAttribute: true,
+            readOnly: true,
           },
           /**
            * Selected slide
@@ -190,7 +196,7 @@
            */
           translate: {
             type: String,
-            computed: '_getTranslate(selected)',
+            computed: '_getTranslate(selected, x)',
             readOnly: true,
           },
           /**
@@ -258,6 +264,30 @@
             readOnly: true,
             computed: '_computeEnd(total, selected)',
           },
+          /**
+           * Disable swipe functionality
+           */
+          disableSwipe: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * swipe sensitivity:
+           * high, low or default
+           */
+          sensitivity: {
+            type: String,
+            value: 'default',
+            notify: true,
+          },
+
+          /**
+           * X Axis position (0 - 1)
+           */
+          x: {
+            type: Number,
+            value: 0,
+          },
         };
       }
 
@@ -275,7 +305,7 @@
        * @private
        */
       _slotChanged() {
-        this.total = this.children.length;
+        this._setTotal(this.children.length);
       }
 
       /**
@@ -361,10 +391,11 @@
        * Returns the percentage to translate
        *
        * @param {number} selected
+       * @param {number} x
        * @return {string}
        * @private
        */
-      _getTranslate(selected) {
+      _getTranslate(selected, x) {
         const rule = --selected * 100;
         return `-${rule}%`;
       }
@@ -424,6 +455,118 @@
        */
       _computeEnd(total, selected) {
         return total === selected;
+      }
+
+      _move(event) {
+        const width = this.offsetWidth;
+        const x = event.detail.ddx ? event.detail.ddx : 0;
+        let finalX = x / width;
+        let finalLeft = this.x - finalX;
+        finalLeft = this._normalize(finalLeft);
+        const newPosition = Number(finalLeft.toFixed(3));
+        this.x = newPosition;
+        const positionOriginal = --this.selected * 100;
+        let baseSelected = this.selected;
+        if (newPosition >= 0.6) {
+          baseSelected++;
+          if (baseSelected < 1) baseSelected = 1;
+          console.log('left');
+        } else if (newPosition <= 0.4) {
+          console.log('right');
+          baseSelected--;
+          if (baseSelected > this.total) baseSelected = this.total;
+        }
+
+        if (!(this.disableSwipe)) {
+          switch (event.detail.state) {
+            case 'start':
+
+              break;
+            case 'track':
+              const trackPosition = (--this.selected * 100) - x;
+              this._moveContainer(trackPosition);
+              break;
+            case 'end':
+//              this._moveContainer(finalPosition);
+              this.selected = baseSelected;
+              break;
+          }
+        }
+      }
+
+      /**
+       * Returns a valid value
+       *
+       * @param {number} value
+       * @return {*}
+       * @private
+       */
+      _normalize(value) {
+        if (value < 0) {
+          value = 0;
+        } else if (value > 1) {
+          value = 1;
+        }
+        return value;
+      }
+
+      _moveContainer(base) {
+        const container = this.shadowRoot.querySelector('#items');
+        container.style.transform = `translateX(-${base}%)`;
+      }
+
+      _track(event) {
+        /*
+
+                const width = this.offsetWidth;
+                const x = event.detail.ddx ? event.detail.ddx : 0;
+        //        let finalX = (x * 10) * 100 / width;
+                let finalX = x / width;
+        //        let baseX = event.detail.x / width;
+                const baseSelected = this.selected * 100;
+                const baseMove = (finalX * 100) + baseSelected;
+                const finalValue = baseMove.toFixed(3);
+                console.log(finalX);
+
+                */
+
+//        this._setTranslate(rule);
+//        this.shadowRoot.querySelector('#items').style.transform = `translateX(-${finalValue}%)`;
+
+//        let startPosX = --this.selected * 100;
+        let startPosX = --this.selected * 100;
+        let position = 0;
+
+        let perMov = 0;
+        const total = this.total;
+
+        if (!(this.disableSwipe)) {
+          switch (event.detail.state) {
+            case 'start':
+//              startPosX = event.detail.x;
+              startPosX = --this.selected * 100;
+              break;
+            case 'track':
+              let actualWidth = this.offsetWidth;
+              let swipeTravel = startPosX - event.detail.x;
+              let perActual = position === 0 && swipeTravel < 0 ? 0 : position === (total - 1) && swipeTravel > 0 ? 0 : (swipeTravel / actualWidth) * 100;
+              let percentMove = perActual > 100 ? (position * 100) + 100 : perActual < -100 ? (position * 100) - 100 : perActual + (position * 100);
+              perMov = percentMove <= 100 * (total - 1) ? percentMove >= 0 && percentMove : total;
+              this.shadowRoot.querySelector('#items').style.transform = `translateX(-${perMov}%)`;
+              console.log(percentMove);
+              break;
+            case 'end':
+              let senNumber = this.sensitivity === 'high' ? 0.25 : this.sensitivity === 'low' ? -0.25 : 0;
+              let senDirection = perMov > (position * 100) ? 1 : -1;
+              let newPos = Math.round((perMov / 100) + (senNumber * senDirection));
+              this.selected = 2;
+
+//              this.shadowRoot.querySelector(".slider__slides").classList.add('mouseup');
+//              position === newPos ? this.shadowRoot.querySelector(".slider__slides").style.transform = "translateX(-" + position * 100 + "%)" : false;
+//              this.movePos(newPos);
+              break;
+          }
+        }
       }
     }
 
