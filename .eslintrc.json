@@ -7,7 +7,10 @@
     "ecmaVersion": 6
   },
   "env": {
-    "browser": true
+    "browser": true,
+    "es6": true,
+    "mocha": true,
+    "jasmine": true
   },
   "plugins": [
     "html"
@@ -18,7 +21,8 @@
       "error",
       {
         "capIsNewExceptions": [
-          "Polymer"
+          "Polymer",
+          "Polymer.GestureEventListeners"
         ]
       }
     ],
@@ -46,11 +50,7 @@
   },
   "globals": {
     "Polymer": true,
-    "suite": true,
-    "test": true,
     "fixture": true,
-    "expect": true,
-    "setup": true,
     "MockInteractions": true,
     "WCT": true
   }

@@ -8,6 +8,7 @@ npm-debug.log*
 
 # lock files
 .package-lock.json
+package-lock.json
 yarn.lock
 
 # Runtime data
@@ -53,8 +54,10 @@ bower_components
 
 
 ############################################
-## IDEA temporal files
+## Editor config
 ############################################
 
-## Directory-based project format:
+## IDEA:
 .idea/
+## Visual Studio Code:
+.vscode/

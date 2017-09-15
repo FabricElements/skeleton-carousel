@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
@@ -23,7 +24,13 @@
         };
         --skeleton-carousel-dots: {
         };
+        --skeleton-carousel-dot: {
+        };
         --skeleton-carousel-dot-color: var(--paper-grey-900);
+        --skeleton-carousel-dot-selected: {
+        };
+        --skeleton-carousel-dot-disabled: {
+        };
         --skeleton-carousel-prev: {
         };
         --skeleton-carousel-next: {
@@ -31,10 +38,6 @@
         --skeleton-carousel-next-disabled: {
         };
         --skeleton-carousel-prev-disabled: {
-        };
-        --skeleton-carousel-dot: {
-        };
-        --skeleton-carousel-dot-selected: {
         };
       }
 
@@ -46,16 +49,22 @@
         user-select: none;
       }
 
-      #items {
+      #swipe {
         display: block;
+        @apply --layout-vertical;
+        @apply --layout-flex-auto;
+      }
+
+      #items {
         @apply --layout-inline;
         @apply --layout-flex-auto;
-        transform: translateX(0%);
+      }
+
+      #swipe,
+      #items {
         position: relative;
-        -webkit-transition: -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
-        transition: -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
+        transform: translateX(0%);
         transition: transform .3s cubic-bezier(.51, .92, .24, 1);
-        transition: transform .3s cubic-bezier(.51, .92, .24, 1), -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
       }
 
       ::slotted(*) {
@@ -69,7 +78,7 @@
       }
 
       ::slotted(:not(.selected)) {
-        opacity: 0;
+        opacity: .8;
       }
 
       #controls {
@@ -102,6 +111,11 @@
         @apply --skeleton-carousel-dot-selected;
       }
 
+      #dots paper-icon-button[disabled] {
+        opacity: .4;
+        @apply --skeleton-carousel-dot-disabled;
+      }
+
       #prev {
         @apply --skeleton-carousel-prev;
       }
@@ -117,16 +131,26 @@
       #next[disabled] {
         @apply --skeleton-carousel-next-disabled;
       }
+
+      [hidden] {
+        display: none !important;
+      }
     </style>
 
-    <div id="items" style$="transform: translateX([[translate]]);">
-      <slot></slot>
+    <div id="swipe"
+         on-track="_drag"
+         style$="transform: translateX([[_calcPercentage(x)]]);">
+      <div id="items"
+           style$="transform: translateX([[translate]]);">
+        <slot></slot>
+      </div>
     </div>
-    <nav id="controls">
+    <nav id="controls" hidden$="[[!controls]]">
       <paper-icon-button icon$="[[iconPrev]]"
                          id="prev"
                          on-tap="prev"
                          disabled$="[[!showPrev]]"
+                         hidden$="[[!nav]]"
       ></paper-icon-button>
       <iron-selector id="dots"
                      attr-for-selected="name"
@@ -135,13 +159,15 @@
                      selected-class="selected">
         <template is="dom-repeat" items="[[dots]]">
           <paper-icon-button name$="[[item]]"
-                             icon="[[_iconDot(item, selected)]]"></paper-icon-button>
+                             icon="[[_iconDot(item, selected)]]"
+                             disabled$="[[disabled]]"></paper-icon-button>
         </template>
       </iron-selector>
       <paper-icon-button icon$="[[iconNext]]"
                          id="next"
                          on-tap="next"
                          disabled$="[[!showNext]]"
+                         hidden$="[[!nav]]"
       ></paper-icon-button>
     </nav>
   </template>
@@ -155,7 +181,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    class SkeletonCarousel extends Polymer.Element {
+    class SkeletonCarousel extends Polymer.GestureEventListeners(Polymer.Element) {
       /**
        * @return {string}
        */
@@ -174,6 +200,9 @@
           total: {
             type: Number,
             value: 1,
+            notify: true,
+            reflectToAttribute: true,
+            readOnly: true,
           },
           /**
            * Selected slide
@@ -199,7 +228,7 @@
           showNext: {
             type: Boolean,
             value: false,
-            computed: '_computeShowNext(total, selected, loop)',
+            computed: '_computeShowNext(disabled, total, selected, loop)',
             notify: true,
             reflectToAttribute: true,
             readOnly: true,
@@ -210,10 +239,24 @@
           showPrev: {
             type: Boolean,
             value: false,
-            computed: '_computeShowPrev(selected, loop)',
+            computed: '_computeShowPrev(disabled, selected, loop)',
             notify: true,
             reflectToAttribute: true,
             readOnly: true,
+          },
+          /**
+           * Show navigation controls
+           */
+          controls: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Show navigation next/prev buttons
+           */
+          nav: {
+            type: Boolean,
+            value: false,
           },
           /**
            * Icon for the previous button
@@ -258,6 +301,36 @@
             readOnly: true,
             computed: '_computeEnd(total, selected)',
           },
+          /**
+           * Disable swipe functionality
+           */
+          disabled: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Disable swipe functionality
+           */
+          disableSwipe: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * swipe sensitivity:
+           * high, low or default
+           */
+          sensitivity: {
+            type: String,
+            value: 'default',
+            notify: true,
+          },
+          /**
+           * X Axis position (0 - 1)
+           */
+          x: {
+            type: Number,
+            value: 0,
+          },
         };
       }
 
@@ -275,27 +348,29 @@
        * @private
        */
       _slotChanged() {
-        this.total = this.children.length;
+        this._setTotal(this.children.length);
       }
 
       /**
        * Go to next slide
        *
-       * @return {number}
+       * @return {*}
        */
       next() {
+        if (this.disabled) return;
         if (this.selected < this.total) return this.selected++;
-        this.selected = 1;
+        else if (this.showNext) return this.selected = 1;
       }
 
       /**
        * Go to previous slide
        *
-       * @return {number}
+       * @return {*}
        */
       prev() {
+        if (this.disabled) return;
         if (this.selected >= 2) return this.selected--;
-        this.selected = this.total;
+        else if (this.showPrev) return this.selected = this.total;
       }
 
       /**
@@ -322,6 +397,7 @@
         this._selectSlotted(selected);
         this._lazyContent(selected);
         if (selected === 1 || selected < this.total) this._lazyContent(++selected);
+        if (selected > 1) this._lazyContent(--selected);
       }
 
       /**
@@ -372,13 +448,15 @@
       /**
        * Determine if it should show the next button
        *
+       * @param {boolean} disabled
        * @param {number} total
        * @param {number} selected
        * @param {boolean} loop
        * @return {boolean}
        * @private
        */
-      _computeShowNext(total, selected, loop) {
+      _computeShowNext(disabled, total, selected, loop) {
+        if (disabled) return false;
         if (loop) return true;
         return selected < total;
       }
@@ -386,12 +464,14 @@
       /**
        * Determine if it should show the next button
        *
+       * @param {boolean} disabled
        * @param {number} selected
        * @param {boolean} loop
        * @return {boolean}
        * @private
        */
-      _computeShowPrev(selected, loop) {
+      _computeShowPrev(disabled, selected, loop) {
+        if (disabled) return false;
         if (loop) return true;
         return selected > 1;
       }
@@ -424,6 +504,58 @@
        */
       _computeEnd(total, selected) {
         return total === selected;
+      }
+
+      /**
+       * Returns a valid value
+       *
+       * @param {number} value
+       * @return {*}
+       * @private
+       */
+      _normalize(value) {
+        if (value < 0) {
+          value = 0;
+        } else if (value > 1) {
+          value = 1;
+        }
+        return value;
+      }
+
+      /**
+       * Returns the percentage that will to position the icon
+       *
+       * @param {number} value
+       * @return {string}
+       * @private
+       */
+      _calcPercentage(value) {
+        return `${value * 100}%`;
+      }
+
+      /**
+       * Listen for track and move the container
+       *
+       * @param {object} event
+       * @private
+       */
+      _drag(event) {
+        if (this.disableSwipe || this.disabled) return;
+        const width = this.offsetWidth;
+        const x = event.detail.ddx ? event.detail.ddx : 0;
+        let finalX = x / width;
+        let finalLeft = this.x + finalX;
+        const finalPosition = Number(finalLeft.toFixed(3));
+        switch (event.detail.state) {
+          case 'track':
+            this.x = finalPosition;
+            break;
+          case 'end':
+            this.x = 0;
+            if (finalPosition >= 0.4) this.prev();
+            else if (finalPosition <= -0.4) this.next();
+            break;
+        }
       }
     }
 
