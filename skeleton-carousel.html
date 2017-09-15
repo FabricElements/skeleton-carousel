@@ -16,7 +16,7 @@
         contain: content;
         @apply --layout-vertical;
         @apply --layout-flex-auto;
-        /* Custom letiables and mixins */
+        /* Custom variables and mixins */
         --skeleton-carousel: {
         };
         @apply --skeleton-carousel;
@@ -24,7 +24,13 @@
         };
         --skeleton-carousel-dots: {
         };
-        --skeleton-carousel-dot-color: let(--paper-grey-900);
+        --skeleton-carousel-dot: {
+        };
+        --skeleton-carousel-dot-color: var(--paper-grey-900);
+        --skeleton-carousel-dot-selected: {
+        };
+        --skeleton-carousel-dot-disabled: {
+        };
         --skeleton-carousel-prev: {
         };
         --skeleton-carousel-next: {
@@ -32,10 +38,6 @@
         --skeleton-carousel-next-disabled: {
         };
         --skeleton-carousel-prev-disabled: {
-        };
-        --skeleton-carousel-dot: {
-        };
-        --skeleton-carousel-dot-selected: {
         };
       }
 
@@ -47,16 +49,22 @@
         user-select: none;
       }
 
-      #items {
+      #swipe {
         display: block;
+        @apply --layout-vertical;
+        @apply --layout-flex-auto;
+      }
+
+      #items {
         @apply --layout-inline;
         @apply --layout-flex-auto;
-        transform: translateX(0%);
+      }
+
+      #swipe,
+      #items {
         position: relative;
-        -webkit-transition: -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
-        transition: -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
+        transform: translateX(0%);
         transition: transform .3s cubic-bezier(.51, .92, .24, 1);
-        transition: transform .3s cubic-bezier(.51, .92, .24, 1), -webkit-transform .3s cubic-bezier(.51, .92, .24, 1);
       }
 
       ::slotted(*) {
@@ -70,7 +78,7 @@
       }
 
       ::slotted(:not(.selected)) {
-        opacity: .9;
+        opacity: .8;
       }
 
       #controls {
@@ -93,7 +101,7 @@
       }
 
       #dots paper-icon-button {
-        color: let(--skeleton-carousel-dot-color);
+        color: var(--skeleton-carousel-dot-color);
         opacity: .4;
         @apply --skeleton-carousel-dot;
       }
@@ -101,6 +109,11 @@
       #dots paper-icon-button.selected {
         opacity: 1;
         @apply --skeleton-carousel-dot-selected;
+      }
+
+      #dots paper-icon-button[disabled] {
+        opacity: .4;
+        @apply --skeleton-carousel-dot-disabled;
       }
 
       #prev {
@@ -118,18 +131,26 @@
       #next[disabled] {
         @apply --skeleton-carousel-next-disabled;
       }
+
+      [hidden] {
+        display: none !important;
+      }
     </style>
 
-    <div id="items"
-         on-track="_move"
-         style$="transform: translateX([[translate]]);">
-      <slot></slot>
+    <div id="swipe"
+         on-track="_drag"
+         style$="transform: translateX([[_calcPercentage(x)]]);">
+      <div id="items"
+           style$="transform: translateX([[translate]]);">
+        <slot></slot>
+      </div>
     </div>
-    <nav id="controls">
+    <nav id="controls" hidden$="[[!controls]]">
       <paper-icon-button icon$="[[iconPrev]]"
                          id="prev"
                          on-tap="prev"
                          disabled$="[[!showPrev]]"
+                         hidden$="[[!nav]]"
       ></paper-icon-button>
       <iron-selector id="dots"
                      attr-for-selected="name"
@@ -138,13 +159,15 @@
                      selected-class="selected">
         <template is="dom-repeat" items="[[dots]]">
           <paper-icon-button name$="[[item]]"
-                             icon="[[_iconDot(item, selected)]]"></paper-icon-button>
+                             icon="[[_iconDot(item, selected)]]"
+                             disabled$="[[disabled]]"></paper-icon-button>
         </template>
       </iron-selector>
       <paper-icon-button icon$="[[iconNext]]"
                          id="next"
                          on-tap="next"
                          disabled$="[[!showNext]]"
+                         hidden$="[[!nav]]"
       ></paper-icon-button>
     </nav>
   </template>
@@ -196,7 +219,7 @@
            */
           translate: {
             type: String,
-            computed: '_getTranslate(selected, x)',
+            computed: '_getTranslate(selected)',
             readOnly: true,
           },
           /**
@@ -205,7 +228,7 @@
           showNext: {
             type: Boolean,
             value: false,
-            computed: '_computeShowNext(total, selected, loop)',
+            computed: '_computeShowNext(disabled, total, selected, loop)',
             notify: true,
             reflectToAttribute: true,
             readOnly: true,
@@ -216,10 +239,24 @@
           showPrev: {
             type: Boolean,
             value: false,
-            computed: '_computeShowPrev(selected, loop)',
+            computed: '_computeShowPrev(disabled, selected, loop)',
             notify: true,
             reflectToAttribute: true,
             readOnly: true,
+          },
+          /**
+           * Show navigation controls
+           */
+          controls: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Show navigation next/prev buttons
+           */
+          nav: {
+            type: Boolean,
+            value: false,
           },
           /**
            * Icon for the previous button
@@ -267,6 +304,13 @@
           /**
            * Disable swipe functionality
            */
+          disabled: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Disable swipe functionality
+           */
           disableSwipe: {
             type: Boolean,
             value: false,
@@ -280,7 +324,6 @@
             value: 'default',
             notify: true,
           },
-
           /**
            * X Axis position (0 - 1)
            */
@@ -311,21 +354,23 @@
       /**
        * Go to next slide
        *
-       * @return {number}
+       * @return {*}
        */
       next() {
+        if (this.disabled) return;
         if (this.selected < this.total) return this.selected++;
-        this.selected = 1;
+        else if (this.showNext) return this.selected = 1;
       }
 
       /**
        * Go to previous slide
        *
-       * @return {number}
+       * @return {*}
        */
       prev() {
+        if (this.disabled) return;
         if (this.selected >= 2) return this.selected--;
-        this.selected = this.total;
+        else if (this.showPrev) return this.selected = this.total;
       }
 
       /**
@@ -352,6 +397,7 @@
         this._selectSlotted(selected);
         this._lazyContent(selected);
         if (selected === 1 || selected < this.total) this._lazyContent(++selected);
+        if (selected > 1) this._lazyContent(--selected);
       }
 
       /**
@@ -391,11 +437,10 @@
        * Returns the percentage to translate
        *
        * @param {number} selected
-       * @param {number} x
        * @return {string}
        * @private
        */
-      _getTranslate(selected, x) {
+      _getTranslate(selected) {
         const rule = --selected * 100;
         return `-${rule}%`;
       }
@@ -403,13 +448,15 @@
       /**
        * Determine if it should show the next button
        *
+       * @param {boolean} disabled
        * @param {number} total
        * @param {number} selected
        * @param {boolean} loop
        * @return {boolean}
        * @private
        */
-      _computeShowNext(total, selected, loop) {
+      _computeShowNext(disabled, total, selected, loop) {
+        if (disabled) return false;
         if (loop) return true;
         return selected < total;
       }
@@ -417,12 +464,14 @@
       /**
        * Determine if it should show the next button
        *
+       * @param {boolean} disabled
        * @param {number} selected
        * @param {boolean} loop
        * @return {boolean}
        * @private
        */
-      _computeShowPrev(selected, loop) {
+      _computeShowPrev(disabled, selected, loop) {
+        if (disabled) return false;
         if (loop) return true;
         return selected > 1;
       }
@@ -457,43 +506,6 @@
         return total === selected;
       }
 
-      _move(event) {
-        const width = this.offsetWidth;
-        const x = event.detail.ddx ? event.detail.ddx : 0;
-        let finalX = x / width;
-        let finalLeft = this.x - finalX;
-        finalLeft = this._normalize(finalLeft);
-        const newPosition = Number(finalLeft.toFixed(3));
-        this.x = newPosition;
-        const positionOriginal = --this.selected * 100;
-        let baseSelected = this.selected;
-        if (newPosition >= 0.6) {
-          baseSelected++;
-          if (baseSelected < 1) baseSelected = 1;
-          console.log('left');
-        } else if (newPosition <= 0.4) {
-          console.log('right');
-          baseSelected--;
-          if (baseSelected > this.total) baseSelected = this.total;
-        }
-
-        if (!(this.disableSwipe)) {
-          switch (event.detail.state) {
-            case 'start':
-
-              break;
-            case 'track':
-              const trackPosition = (--this.selected * 100) - x;
-              this._moveContainer(trackPosition);
-              break;
-            case 'end':
-//              this._moveContainer(finalPosition);
-              this.selected = baseSelected;
-              break;
-          }
-        }
-      }
-
       /**
        * Returns a valid value
        *
@@ -510,62 +522,39 @@
         return value;
       }
 
-      _moveContainer(base) {
-        const container = this.shadowRoot.querySelector('#items');
-        container.style.transform = `translateX(-${base}%)`;
+      /**
+       * Returns the percentage that will to position the icon
+       *
+       * @param {number} value
+       * @return {string}
+       * @private
+       */
+      _calcPercentage(value) {
+        return `${value * 100}%`;
       }
 
-      _track(event) {
-        /*
-
-                const width = this.offsetWidth;
-                const x = event.detail.ddx ? event.detail.ddx : 0;
-        //        let finalX = (x * 10) * 100 / width;
-                let finalX = x / width;
-        //        let baseX = event.detail.x / width;
-                const baseSelected = this.selected * 100;
-                const baseMove = (finalX * 100) + baseSelected;
-                const finalValue = baseMove.toFixed(3);
-                console.log(finalX);
-
-                */
-
-//        this._setTranslate(rule);
-//        this.shadowRoot.querySelector('#items').style.transform = `translateX(-${finalValue}%)`;
-
-//        let startPosX = --this.selected * 100;
-        let startPosX = --this.selected * 100;
-        let position = 0;
-
-        let perMov = 0;
-        const total = this.total;
-
-        if (!(this.disableSwipe)) {
-          switch (event.detail.state) {
-            case 'start':
-//              startPosX = event.detail.x;
-              startPosX = --this.selected * 100;
-              break;
-            case 'track':
-              let actualWidth = this.offsetWidth;
-              let swipeTravel = startPosX - event.detail.x;
-              let perActual = position === 0 && swipeTravel < 0 ? 0 : position === (total - 1) && swipeTravel > 0 ? 0 : (swipeTravel / actualWidth) * 100;
-              let percentMove = perActual > 100 ? (position * 100) + 100 : perActual < -100 ? (position * 100) - 100 : perActual + (position * 100);
-              perMov = percentMove <= 100 * (total - 1) ? percentMove >= 0 && percentMove : total;
-              this.shadowRoot.querySelector('#items').style.transform = `translateX(-${perMov}%)`;
-              console.log(percentMove);
-              break;
-            case 'end':
-              let senNumber = this.sensitivity === 'high' ? 0.25 : this.sensitivity === 'low' ? -0.25 : 0;
-              let senDirection = perMov > (position * 100) ? 1 : -1;
-              let newPos = Math.round((perMov / 100) + (senNumber * senDirection));
-              this.selected = 2;
-
-//              this.shadowRoot.querySelector(".slider__slides").classList.add('mouseup');
-//              position === newPos ? this.shadowRoot.querySelector(".slider__slides").style.transform = "translateX(-" + position * 100 + "%)" : false;
-//              this.movePos(newPos);
-              break;
-          }
+      /**
+       * Listen for track and move the container
+       *
+       * @param {object} event
+       * @private
+       */
+      _drag(event) {
+        if (this.disableSwipe || this.disabled) return;
+        const width = this.offsetWidth;
+        const x = event.detail.ddx ? event.detail.ddx : 0;
+        let finalX = x / width;
+        let finalLeft = this.x + finalX;
+        const finalPosition = Number(finalLeft.toFixed(3));
+        switch (event.detail.state) {
+          case 'track':
+            this.x = finalPosition;
+            break;
+          case 'end':
+            this.x = 0;
+            if (finalPosition >= 0.4) this.prev();
+            else if (finalPosition <= -0.4) this.next();
+            break;
         }
       }
     }
