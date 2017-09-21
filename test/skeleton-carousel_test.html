@@ -9,25 +9,42 @@
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
 
+  <link rel="import" href="../../iron-image/iron-image.html">
   <link rel="import" href="../skeleton-carousel.html">
 </head>
 <body>
 
-<test-fixture id="BasicTestFixture">
+<test-fixture id="basicCarousel">
   <template>
-    <skeleton-carousel></skeleton-carousel>
+    <skeleton-carousel controls nav>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/food/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+    </skeleton-carousel>
   </template>
 </test-fixture>
-
-<test-fixture id="ChangedPropertyTestFixture">
-  <template>
-    <skeleton-carousel prop1="new-prop1"></skeleton-carousel>
-  </template>
-</test-fixture>
-
 <script>
+  suite('Basic behaviour', () => {
+    let element;
 
+    setup(() => {
+      element = fixture('basicCarousel');
+    });
+
+    test('Total property should return all the childs', (done) => {
+      expect(element.total).to.equal(2);
+      done();
+    });
+  });
 </script>
-
 </body>
 </html>
