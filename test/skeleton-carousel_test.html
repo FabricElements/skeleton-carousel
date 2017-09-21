@@ -8,6 +8,7 @@
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
   <link rel="import" href="../../iron-image/iron-image.html">
   <link rel="import" href="../skeleton-carousel.html">
@@ -52,6 +53,44 @@
   </template>
 </test-fixture>
 
+<test-fixture id="listBoundaries">
+  <template>
+    <skeleton-carousel controls nav>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+    </skeleton-carousel>
+  </template>
+</test-fixture>
+
+<test-fixture id="disabledCarousel">
+  <template>
+    <skeleton-carousel controls nav disabled>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+    </skeleton-carousel>
+  </template>
+</test-fixture>
+
 <script>
   suite('Basic behaviour', () => {
     let element;
@@ -66,8 +105,8 @@
     });
 
     test('End should be true if last item is selected', (done) => {
-        expect(element.end).to.be.true;
-        done();
+      expect(element.end).to.be.true;
+      done();
     });
   });
 
@@ -82,6 +121,45 @@
       expect(element.showNext).to.be.true;
       expect(element.showPrev).to.be.true;
       done();
+    });
+  });
+
+  suite('List boundaries', () => {
+    let element;
+    let next;
+    let prev;
+
+    setup(() => {
+      element = fixture('listBoundaries');
+      next = element.shadowRoot.querySelector('#next');
+      prev = element.shadowRoot.querySelector('#prev');
+    });
+
+    test('showPrev & showNext should be disable', (done) => {
+      expect(prev.disabled).to.be.true;
+
+      MockInteractions.tap(next);
+
+      expect(next.disabled).to.be.true;
+      done();
+    });
+  });
+
+  suite('Disable option', () => {
+    test('showPrev & showNext should be disable', (done) => {
+      let element = fixture('disabledCarousel');
+      flush(() => {
+        const buttons = element
+          .shadowRoot
+          .querySelector('iron-selector')
+          .querySelectorAll('paper-icon-button');
+
+        buttons.forEach((button) => {
+          expect(button.disabled).to.be.true;
+        });
+
+        done();
+      });
     });
   });
 </script>

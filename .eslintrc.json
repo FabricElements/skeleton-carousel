@@ -51,6 +51,7 @@
   "globals": {
     "Polymer": true,
     "fixture": true,
+    "flush": true,
     "MockInteractions": true,
     "WCT": true
   }
