@@ -16,7 +16,7 @@
 
 <test-fixture id="basicCarousel">
   <template>
-    <skeleton-carousel controls nav>
+    <skeleton-carousel controls nav selected="2">
       <div>
         <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
                     sizing="cover"
@@ -34,23 +34,23 @@
 </test-fixture>
 
 <test-fixture id="loopCarousel">
-    <template>
-      <skeleton-carousel controls nav loop>
-        <div>
-          <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
-                      sizing="cover"
-                      preload
-          ></iron-image>
-        </div>
-        <div>
-          <iron-image data-src="http://source.unsplash.com/category/food/400x400"
-                      sizing="cover"
-                      preload
-          ></iron-image>
-        </div>
-      </skeleton-carousel>
-    </template>
-  </test-fixture>
+  <template>
+    <skeleton-carousel controls nav loop>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/food/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+    </skeleton-carousel>
+  </template>
+</test-fixture>
 
 <script>
   suite('Basic behaviour', () => {
@@ -63,6 +63,11 @@
     test('Total property should return all the childs', (done) => {
       expect(element.total).to.equal(2);
       done();
+    });
+
+    test('End should be true if last item is selected', (done) => {
+        expect(element.end).to.be.true;
+        done();
     });
   });
 
