@@ -20,10 +20,8 @@
     "new-cap": [
       "error",
       {
-        "capIsNewExceptions": [
-          "Polymer",
-          "Polymer.GestureEventListeners"
-        ]
+        "newIsCap": true,
+        "properties": false
       }
     ],
     "no-var": "error",

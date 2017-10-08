@@ -1,11 +1,11 @@
 {
-  "name": "skeleton-carousel",
+  "name": "name",
   "version": "0.0.1",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "eslint": "^4.5.0",
+    "eslint": "^4.7.2",
     "eslint-config-google": "^0.9.1",
-    "eslint-plugin-html": "^3.2.0"
+    "eslint-plugin-html": "^3.2.2"
   },
   "scripts": {
     "lint": "npm run lint:javascript && polymer lint",
@@ -13,7 +13,5 @@
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
   },
-  "dependencies": {
-    "gulp": "^3.9.1"
-  }
+  "dependencies": {}
 }
