@@ -551,6 +551,7 @@
        */
       _lazyContent(selected) {
         const child = this.children[--selected];
+        if (!child) return;
         const content = child.querySelectorAll('[data-src]');
         if (content.length <= 0) return;
         let i = 0;
