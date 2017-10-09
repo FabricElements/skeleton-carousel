@@ -242,7 +242,8 @@
         <template is="dom-repeat" items="[[_dots]]">
           <paper-icon-button name$="[[item]]"
                              icon="[[_iconDot(item, selected)]]"
-                             disabled$="[[disabled]]"></paper-icon-button>
+                             disabled$="[[disabled]]"
+          ></paper-icon-button>
         </template>
       </iron-selector>
       <paper-icon-button icon$="[[iconNext]]"
@@ -282,7 +283,7 @@
            */
           total: {
             type: Number,
-            value: 1,
+            value: 0,
             notify: true,
             reflectToAttribute: true,
             readOnly: true,
@@ -402,8 +403,6 @@
             value: false,
             notify: true,
             reflectToAttribute: true,
-            readOnly: true,
-            computed: '_computeEnd(total, selected)',
           },
           /**
            * Disable swipe functionality
@@ -522,10 +521,14 @@
        * @private
        */
       _selectedObserver(selected) {
+        this._checkIfEnd(selected);
         this._selectSlotted(selected);
         this._lazyContent(selected);
-        if (selected === 1 || selected < this.total) this._lazyContent(++selected);
-        if (selected > 1) this._lazyContent(--selected);
+        let baseSelected = selected;
+        if (selected === 1 || selected < this.total) {
+          this._lazyContent(++baseSelected);
+        }
+        if (selected > 1) this._lazyContent(--baseSelected);
       }
 
       /**
@@ -615,13 +618,15 @@
       /**
        * Determines if the current item is the last one on the list
        *
-       * @param {number} total
        * @param {number} selected
        * @return {boolean}
        * @private
        */
-      _computeEnd(total, selected) {
-        return total === selected;
+      _checkIfEnd(selected) {
+        if (selected <= 1 && this.total <= 1) return this.end = false;
+        const status = selected >= this.total;
+        this.end = status;
+        this._event('skeleton-carousel-end', status);
       }
 
       /**
@@ -741,7 +746,9 @@
        * @private
        */
       _computeTranslate(selected, direction) {
-        const percentage = --selected * 100;
+        let baseSelected = --selected;
+        if (selected <= 0) baseSelected = 0;
+        const percentage = baseSelected * 100;
         let finalX = 0;
         let finalY = 0;
         if (direction === 'horizontal') finalX = percentage;
@@ -775,6 +782,19 @@
        */
       _computeControls(dots, nav) {
         return (dots || nav);
+      }
+
+      /**
+       * Fire event
+       *
+       * @param {string} name
+       * @param {string|boolean|null} detail
+       * @private
+       */
+      _event(name, detail = null) {
+        this.dispatchEvent(new CustomEvent(name, {
+          detail: detail, bubbles: true, composed: true,
+        }));
       }
     }
 
