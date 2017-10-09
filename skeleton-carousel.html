@@ -525,7 +525,9 @@
         this._selectSlotted(selected);
         this._lazyContent(selected);
         let baseSelected = selected;
-        if (selected === 1 || selected < this.total) this._lazyContent(++baseSelected);
+        if (selected === 1 || selected < this.total) {
+          this._lazyContent(++baseSelected);
+        }
         if (selected > 1) this._lazyContent(--baseSelected);
         this._checkIfEnd(selected);
       }
