@@ -535,6 +535,7 @@
        * @private
        */
       _selectSlotted(selected) {
+        if (this.children.length < 1) return;
         let i = 0;
         for (i; i < this.children.length; ++i) {
           this.children[i].classList.remove('selected');
@@ -551,6 +552,7 @@
        */
       _lazyContent(selected) {
         const child = this.children[--selected];
+        if (!child) return;
         const content = child.querySelectorAll('[data-src]');
         if (content.length <= 0) return;
         let i = 0;
