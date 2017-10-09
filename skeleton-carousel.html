@@ -403,7 +403,6 @@
             value: false,
             notify: true,
             reflectToAttribute: true,
-            readOnly: true,
           },
           /**
            * Disable swipe functionality
@@ -522,6 +521,7 @@
        * @private
        */
       _selectedObserver(selected) {
+        this._checkIfEnd(selected);
         this._selectSlotted(selected);
         this._lazyContent(selected);
         let baseSelected = selected;
@@ -529,7 +529,6 @@
           this._lazyContent(++baseSelected);
         }
         if (selected > 1) this._lazyContent(--baseSelected);
-        this._checkIfEnd(selected);
       }
 
       /**
@@ -624,9 +623,9 @@
        * @private
        */
       _checkIfEnd(selected) {
-        if (selected <= 1 && this.total <= 1) return this._setEnd = false;
+        if (selected <= 1 && this.total <= 1) return this.end = false;
         const status = selected >= this.total;
-        this._setEnd = status;
+        this.end = status;
         this._event('skeleton-carousel-end', status);
       }
 
