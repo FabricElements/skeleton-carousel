@@ -38,13 +38,12 @@
         };
         --skeleton-carousel-dot-disabled: {
         };
-        --skeleton-carousel-prev: {
+        --skeleton-carousel-nav: {
         };
-        --skeleton-carousel-next: {
+        --skeleton-carousel-nav-disabled: {
         };
-        --skeleton-carousel-next-disabled: {
-        };
-        --skeleton-carousel-prev-disabled: {
+        --skeleton-carousel-nav-color: var(--paper-grey-900);
+        --skeleton-carousel-transition: {
         };
       }
 
@@ -98,8 +97,12 @@
       #swipe,
       #items {
         position: relative;
-        transform: translate(0%, 0%);
-        transition: transform .3s cubic-bezier(.51, .92, .24, 1);
+        -webkit-transform: translate3d(0%, 0%, 0);
+        -moz-transform: translate3d(0%, 0%, 0);
+        -ms-transform: translate3d(0%, 0%, 0);
+        -o-transform: translate3d(0%, 0%, 0);
+        transform: translate3d(0%, 0%, 0);
+        will-change: transform;
       }
 
       #swipe {
@@ -126,7 +129,6 @@
         overflow: hidden;
         @apply --layout-vertical;
         @apply --layout-flex-auto;
-        transition: all ease .3s;
         min-width: 100%;
         max-width: 100%;
         width: 100%;
@@ -168,7 +170,6 @@
       }
 
       paper-icon-button {
-        transition: all .3s ease-in-out;
         border-radius: 50%;
       }
 
@@ -194,24 +195,36 @@
         @apply --skeleton-carousel-dot-disabled;
       }
 
-      #prev {
-        @apply --skeleton-carousel-prev;
-      }
-
+      #prev,
       #next {
-        @apply --skeleton-carousel-next;
+        color: var(--skeleton-carousel-nav-color);
       }
 
-      #prev[disabled] {
-        @apply --skeleton-carousel-prev-disabled;
+      #prev,
+      #next {
+        @apply --skeleton-carousel-nav;
       }
 
+      #prev[disabled],
       #next[disabled] {
-        @apply --skeleton-carousel-next-disabled;
+        @apply --skeleton-carousel-nav-disabled;
       }
 
       [hidden] {
         display: none !important;
+      }
+
+      /* Apply transition */
+      #swipe,
+      #items,
+      ::slotted(*),
+      paper-icon-button {
+        -webkit-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        -moz-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        -ms-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        -o-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        @apply --skeleton-carousel-transition;
       }
     </style>
 
@@ -475,7 +488,9 @@
        * @private
        */
       _slotChanged() {
-        this._setTotal(this.children.length);
+        const total = this.children.length;
+        this._setTotal(total);
+        if (total >= 1) this._lazyContent(1);
       }
 
       /**
@@ -734,7 +749,11 @@
         let finalY = 0;
         if (direction === 'horizontal') finalX = this._calcPercentage(x);
         if (direction === 'vertical') finalY = this._calcPercentage(y);
-        return `transform: translate(${finalX}, ${finalY});`;
+        return `-webkit-transform: translate3d(${finalX}, ${finalY}, 0);
+                -moz-transform: translate3d(${finalX}, ${finalY}, 0);
+                -ms-transform: translate3d(${finalX}, ${finalY}, 0);
+                -o-transform: translate3d(${finalX}, ${finalY}, 0);
+                transform: translate3d(${finalX}, ${finalY}, 0);`;
       }
 
       /**
@@ -753,7 +772,11 @@
         let finalY = 0;
         if (direction === 'horizontal') finalX = percentage;
         if (direction === 'vertical') finalY = percentage;
-        return `transform: translate(-${finalX}%, -${finalY}%);`;
+        return `-webkit-transform: translate3d(-${finalX}%, -${finalY}%, 0);
+                -moz-transform: translate3d(-${finalX}%, -${finalY}%, 0);
+                -ms-transform: translate3d(-${finalX}%, -${finalY}%, 0);
+                -o-transform: translate3d(-${finalX}%, -${finalY}%, 0);
+                transform: translate3d(-${finalX}%, -${finalY}%, 0);`;
       }
 
       /**

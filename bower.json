@@ -1,5 +1,33 @@
 {
   "name": "skeleton-carousel",
+  "version": "2.0.1",
+  "license": "BSD-3-Clause",
+  "private": false,
+  "authors": [
+    "The FabricElements Authors"
+  ],
+  "description": "skeleton-carousel provides a carousel for images and other content",
+  "keywords": [
+    "gallery",
+    "carousel",
+    "swipe",
+    "media",
+    "images",
+    "slider",
+    "pictures",
+    "vertical",
+    "horizontal",
+    "lazy-loading",
+    "material-design",
+    "material design",
+    "web-components",
+    "polymer",
+    "FabricElements"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FabricElements/skeleton-carousel.git"
+  },
   "main": "skeleton-carousel.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
