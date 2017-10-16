@@ -34,6 +34,25 @@
   </template>
 </test-fixture>
 
+<test-fixture id="endCarousel">
+  <template>
+    <skeleton-carousel dots nav>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/nature/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+      <div>
+        <iron-image data-src="http://source.unsplash.com/category/food/400x400"
+                    sizing="cover"
+                    preload
+        ></iron-image>
+      </div>
+    </skeleton-carousel>
+  </template>
+</test-fixture>
+
 <test-fixture id="loopCarousel">
   <template>
     <skeleton-carousel dots nav loop>
@@ -107,6 +126,20 @@
     test('End should be true if last item is selected', (done) => {
       expect(element.end).to.be.true;
       done();
+    });
+  });
+
+  suite('End event behaviour', () => {
+    test('Should be true if selected & total have the same number', (done) => {
+      const element = fixture('endCarousel');
+      const next = element.shadowRoot.querySelector('#next');
+
+      element.addEventListener('skeleton-carousel-end', () => {
+        expect(element.selected).to.equal(element.total);
+        done();
+      });
+
+      MockInteractions.tap(next);
     });
   });
 
