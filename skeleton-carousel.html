@@ -134,7 +134,7 @@
         @apply --skeleton-carousel-item;
       }
 
-      #itemsContainer #itemsContainer #itemsContainer ::slotted(:not(.selected)) {
+      #itemsContainer ::slotted(:not(.selected)) {
         opacity: .8;
       }
 
@@ -216,7 +216,7 @@
       /* Apply transition */
       #swipe,
       #items,
-      #itemsContainer #itemsContainer ::slotted(*),
+      #itemsContainer ::slotted(*),
       paper-icon-button {
         -webkit-transition: all .3s cubic-bezier(.51, .92, .24, 1);
         -moz-transition: all .3s cubic-bezier(.51, .92, .24, 1);
