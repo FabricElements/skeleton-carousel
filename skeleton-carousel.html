@@ -7,227 +7,225 @@
 
 <dom-module id="skeleton-carousel">
   <template>
-    <custom-style>
-      <!--suppress CssInvalidPseudoSelector -->
-      <style is="custom-style">
-        :host {
-          display: block;
-          position: relative;
-          overflow: hidden;
-          contain: content;
-          @apply --layout-flex-auto;
-          /* Custom variables and mixins */
-          --skeleton-carousel: {
-          };
-          @apply --skeleton-carousel;
-          --skeleton-carousel-min-height: 300px;
-          min-height: var(--skeleton-carousel-min-height);
-          --skeleton-carousel-item: {
-          };
-          --skeleton-carousel-controls: {
-          };
-          --skeleton-carousel-controls-horizontal: {
-          };
-          --skeleton-carousel-controls-vertical: {
-          };
-          --skeleton-carousel-dots: {
-          };
-          --skeleton-carousel-dot: {
-          };
-          --skeleton-carousel-dot-color: var(--paper-grey-900);
-          --skeleton-carousel-dot-selected: {
-          };
-          --skeleton-carousel-dot-disabled: {
-          };
-          --skeleton-carousel-nav: {
-          };
-          --skeleton-carousel-nav-disabled: {
-          };
-          --skeleton-carousel-nav-color: var(--paper-grey-900);
-          --skeleton-carousel-transition: {
-          };
-        }
+    <!--suppress CssInvalidPseudoSelector -->
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        contain: content;
+        @apply --layout-flex-auto;
+        /* Custom variables and mixins */
+        --skeleton-carousel: {
+        };
+        @apply --skeleton-carousel;
+        --skeleton-carousel-min-height: 300px;
+        min-height: var(--skeleton-carousel-min-height);
+        --skeleton-carousel-item: {
+        };
+        --skeleton-carousel-controls: {
+        };
+        --skeleton-carousel-controls-horizontal: {
+        };
+        --skeleton-carousel-controls-vertical: {
+        };
+        --skeleton-carousel-dots: {
+        };
+        --skeleton-carousel-dot: {
+        };
+        --skeleton-carousel-dot-color: var(--paper-grey-900);
+        --skeleton-carousel-dot-selected: {
+        };
+        --skeleton-carousel-dot-disabled: {
+        };
+        --skeleton-carousel-nav: {
+        };
+        --skeleton-carousel-nav-disabled: {
+        };
+        --skeleton-carousel-nav-color: var(--paper-grey-900);
+        --skeleton-carousel-transition: {
+        };
+      }
 
-        :host([direction="horizontal"]) {
-          @apply --layout-vertical;
-        }
+      :host([direction="horizontal"]) {
+        @apply --layout-vertical;
+      }
 
-        :host([alt][direction="horizontal"]) {
-          @apply --layout-vertical-reverse;
-        }
+      :host([alt][direction="horizontal"]) {
+        @apply --layout-vertical-reverse;
+      }
 
-        :host([direction="vertical"]) {
-          @apply --layout-inline;
-          @apply --layout-horizontal;
-        }
+      :host([direction="vertical"]) {
+        @apply --layout-inline;
+        @apply --layout-horizontal;
+      }
 
-        :host([alt][direction="vertical"]) {
-          @apply --layout-horizontal-reverse;
-        }
+      :host([alt][direction="vertical"]) {
+        @apply --layout-horizontal-reverse;
+      }
 
-        :host,
-        #itemsContainer ::slotted(*) {
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
+      :host,
+      #itemsContainer ::slotted(*) {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-        #carousel,
-        #swipe,
-        #items,
-        #itemsContainer {
-          display: block;
-          position: relative;
-          width: 100%;
-          @apply --layout-flex-auto;
-        }
+      #carousel,
+      #swipe,
+      #items,
+      #itemsContainer {
+        display: block;
+        position: relative;
+        width: 100%;
+        @apply --layout-flex-auto;
+      }
 
-        #carousel,
-        #swipe,
-        #itemsContainer {
-          @apply --layout-vertical;
-        }
+      #carousel,
+      #swipe,
+      #itemsContainer {
+        @apply --layout-vertical;
+      }
 
-        #carousel {
-          overflow: hidden;
-          z-index: 0;
-        }
+      #carousel {
+        overflow: hidden;
+        z-index: 0;
+      }
 
-        #swipe,
-        #items {
-          position: relative;
-          -webkit-transform: translate3d(0%, 0%, 0);
-          -moz-transform: translate3d(0%, 0%, 0);
-          -ms-transform: translate3d(0%, 0%, 0);
-          -o-transform: translate3d(0%, 0%, 0);
-          transform: translate3d(0%, 0%, 0);
-          will-change: transform;
-        }
+      #swipe,
+      #items {
+        position: relative;
+        -webkit-transform: translate3d(0%, 0%, 0);
+        -moz-transform: translate3d(0%, 0%, 0);
+        -ms-transform: translate3d(0%, 0%, 0);
+        -o-transform: translate3d(0%, 0%, 0);
+        transform: translate3d(0%, 0%, 0);
+        will-change: transform;
+      }
 
-        #swipe {
-          width: 100%;
-        }
+      #swipe {
+        width: 100%;
+      }
 
-        #itemsContainer {
-          @apply --layout-fit;
-          @apply --layout-inline;
-        }
+      #itemsContainer {
+        @apply --layout-fit;
+        @apply --layout-inline;
+      }
 
-        :host([direction="horizontal"]) #itemsContainer {
-          @apply --layout-horizontal;
-        }
+      :host([direction="horizontal"]) #itemsContainer {
+        @apply --layout-horizontal;
+      }
 
-        :host([direction="vertical"]) #itemsContainer {
-          @apply --layout-vertical;
-          @apply --layout-wrap;
-        }
+      :host([direction="vertical"]) #itemsContainer {
+        @apply --layout-vertical;
+        @apply --layout-wrap;
+      }
 
-        #itemsContainer ::slotted(*) {
-          display: block;
-          position: relative;
-          overflow: hidden;
-          @apply --layout-vertical;
-          @apply --layout-flex-auto;
-          min-width: 100%;
-          max-width: 100%;
-          width: 100%;
-          @apply --skeleton-carousel-item;
-        }
+      #itemsContainer ::slotted(*) {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        @apply --layout-vertical;
+        @apply --layout-flex-auto;
+        min-width: 100%;
+        max-width: 100%;
+        width: 100%;
+        @apply --skeleton-carousel-item;
+      }
 
-        #itemsContainer #itemsContainer #itemsContainer ::slotted(:not(.selected)) {
-          opacity: .8;
-        }
+      #itemsContainer #itemsContainer #itemsContainer ::slotted(:not(.selected)) {
+        opacity: .8;
+      }
 
-        /*
-        * Controls
-        */
-        #controls {
-          display: block;
-          padding: .5rem;
-          z-index: 1;
-          @apply --layout-center-center;
-          @apply --layout-center-justified;
-          @apply --skeleton-carousel-controls;
-        }
+      /*
+      * Controls
+      */
+      #controls {
+        display: block;
+        padding: .5rem;
+        z-index: 1;
+        @apply --layout-center-center;
+        @apply --layout-center-justified;
+        @apply --skeleton-carousel-controls;
+      }
 
-        :host([direction="horizontal"]) #controls {
-          @apply --skeleton-carousel-controls-horizontal;
-        }
+      :host([direction="horizontal"]) #controls {
+        @apply --skeleton-carousel-controls-horizontal;
+      }
 
-        :host([direction="vertical"]) #controls {
-          @apply --skeleton-carousel-controls-vertical;
-        }
+      :host([direction="vertical"]) #controls {
+        @apply --skeleton-carousel-controls-vertical;
+      }
 
-        :host([direction="horizontal"]) #controls,
-        :host([direction="horizontal"]) #dots {
-          @apply --layout-horizontal;
-        }
+      :host([direction="horizontal"]) #controls,
+      :host([direction="horizontal"]) #dots {
+        @apply --layout-horizontal;
+      }
 
-        :host([direction="vertical"]) #controls,
-        :host([direction="vertical"]) #dots {
-          @apply --layout-vertical;
-        }
+      :host([direction="vertical"]) #controls,
+      :host([direction="vertical"]) #dots {
+        @apply --layout-vertical;
+      }
 
-        paper-icon-button {
-          border-radius: 50%;
-        }
+      paper-icon-button {
+        border-radius: 50%;
+      }
 
-        #dots {
-          @apply --layout-flex-auto;
-          @apply --layout-center-center;
-          @apply --skeleton-carousel-dots;
-        }
+      #dots {
+        @apply --layout-flex-auto;
+        @apply --layout-center-center;
+        @apply --skeleton-carousel-dots;
+      }
 
-        #dots paper-icon-button {
-          color: var(--skeleton-carousel-dot-color);
-          opacity: .4;
-          @apply --skeleton-carousel-dot;
-        }
+      #dots paper-icon-button {
+        color: var(--skeleton-carousel-dot-color);
+        opacity: .4;
+        @apply --skeleton-carousel-dot;
+      }
 
-        #dots paper-icon-button.selected {
-          opacity: 1;
-          @apply --skeleton-carousel-dot-selected;
-        }
+      #dots paper-icon-button.selected {
+        opacity: 1;
+        @apply --skeleton-carousel-dot-selected;
+      }
 
-        #dots paper-icon-button[disabled] {
-          opacity: .4;
-          @apply --skeleton-carousel-dot-disabled;
-        }
+      #dots paper-icon-button[disabled] {
+        opacity: .4;
+        @apply --skeleton-carousel-dot-disabled;
+      }
 
-        #prev,
-        #next {
-          color: var(--skeleton-carousel-nav-color);
-        }
+      #prev,
+      #next {
+        color: var(--skeleton-carousel-nav-color);
+      }
 
-        #prev,
-        #next {
-          @apply --skeleton-carousel-nav;
-        }
+      #prev,
+      #next {
+        @apply --skeleton-carousel-nav;
+      }
 
-        #prev[disabled],
-        #next[disabled] {
-          @apply --skeleton-carousel-nav-disabled;
-        }
+      #prev[disabled],
+      #next[disabled] {
+        @apply --skeleton-carousel-nav-disabled;
+      }
 
-        [hidden] {
-          display: none !important;
-        }
+      [hidden] {
+        display: none !important;
+      }
 
-        /* Apply transition */
-        #swipe,
-        #items,
-        #itemsContainer #itemsContainer ::slotted(*),
-        paper-icon-button {
-          -webkit-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-          -moz-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-          -ms-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-          -o-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-          transition: all .3s cubic-bezier(.51, .92, .24, 1);
-          @apply --skeleton-carousel-transition;
-        }
-      </style>
-    </custom-style>
+      /* Apply transition */
+      #swipe,
+      #items,
+      #itemsContainer #itemsContainer ::slotted(*),
+      paper-icon-button {
+        -webkit-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        -moz-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        -ms-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        -o-transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        @apply --skeleton-carousel-transition;
+      }
+    </style>
 
     <div id="carousel">
       <div id="swipe"
