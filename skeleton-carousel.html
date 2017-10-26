@@ -575,7 +575,7 @@
         let i = 0;
         for (i; i < content.length; ++i) {
           const value = content[i].getAttribute('data-src');
-          content[i].setAttribute('src', value);
+          content[i].src = value;
           content[i].removeAttribute('data-src');
         }
       }
