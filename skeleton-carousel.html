@@ -468,11 +468,27 @@
             type: Array,
             observer: '_slotChanged'
           },
+          /**
+            * Accepted node names as children, passed in via <slot>
+            */
+          acceptedChildNodeNames: {
+            type: Array,
+            value() {
+              return [
+                'div',
+                'span',
+                'img',
+                'iron-image'
+              ]
+            }
+          }
         },
 
         ready() {
           Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
-            this._children = this.getContentChildNodes().filter(n => n.nodeType === 1);
+            this._children = this.getContentChildNodes().filter(n => {
+              return this.acceptedChildNodeNames.indexOf(n.nodeName.toLowerCase()) > -1;
+            });
           });
         },
 
