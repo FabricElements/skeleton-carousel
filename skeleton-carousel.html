@@ -283,7 +283,8 @@
      * @polymer
      * @demo demo/index.html
      */
-    (function () {
+    (function() {
+      /* eslint new-cap: 0 */
       Polymer({
         is: 'skeleton-carousel',
 
@@ -473,7 +474,7 @@
             */
           _children: {
             type: Array,
-            observer: '_slotChanged'
+            observer: '_slotChanged',
           },
           /**
             * Accepted node names as children, passed in via <slot>
@@ -486,16 +487,18 @@
                 'span',
                 'section',
                 'img',
-                'iron-image'
-              ]
-            }
-          }
+                'iron-image',
+              ];
+            },
+          },
         },
 
         ready() {
           Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
-            this._children = this.getContentChildNodes().filter(n => {
-              return this.acceptedChildNodeNames.indexOf(n.nodeName.toLowerCase()) > -1;
+            this._children = this.getContentChildNodes().filter((n) => {
+              return this.acceptedChildNodeNames.indexOf(
+                n.nodeName.toLowerCase()
+              ) > -1;
             });
           });
         },
@@ -543,7 +546,9 @@
         */
         _iconDot(item, selected) {
           let icon = 'icons:radio-button-unchecked';
-          if (Number(item) === Number(selected)) icon = 'icons:radio-button-checked';
+          if (Number(item) === Number(selected)) {
+            icon = 'icons:radio-button-checked';
+          }
           return icon;
         },
 
@@ -837,7 +842,7 @@
           this.dispatchEvent(new CustomEvent(name, {
             detail: detail, bubbles: true, composed: true,
           }));
-        }
+        },
       });
     })();
   </script>

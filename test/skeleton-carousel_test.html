@@ -188,8 +188,11 @@
     test('showPrev & showNext should be disable', (done) => {
       let element = fixture('disabledCarousel');
       flush(() => {
-        const selector = Polymer.dom(element.$$('iron-selector'));
-        const buttons = Polymer.dom(selector).querySelectorAll('paper-icon-button');
+        const selector = Polymer
+                          .dom(element.$$('iron-selector'));
+        const buttons = Polymer
+                          .dom(selector)
+                          .querySelectorAll('paper-icon-button');
 
         buttons.forEach((button) => {
           expect(button.disabled).to.be.true;
