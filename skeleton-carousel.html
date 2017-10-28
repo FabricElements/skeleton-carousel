@@ -42,6 +42,10 @@
         --skeleton-carousel-nav-disabled: {
         };
         --skeleton-carousel-nav-color: var(--paper-grey-900);
+        --skeleton-carousel-nav-prev: {
+        };
+        --skeleton-carousel-nav-next: {
+        };
         --skeleton-carousel-transition: {
         };
       }
@@ -211,6 +215,7 @@
       #prev {
         @apply --skeleton-carousel-nav-prev;
       }
+
       #next {
         @apply --skeleton-carousel-nav-next;
       }
@@ -283,15 +288,15 @@
      * @polymer
      * @demo demo/index.html
      */
-    (function() {
+    (() => {
       /* eslint new-cap: 0 */
       Polymer({
         is: 'skeleton-carousel',
 
         properties: {
           /**
-            * Total number of slides
-            */
+           * Total number of slides
+           */
           total: {
             type: Number,
             value: 0,
@@ -300,8 +305,8 @@
             readOnly: true,
           },
           /**
-            * Selected slide
-            */
+           * Selected slide
+           */
           selected: {
             type: Number,
             value: 1,
@@ -309,24 +314,24 @@
             reflectToAttribute: true,
           },
           /**
-            * Determines ow mush the sliders container needs to move
-            */
+           * Determines ow mush the sliders container needs to move
+           */
           translate: {
             type: String,
             computed: '_computeTranslate(selected, direction)',
             readOnly: true,
           },
           /**
-            * Returns translation style.
-            */
+           * Returns translation style.
+           */
           translateSwipe: {
             type: String,
             computed: '_computeTranslateSwipe(direction, x, y)',
             readOnly: true,
           },
           /**
-            * Determines if the next button should be displayed.
-            */
+           * Determines if the next button should be displayed.
+           */
           showNext: {
             type: Boolean,
             value: false,
@@ -336,8 +341,8 @@
             readOnly: true,
           },
           /**
-            * Determines if the previous button should be displayed.
-            */
+           * Determines if the previous button should be displayed.
+           */
           showPrev: {
             type: Boolean,
             value: false,
@@ -347,8 +352,8 @@
             readOnly: true,
           },
           /**
-            * Show navigation controls
-            */
+           * Show navigation controls
+           */
           controls: {
             type: Boolean,
             value: false,
@@ -356,22 +361,22 @@
             computed: '_computeControls(dots, nav)',
           },
           /**
-            * Show navigation next/prev buttons
-            */
+           * Show navigation next/prev buttons
+           */
           nav: {
             type: Boolean,
             value: false,
           },
           /**
-            * Show navigation dots
-            */
+           * Show navigation dots
+           */
           dots: {
             type: Boolean,
             value: false,
           },
           /**
-            * Icon for the previous button
-            */
+           * Icon for the previous button
+           */
           iconPrev: {
             type: String,
             value: 'icons:arrow-back',
@@ -379,8 +384,8 @@
             computed: '_computeIconPrev(direction)',
           },
           /**
-            * Icon for the next button
-            */
+           * Icon for the next button
+           */
           iconNext: {
             type: String,
             value: 'icons:arrow-forward',
@@ -388,26 +393,26 @@
             computed: '_computeIconNext(direction)',
           },
           /**
-            * Returns an array with the slides.
-            * This will be used to create the dot controls.
-            */
+           * Returns an array with the slides.
+           * This will be used to create the dot controls.
+           */
           _dots: {
             type: Array,
             computed: '_computeDots(total)',
             readOnly: true,
           },
           /**
-            * Determines if the carousel should be looped.
-            * This affects the controls and the drag and drop functionality.
-            * Set to `true` if you need to loop the slides.
-            */
+           * Determines if the carousel should be looped.
+           * This affects the controls and the drag and drop functionality.
+           * Set to `true` if you need to loop the slides.
+           */
           loop: {
             type: Boolean,
             value: false,
           },
           /**
-            * Returns true when the carousel has reached the last slide.
-            */
+           * Returns true when the carousel has reached the last slide.
+           */
           end: {
             type: Boolean,
             value: false,
@@ -415,53 +420,53 @@
             reflectToAttribute: true,
           },
           /**
-            * Disables component
-            */
+           * Disables component
+           */
           disabled: {
             type: Boolean,
             value: false,
           },
           /**
-            * Disable swipe functionality
-            */
+           * Disable swipe functionality
+           */
           disableSwipe: {
             type: Boolean,
             value: false,
           },
           /**
-            * swipe sensitivity:
-            * high, low or default
-            */
+           * swipe sensitivity:
+           * high, low or default
+           */
           sensitivity: {
             type: String,
             value: 'default',
             notify: true,
           },
           /**
-            * X Axis position (0 - 1)
-            */
+           * X Axis position (0 - 1)
+           */
           x: {
             type: Number,
             value: 0,
           },
           /**
-            * Y Axis position (0 - 1)
-            */
+           * Y Axis position (0 - 1)
+           */
           y: {
             type: Number,
             value: 0,
           },
           /**
-            * Carousel direction (horizontal or vertical)
-            */
+           * Carousel direction (horizontal or vertical)
+           */
           direction: {
             type: String,
             value: 'horizontal',
             reflectToAttribute: true,
           },
           /**
-            * Icon for the next button
-            */
+           * Icon for the next button
+           */
           itemsContainerHeight: {
             type: String,
             value: 'auto',
@@ -469,15 +474,15 @@
             readOnly: true,
           },
           /**
-            * Elements passed in via <slot>
-            */
+           * Elements passed in via <slot>
+           */
           _children: {
             type: Array,
             observer: '_slotChanged',
           },
           /**
-            * Accepted node names as children, passed in via <slot>
-            */
+           * Accepted node names as children, passed in via <slot>
+           */
           acceptedChildNodeNames: {
             type: Array,
             value() {
@@ -492,10 +497,16 @@
           },
         },
 
+        /**
+         * Observers
+         */
         observers: [
           '_selectedObserver(selected, _children)',
         ],
 
+        /**
+         * Ready event
+         */
         ready() {
           Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
             this._children = this.getContentChildNodes().filter((n) => {
@@ -507,10 +518,10 @@
         },
 
         /**
-        * On slot change
-        *
-        * @private
-        */
+         * On slot change
+         *
+         * @private
+         */
         _slotChanged() {
           const total = this._children.length;
           this._setTotal(total);
@@ -518,10 +529,10 @@
         },
 
         /**
-        * Go to next slide
-        *
-        * @return {*}
-        */
+         * Go to next slide
+         *
+         * @return {*}
+         */
         next() {
           if (this.disabled) return;
           if (this.selected < this.total) return this.selected++;
@@ -529,10 +540,10 @@
         },
 
         /**
-        * Go to previous slide
-        *
-        * @return {*}
-        */
+         * Go to previous slide
+         *
+         * @return {*}
+         */
         prev() {
           if (this.disabled) return;
           if (this.selected >= 2) return this.selected--;
@@ -540,13 +551,13 @@
         },
 
         /**
-        * Switch the icon if the item is selected
-        *
-        * @param {number} item
-        * @param {number} selected
-        * @return {string}
-        * @private
-        */
+         * Switch the icon if the item is selected
+         *
+         * @param {number} item
+         * @param {number} selected
+         * @return {string}
+         * @private
+         */
         _iconDot(item, selected) {
           let icon = 'icons:radio-button-unchecked';
           if (Number(item) === Number(selected)) {
@@ -556,11 +567,11 @@
         },
 
         /**
-        * Listen for changes on the selected item
-        *
-        * @param {number} selected
-        * @private
-        */
+         * Listen for changes on the selected item
+         *
+         * @param {number} selected
+         * @private
+         */
         _selectedObserver(selected) {
           if (!this._children || this._children.length < 1) return;
           this._checkIfEnd(selected);
@@ -574,11 +585,11 @@
         },
 
         /**
-        * Adds class `selected` to the current slide
-        *
-        * @param {number} selected
-        * @private
-        */
+         * Adds class `selected` to the current slide
+         *
+         * @param {number} selected
+         * @private
+         */
         _selectSlotted(selected) {
           if (!this._children || this._children.length < 1) return;
           let i = 0;
@@ -589,12 +600,12 @@
         },
 
         /**
-        * Lazy load content for the given slider number
-        * Replaces 'data-src' attribute to 'src'.
-        *
-        * @param {number} selected
-        * @private
-        */
+         * Lazy load content for the given slider number
+         * Replaces 'data-src' attribute to 'src'.
+         *
+         * @param {number} selected
+         * @private
+         */
         _lazyContent(selected) {
           if (!this._children || this._children.length < 1) return;
           const child = this._children[--selected];
@@ -610,15 +621,15 @@
         },
 
         /**
-        * Determine if it should show the next button
-        *
-        * @param {boolean} disabled
-        * @param {number} total
-        * @param {number} selected
-        * @param {boolean} loop
-        * @return {boolean}
-        * @private
-        */
+         * Determine if it should show the next button
+         *
+         * @param {boolean} disabled
+         * @param {number} total
+         * @param {number} selected
+         * @param {boolean} loop
+         * @return {boolean}
+         * @private
+         */
         _computeShowNext(disabled, total, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
@@ -626,14 +637,14 @@
         },
 
         /**
-        * Determine if it should show the next button
-        *
-        * @param {boolean} disabled
-        * @param {number} selected
-        * @param {boolean} loop
-        * @return {boolean}
-        * @private
-        */
+         * Determine if it should show the next button
+         *
+         * @param {boolean} disabled
+         * @param {number} selected
+         * @param {boolean} loop
+         * @return {boolean}
+         * @private
+         */
         _computeShowPrev(disabled, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
@@ -641,12 +652,12 @@
         },
 
         /**
-        * Returns the dots array
-        *
-        * @param {number} total
-        * @return {Array}
-        * @private
-        */
+         * Returns the dots array
+         *
+         * @param {number} total
+         * @return {Array}
+         * @private
+         */
         _computeDots(total) {
           let array = [];
           if (total <= 0) return array;
@@ -659,12 +670,12 @@
         },
 
         /**
-        * Determines if the current item is the last one on the list
-        *
-        * @param {number} selected
-        * @return {boolean}
-        * @private
-        */
+         * Determines if the current item is the last one on the list
+         *
+         * @param {number} selected
+         * @return {boolean}
+         * @private
+         */
         _checkIfEnd(selected) {
           if (selected <= 1 && this.total <= 1) return this.end = false;
           const status = selected >= this.total;
@@ -673,12 +684,12 @@
         },
 
         /**
-        * Returns a valid value
-        *
-        * @param {number} value
-        * @return {*}
-        * @private
-        */
+         * Returns a valid value
+         *
+         * @param {number} value
+         * @return {*}
+         * @private
+         */
         _normalize(value) {
           if (value < 0) {
             value = 0;
@@ -689,22 +700,22 @@
         },
 
         /**
-        * Returns the percentage that will to position the icon
-        *
-        * @param {number} value
-        * @return {string}
-        * @private
-        */
+         * Returns the percentage that will to position the icon
+         *
+         * @param {number} value
+         * @return {string}
+         * @private
+         */
         _calcPercentage(value) {
           return `${value * 100}%`;
         },
 
         /**
-        * Listen for track and move the container
-        *
-        * @param {object} event
-        * @private
-        */
+         * Listen for track and move the container
+         *
+         * @param {object} event
+         * @private
+         */
         _drag(event) {
           if (this.disableSwipe || this.disabled) return;
           const width = this.offsetWidth;
@@ -740,38 +751,38 @@
         },
 
         /**
-        * Compute icon previews
-        *
-        * @param {string|null} direction
-        * @return {string}
-        * @private
-        */
+         * Compute icon previews
+         *
+         * @param {string|null} direction
+         * @return {string}
+         * @private
+         */
         _computeIconPrev(direction) {
           if (direction === 'vertical') return 'icons:arrow-upward';
           return 'icons:arrow-back';
         },
 
         /**
-        * Compute icon next
-        *
-        * @param {string|null} direction
-        * @return {string}
-        * @private
-        */
+         * Compute icon next
+         *
+         * @param {string|null} direction
+         * @return {string}
+         * @private
+         */
         _computeIconNext(direction) {
           if (direction === 'vertical') return 'icons:arrow-downward';
           return 'icons:arrow-forward';
         },
 
         /**
-        * Compute translate swipe
-        *
-        * @param {string} direction
-        * @param {number} x
-        * @param {number} y
-        * @return {string}
-        * @private
-        */
+         * Compute translate swipe
+         *
+         * @param {string} direction
+         * @param {number} x
+         * @param {number} y
+         * @return {string}
+         * @private
+         */
         _computeTranslateSwipe(direction, x, y) {
           let finalX = 0;
           let finalY = 0;
@@ -785,13 +796,13 @@
         },
 
         /**
-        * Returns the percentage to translate
-        *
-        * @param {number} selected
-        * @param {string} direction
-        * @return {string}
-        * @private
-        */
+         * Returns the percentage to translate
+         *
+         * @param {number} selected
+         * @param {string} direction
+         * @return {string}
+         * @private
+         */
         _computeTranslate(selected, direction) {
           let baseSelected = --selected;
           if (selected <= 0) baseSelected = 0;
@@ -808,13 +819,13 @@
         },
 
         /**
-        * Compute items container height
-        *
-        * @param {string} direction
-        * @param {number} total
-        * @return {string}
-        * @private
-        */
+         * Compute items container height
+         *
+         * @param {string} direction
+         * @param {number} total
+         * @return {string}
+         * @private
+         */
         _computeItemsContainerHeight(direction, total) {
           let height = 'auto';
           if (direction === 'vertical') height = this._calcPercentage(total);
@@ -823,25 +834,25 @@
         },
 
         /**
-        * Compute Controls
-        * Returns true if needs to display the control.s
-        *
-        * @param {boolean} dots
-        * @param {boolean} nav
-        * @return {boolean}
-        * @private
-        */
+         * Compute Controls
+         * Returns true if needs to display the control.s
+         *
+         * @param {boolean} dots
+         * @param {boolean} nav
+         * @return {boolean}
+         * @private
+         */
         _computeControls(dots, nav) {
           return (dots || nav);
         },
 
         /**
-        * Fire event
-        *
-        * @param {string} name
-        * @param {string|boolean|null} detail
-        * @private
-        */
+         * Fire event
+         *
+         * @param {string} name
+         * @param {string|boolean|null} detail
+         * @private
+         */
         _event(name, detail = null) {
           this.dispatchEvent(new CustomEvent(name, {
             detail: detail, bubbles: true, composed: true,
