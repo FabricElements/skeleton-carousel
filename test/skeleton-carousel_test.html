@@ -119,26 +119,33 @@
     });
 
     test('Total property should return all the childs', (done) => {
-      expect(element.total).to.equal(2);
-      done();
+      setTimeout(() => {
+        expect(element.total).to.equal(2);
+        done();
+      }, 50);
     });
 
     test('End should be true if last item is selected', (done) => {
-      expect(element.end).to.be.true;
-      done();
+      setTimeout(() => {
+        expect(element.end).to.be.true;
+        done();
+      }, 50);
     });
   });
 
   suite('End event behaviour', () => {
     test('Should be true if selected & total have the same number', (done) => {
       const element = fixture('endCarousel');
-      const next = element.shadowRoot.querySelector('#next');
+      const next = element.$$('#next');
 
-      element.addEventListener('skeleton-carousel-end', () => {
-        expect(element.selected).to.equal(element.total);
+      element.addEventListener('skeleton-carousel-end', (e) => {
+        const end = e.detail;
+        if (end) {
+          expect(element.selected).to.equal(element.total);
+        }
         done();
       });
-
+      MockInteractions.tap(next);
       MockInteractions.tap(next);
     });
   });
@@ -164,8 +171,8 @@
 
     setup(() => {
       element = fixture('listBoundaries');
-      next = element.shadowRoot.querySelector('#next');
-      prev = element.shadowRoot.querySelector('#prev');
+      next = element.$$('#next');
+      prev = element.$$('#prev');
     });
 
     test('showPrev & showNext should be disable', (done) => {
@@ -182,10 +189,11 @@
     test('showPrev & showNext should be disable', (done) => {
       let element = fixture('disabledCarousel');
       flush(() => {
-        const buttons = element
-          .shadowRoot
-          .querySelector('iron-selector')
-          .querySelectorAll('paper-icon-button');
+        const selector = Polymer
+                          .dom(element.$$('iron-selector'));
+        const buttons = Polymer
+                          .dom(selector)
+                          .querySelectorAll('paper-icon-button');
 
         buttons.forEach((button) => {
           expect(button.disabled).to.be.true;

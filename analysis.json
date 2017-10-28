@@ -1,0 +1,1852 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "",
+      "summary": "",
+      "path": "skeleton-carousel.html",
+      "properties": [
+        {
+          "name": "keyEventTarget",
+          "type": "?EventTarget",
+          "description": "The EventTarget that will be firing relevant KeyboardEvents. Set it to\n`null` to disable the listeners.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 278,
+              "column": 8
+            },
+            "end": {
+              "line": 283,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "stopKeyboardEventPropagation",
+          "type": "boolean",
+          "description": "If true, this property will cause the implementing element to\nautomatically stop propagation on any handled KeyboardEvents.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 289,
+              "column": 8
+            },
+            "end": {
+              "line": 292,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_boundKeyHandlers",
+          "type": "Array",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 294,
+              "column": 8
+            },
+            "end": {
+              "line": 299,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]",
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_imperativeKeyBindings",
+          "type": "Object",
+          "description": "own properties of everything on the \"prototype\".",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 303,
+              "column": 8
+            },
+            "end": {
+              "line": 308,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}",
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "keyBindings",
+          "type": "!Object",
+          "description": "To be used to express what combination of keys  will trigger the relative\ncallback. e.g. `keyBindings: { 'esc': '_onEscPressed'}`",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 321,
+              "column": 6
+            },
+            "end": {
+              "line": 321,
+              "column": 21
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "total",
+          "type": "number",
+          "description": "Total number of slides",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 294,
+              "column": 10
+            },
+            "end": {
+              "line": 300,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "readOnly": true
+            }
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "selected",
+          "type": "number",
+          "description": "Selected slide",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 304,
+              "column": 10
+            },
+            "end": {
+              "line": 310,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_selectedObserver\""
+            }
+          },
+          "defaultValue": "1"
+        },
+        {
+          "name": "translate",
+          "type": "string",
+          "description": "Determines ow mush the sliders container needs to move",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 314,
+              "column": 10
+            },
+            "end": {
+              "line": 318,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "translateSwipe",
+          "type": "string",
+          "description": "Returns translation style.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 322,
+              "column": 10
+            },
+            "end": {
+              "line": 326,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "showNext",
+          "type": "boolean",
+          "description": "Determines if the next button should be displayed.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 330,
+              "column": 10
+            },
+            "end": {
+              "line": 337,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "readOnly": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "showPrev",
+          "type": "boolean",
+          "description": "Determines if the previous button should be displayed.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 341,
+              "column": 10
+            },
+            "end": {
+              "line": 348,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "readOnly": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "controls",
+          "type": "boolean",
+          "description": "Show navigation controls",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 352,
+              "column": 10
+            },
+            "end": {
+              "line": 357,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "nav",
+          "type": "boolean",
+          "description": "Show navigation next/prev buttons",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 361,
+              "column": 10
+            },
+            "end": {
+              "line": 364,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "dots",
+          "type": "boolean",
+          "description": "Show navigation dots",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 368,
+              "column": 10
+            },
+            "end": {
+              "line": 371,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "iconPrev",
+          "type": "string",
+          "description": "Icon for the previous button",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 375,
+              "column": 10
+            },
+            "end": {
+              "line": 380,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          },
+          "defaultValue": "\"icons:arrow-back\""
+        },
+        {
+          "name": "iconNext",
+          "type": "string",
+          "description": "Icon for the next button",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 384,
+              "column": 10
+            },
+            "end": {
+              "line": 389,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          },
+          "defaultValue": "\"icons:arrow-forward\""
+        },
+        {
+          "name": "_dots",
+          "type": "Array",
+          "description": "Returns an array with the slides.\nThis will be used to create the dot controls.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 394,
+              "column": 10
+            },
+            "end": {
+              "line": 398,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "description": "Determines if the carousel should be looped.\nThis affects the controls and the drag and drop functionality.\nSet to `true` if you need to loop the slides.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 404,
+              "column": 10
+            },
+            "end": {
+              "line": 407,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "end",
+          "type": "boolean",
+          "description": "Returns true when the carousel has reached the last slide.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 411,
+              "column": 10
+            },
+            "end": {
+              "line": 416,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables component",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 420,
+              "column": 10
+            },
+            "end": {
+              "line": 423,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "disableSwipe",
+          "type": "boolean",
+          "description": "Disable swipe functionality",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 427,
+              "column": 10
+            },
+            "end": {
+              "line": 430,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "sensitivity",
+          "type": "string",
+          "description": "swipe sensitivity:\nhigh, low or default",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 435,
+              "column": 10
+            },
+            "end": {
+              "line": 439,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "\"default\""
+        },
+        {
+          "name": "x",
+          "type": "number",
+          "description": "X Axis position (0 - 1)",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 443,
+              "column": 10
+            },
+            "end": {
+              "line": 446,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "description": "Y Axis position (0 - 1)",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 450,
+              "column": 10
+            },
+            "end": {
+              "line": 453,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "direction",
+          "type": "string",
+          "description": "Carousel direction (horizontal or vertical)",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 457,
+              "column": 10
+            },
+            "end": {
+              "line": 461,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"horizontal\""
+        },
+        {
+          "name": "itemsContainerHeight",
+          "type": "string",
+          "description": "Icon for the next button",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 465,
+              "column": 10
+            },
+            "end": {
+              "line": 470,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          },
+          "defaultValue": "\"auto\""
+        }
+      ],
+      "methods": [
+        {
+          "name": "registered",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 323,
+              "column": 6
+            },
+            "end": {
+              "line": 325,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 327,
+              "column": 6
+            },
+            "end": {
+              "line": 329,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 331,
+              "column": 6
+            },
+            "end": {
+              "line": 333,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "addOwnKeyBinding",
+          "description": "Can be used to imperatively add a key binding to the implementing\nelement. This is the imperative equivalent of declaring a keybinding\nin the `keyBindings` prototype property.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 343,
+              "column": 6
+            },
+            "end": {
+              "line": 347,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "eventString",
+              "type": "string"
+            },
+            {
+              "name": "handlerName",
+              "type": "string"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "removeOwnKeyBindings",
+          "description": "When called, will remove all imperatively-added key bindings.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 352,
+              "column": 6
+            },
+            "end": {
+              "line": 356,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "keyboardEventMatchesKeys",
+          "description": "Returns true if a keyboard event matches `eventString`.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 365,
+              "column": 6
+            },
+            "end": {
+              "line": 373,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "KeyboardEvent"
+            },
+            {
+              "name": "eventString",
+              "type": "string"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          },
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_collectKeyBindings",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 375,
+              "column": 6
+            },
+            "end": {
+              "line": 385,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_prepKeyBindings",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 387,
+              "column": 6
+            },
+            "end": {
+              "line": 408,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_addKeyBinding",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 410,
+              "column": 6
+            },
+            "end": {
+              "line": 420,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "eventString"
+            },
+            {
+              "name": "handlerName"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_resetKeyEventListeners",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 422,
+              "column": 6
+            },
+            "end": {
+              "line": 428,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_listenKeyEventListeners",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 430,
+              "column": 6
+            },
+            "end": {
+              "line": 442,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_unlistenKeyEventListeners",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 444,
+              "column": 6
+            },
+            "end": {
+              "line": 459,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_onKeyBindingEvent",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 461,
+              "column": 6
+            },
+            "end": {
+              "line": 482,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "keyBindings"
+            },
+            {
+              "name": "event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_triggerKeyHandler",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 484,
+              "column": 6
+            },
+            "end": {
+              "line": 495,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "keyCombo"
+            },
+            {
+              "name": "handlerName"
+            },
+            {
+              "name": "keyboardEvent"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "_slotChanged",
+          "description": "On slot change",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 477,
+              "column": 8
+            },
+            "end": {
+              "line": 481,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "next",
+          "description": "Go to next slide",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 488,
+              "column": 8
+            },
+            "end": {
+              "line": 492,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "*"
+          }
+        },
+        {
+          "name": "prev",
+          "description": "Go to previous slide",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 499,
+              "column": 8
+            },
+            "end": {
+              "line": 503,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "*"
+          }
+        },
+        {
+          "name": "_iconDot",
+          "description": "Switch the icon if the item is selected",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 513,
+              "column": 8
+            },
+            "end": {
+              "line": 517,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item",
+              "type": "number"
+            },
+            {
+              "name": "selected",
+              "type": "number"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_selectedObserver",
+          "description": "Listen for changes on the selected item",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 525,
+              "column": 8
+            },
+            "end": {
+              "line": 534,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "selected",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "name": "_selectSlotted",
+          "description": "Adds class `selected` to the current slide",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 542,
+              "column": 8
+            },
+            "end": {
+              "line": 549,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "selected",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "name": "_lazyContent",
+          "description": "Lazy load content for the given slider number\nReplaces 'data-src' attribute to 'src'.",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 558,
+              "column": 8
+            },
+            "end": {
+              "line": 569,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "selected",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "name": "_computeShowNext",
+          "description": "Determine if it should show the next button",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 581,
+              "column": 8
+            },
+            "end": {
+              "line": 585,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "disabled",
+              "type": "boolean"
+            },
+            {
+              "name": "total",
+              "type": "number"
+            },
+            {
+              "name": "selected",
+              "type": "number"
+            },
+            {
+              "name": "loop",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "_computeShowPrev",
+          "description": "Determine if it should show the next button",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 596,
+              "column": 8
+            },
+            "end": {
+              "line": 600,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "disabled",
+              "type": "boolean"
+            },
+            {
+              "name": "selected",
+              "type": "number"
+            },
+            {
+              "name": "loop",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "_computeDots",
+          "description": "Returns the dots array",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 609,
+              "column": 8
+            },
+            "end": {
+              "line": 618,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "total",
+              "type": "number"
+            }
+          ],
+          "return": {
+            "type": "Array"
+          }
+        },
+        {
+          "name": "_checkIfEnd",
+          "description": "Determines if the current item is the last one on the list",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 627,
+              "column": 8
+            },
+            "end": {
+              "line": 632,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "selected",
+              "type": "number"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "_normalize",
+          "description": "Returns a valid value",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 641,
+              "column": 8
+            },
+            "end": {
+              "line": 648,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value",
+              "type": "number"
+            }
+          ],
+          "return": {
+            "type": "*"
+          }
+        },
+        {
+          "name": "_calcPercentage",
+          "description": "Returns the percentage that will to position the icon",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 657,
+              "column": 8
+            },
+            "end": {
+              "line": 659,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value",
+              "type": "number"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_drag",
+          "description": "Listen for track and move the container",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 667,
+              "column": 8
+            },
+            "end": {
+              "line": 699,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "object"
+            }
+          ]
+        },
+        {
+          "name": "_computeIconPrev",
+          "description": "Compute icon previews",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 708,
+              "column": 8
+            },
+            "end": {
+              "line": 711,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "direction",
+              "type": "(string|null)"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_computeIconNext",
+          "description": "Compute icon next",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 720,
+              "column": 8
+            },
+            "end": {
+              "line": 723,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "direction",
+              "type": "(string|null)"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_computeTranslateSwipe",
+          "description": "Compute translate swipe",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 734,
+              "column": 8
+            },
+            "end": {
+              "line": 744,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "direction",
+              "type": "string"
+            },
+            {
+              "name": "x",
+              "type": "number"
+            },
+            {
+              "name": "y",
+              "type": "number"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_computeTranslate",
+          "description": "Returns the percentage to translate",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 754,
+              "column": 8
+            },
+            "end": {
+              "line": 767,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "selected",
+              "type": "number"
+            },
+            {
+              "name": "direction",
+              "type": "string"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_computeItemsContainerHeight",
+          "description": "Compute items container height",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 777,
+              "column": 8
+            },
+            "end": {
+              "line": 782,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "direction",
+              "type": "string"
+            },
+            {
+              "name": "total",
+              "type": "number"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_computeControls",
+          "description": "Compute Controls\nReturns true if needs to display the control.s",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 793,
+              "column": 8
+            },
+            "end": {
+              "line": 795,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "dots",
+              "type": "boolean"
+            },
+            {
+              "name": "nav",
+              "type": "boolean"
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "_event",
+          "description": "Fire event",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 804,
+              "column": 8
+            },
+            "end": {
+              "line": 808,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "detail = null"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 279,
+          "column": 14
+        },
+        "end": {
+          "line": 809,
+          "column": 7
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "key-event-target",
+          "description": "The EventTarget that will be firing relevant KeyboardEvents. Set it to\n`null` to disable the listeners.",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 278,
+              "column": 8
+            },
+            "end": {
+              "line": 283,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "?EventTarget",
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "stop-keyboard-event-propagation",
+          "description": "If true, this property will cause the implementing element to\nautomatically stop propagation on any handled KeyboardEvents.",
+          "sourceRange": {
+            "file": "bower_components/iron-a11y-keys-behavior/iron-a11y-keys-behavior.html",
+            "start": {
+              "line": 289,
+              "column": 8
+            },
+            "end": {
+              "line": 292,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronA11yKeysBehavior"
+        },
+        {
+          "name": "total",
+          "description": "Total number of slides",
+          "sourceRange": {
+            "start": {
+              "line": 294,
+              "column": 10
+            },
+            "end": {
+              "line": 300,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "selected",
+          "description": "Selected slide",
+          "sourceRange": {
+            "start": {
+              "line": 304,
+              "column": 10
+            },
+            "end": {
+              "line": 310,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "translate",
+          "description": "Determines ow mush the sliders container needs to move",
+          "sourceRange": {
+            "start": {
+              "line": 314,
+              "column": 10
+            },
+            "end": {
+              "line": 318,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "translate-swipe",
+          "description": "Returns translation style.",
+          "sourceRange": {
+            "start": {
+              "line": 322,
+              "column": 10
+            },
+            "end": {
+              "line": 326,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "show-next",
+          "description": "Determines if the next button should be displayed.",
+          "sourceRange": {
+            "start": {
+              "line": 330,
+              "column": 10
+            },
+            "end": {
+              "line": 337,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "show-prev",
+          "description": "Determines if the previous button should be displayed.",
+          "sourceRange": {
+            "start": {
+              "line": 341,
+              "column": 10
+            },
+            "end": {
+              "line": 348,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "controls",
+          "description": "Show navigation controls",
+          "sourceRange": {
+            "start": {
+              "line": 352,
+              "column": 10
+            },
+            "end": {
+              "line": 357,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "nav",
+          "description": "Show navigation next/prev buttons",
+          "sourceRange": {
+            "start": {
+              "line": 361,
+              "column": 10
+            },
+            "end": {
+              "line": 364,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "dots",
+          "description": "Show navigation dots",
+          "sourceRange": {
+            "start": {
+              "line": 368,
+              "column": 10
+            },
+            "end": {
+              "line": 371,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "icon-prev",
+          "description": "Icon for the previous button",
+          "sourceRange": {
+            "start": {
+              "line": 375,
+              "column": 10
+            },
+            "end": {
+              "line": 380,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "icon-next",
+          "description": "Icon for the next button",
+          "sourceRange": {
+            "start": {
+              "line": 384,
+              "column": 10
+            },
+            "end": {
+              "line": 389,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "loop",
+          "description": "Determines if the carousel should be looped.\nThis affects the controls and the drag and drop functionality.\nSet to `true` if you need to loop the slides.",
+          "sourceRange": {
+            "start": {
+              "line": 404,
+              "column": 10
+            },
+            "end": {
+              "line": 407,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "end",
+          "description": "Returns true when the carousel has reached the last slide.",
+          "sourceRange": {
+            "start": {
+              "line": 411,
+              "column": 10
+            },
+            "end": {
+              "line": 416,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "disabled",
+          "description": "Disables component",
+          "sourceRange": {
+            "start": {
+              "line": 420,
+              "column": 10
+            },
+            "end": {
+              "line": 423,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "disable-swipe",
+          "description": "Disable swipe functionality",
+          "sourceRange": {
+            "start": {
+              "line": 427,
+              "column": 10
+            },
+            "end": {
+              "line": 430,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "sensitivity",
+          "description": "swipe sensitivity:\nhigh, low or default",
+          "sourceRange": {
+            "start": {
+              "line": 435,
+              "column": 10
+            },
+            "end": {
+              "line": 439,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "x",
+          "description": "X Axis position (0 - 1)",
+          "sourceRange": {
+            "start": {
+              "line": 443,
+              "column": 10
+            },
+            "end": {
+              "line": 446,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "y",
+          "description": "Y Axis position (0 - 1)",
+          "sourceRange": {
+            "start": {
+              "line": 450,
+              "column": 10
+            },
+            "end": {
+              "line": 453,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "direction",
+          "description": "Carousel direction (horizontal or vertical)",
+          "sourceRange": {
+            "start": {
+              "line": 457,
+              "column": 10
+            },
+            "end": {
+              "line": 461,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "items-container-height",
+          "description": "Icon for the next button",
+          "sourceRange": {
+            "start": {
+              "line": 465,
+              "column": 10
+            },
+            "end": {
+              "line": 470,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "total-changed",
+          "description": "Fired when the `total` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "selected-changed",
+          "description": "Fired when the `selected` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "show-next-changed",
+          "description": "Fired when the `showNext` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "show-prev-changed",
+          "description": "Fired when the `showPrev` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "end-changed",
+          "description": "Fired when the `end` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "sensitivity-changed",
+          "description": "Fired when the `sensitivity` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [
+        {
+          "description": "",
+          "name": "",
+          "range": {
+            "file": "skeleton-carousel.html",
+            "start": {
+              "line": 234,
+              "column": 12
+            },
+            "end": {
+              "line": 234,
+              "column": 25
+            }
+          }
+        }
+      ],
+      "tagname": "skeleton-carousel"
+    }
+  ]
+}
