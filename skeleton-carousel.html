@@ -307,7 +307,6 @@
             value: 1,
             notify: true,
             reflectToAttribute: true,
-            observer: '_selectedObserver',
           },
           /**
             * Determines ow mush the sliders container needs to move
@@ -493,6 +492,10 @@
           },
         },
 
+        observers: [
+          '_selectedObserver(selected, _children)'
+        ],
+
         ready() {
           Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
             this._children = this.getContentChildNodes().filter((n) => {
@@ -559,6 +562,7 @@
         * @private
         */
         _selectedObserver(selected) {
+          if (!this._children || this._children.length < 1) return;
           this._checkIfEnd(selected);
           this._selectSlotted(selected);
           this._lazyContent(selected);
