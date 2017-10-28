@@ -138,14 +138,15 @@
       const element = fixture('endCarousel');
       const next = element.$$('#next');
 
-      element.addEventListener('skeleton-carousel-end', () => {
-        expect(element.selected).to.equal(element.total);
+      element.addEventListener('skeleton-carousel-end', (e) => {
+        const end = e.detail;
+        if (end) {
+          expect(element.selected).to.equal(element.total);
+        }
         done();
       });
-      setTimeout(() => {
-        MockInteractions.tap(next);
-        MockInteractions.tap(next);
-      }, 50);
+      MockInteractions.tap(next);
+      MockInteractions.tap(next);
     });
   });
 
