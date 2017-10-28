@@ -52,6 +52,7 @@
     "flush": true,
     "MockInteractions": true,
     "WCT": true,
-    "firebase": true
+    "firebase": true,
+    "Fabric": true
   }
 }

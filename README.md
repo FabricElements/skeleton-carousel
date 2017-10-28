@@ -165,6 +165,8 @@ The following custom properties and mixins are available for styling:
 | `--skeleton-carousel-nav`                 | Mixin applied to navigation buttons     | `{}`                    |
 | `--skeleton-carousel-nav-disabled`        | Mixin applied to disabled navigation    | `{}`                    |
 | `--skeleton-carousel-nav-color`           | Navigation buttons color                | `var(--paper-grey-900)` |
+| `--skeleton-carousel-nav-prev`            | Mixin applied to previous button        | `{}`                    |
+| `--skeleton-carousel-nav-next`            | Mixin applied to next button            | `{}`                    |
 | `--skeleton-carousel-transition`          | Transition mixin ()                     | `{}`                    |
 
 ## Contributing

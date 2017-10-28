@@ -41,6 +41,8 @@ dist/*
 node_modules
 jspm_packages
 bower_components
+bower_components-1.x
+bower-1.x.json
 
 # Optional npm cache directory
 .npm
