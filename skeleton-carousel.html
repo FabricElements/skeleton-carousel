@@ -42,6 +42,10 @@
         --skeleton-carousel-nav-disabled: {
         };
         --skeleton-carousel-nav-color: var(--paper-grey-900);
+        --skeleton-carousel-nav-prev: {
+        };
+        --skeleton-carousel-nav-next: {
+        };
         --skeleton-carousel-transition: {
         };
       }
@@ -64,6 +68,7 @@
       }
 
       :host,
+      #carousel *,
       #itemsContainer ::slotted(*) {
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -72,7 +77,6 @@
       }
 
       #carousel,
-      #swipe,
       #items,
       #itemsContainer {
         display: block;
@@ -82,7 +86,6 @@
       }
 
       #carousel,
-      #swipe,
       #itemsContainer {
         @apply --layout-vertical;
       }
@@ -92,7 +95,6 @@
         z-index: 0;
       }
 
-      #swipe,
       #items {
         position: relative;
         -webkit-transform: translate3d(0%, 0%, 0);
@@ -101,10 +103,6 @@
         -o-transform: translate3d(0%, 0%, 0);
         transform: translate3d(0%, 0%, 0);
         will-change: transform;
-      }
-
-      #swipe {
-        width: 100%;
       }
 
       #itemsContainer {
@@ -130,6 +128,7 @@
         min-width: 100%;
         max-width: 100%;
         width: 100%;
+        will-change: auto;
         @apply --skeleton-carousel-item;
       }
 
@@ -220,58 +219,65 @@
       }
 
       /* Apply transition */
-      #swipe,
       #items,
       #itemsContainer ::slotted(*),
       paper-icon-button {
-        -webkit-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-        -moz-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-        -ms-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-        -o-transition: all .3s cubic-bezier(.51, .92, .24, 1);
-        transition: all .3s cubic-bezier(.51, .92, .24, 1);
+        will-change: transform, transition;
+        -webkit-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        -moz-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        -ms-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        -o-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        transition: all 300ms cubic-bezier(.51, .92, .24, 1);
         @apply --skeleton-carousel-transition;
+      }
+
+      :host[swiping] #items {
+        -webkit-transition: all 300ms linear;
+        -moz-transition: all 300ms linear;
+        -ms-transition: all 300ms linear;
+        -o-transition: all 300ms linear;
+        transition: all 300ms linear;
       }
     </style>
 
     <div id="carousel">
-      <div id="swipe"
-           on-track="_drag"
-           style$="[[translateSwipe]]">
-        <div id="items" style$="[[translate]]">
-          <div id="itemsContainer" style$="[[itemsContainerHeight]]">
-            <slot></slot>
-          </div>
+      <div id="items"
+          style$="[[translate]]"
+          on-track="_drag">
+        <div id="itemsContainer" style$="[[itemsContainerHeight]]">
+          <slot></slot>
         </div>
       </div>
     </div>
     <nav id="controls" hidden$="[[!controls]]">
       <paper-icon-button icon$="[[iconPrev]]"
-                         id="prev"
-                         on-tap="prev"
-                         disabled$="[[!showPrev]]"
-                         hidden$="[[!nav]]"
+                        id="prev"
+                        on-tap="prev"
+                        disabled$="[[!showPrev]]"
+                        hidden$="[[!nav]]"
       ></paper-icon-button>
       <iron-selector id="dots"
-                     attr-for-selected="name"
-                     selected="{{selected}}"
-                     fallback-selection="1"
-                     selected-class="selected"
-                     hidden$="[[!dots]]">
+                    attr-for-selected="name"
+                    selected="{{selected}}"
+                    fallback-selection="1"
+                    selected-class="selected"
+                    hidden$="[[!dots]]"
+                    tabindex="-1">
         <template is="dom-repeat" items="[[_dots]]">
           <paper-icon-button name$="[[item]]"
-                             icon="[[_iconDot(item, selected)]]"
-                             disabled$="[[disabled]]"
+                            icon="[[_iconDot(item, selected)]]"
+                            disabled$="[[disabled]]"
           ></paper-icon-button>
         </template>
       </iron-selector>
       <paper-icon-button icon$="[[iconNext]]"
-                         id="next"
-                         on-tap="next"
-                         disabled$="[[!showNext]]"
-                         hidden$="[[!nav]]"
+                        id="next"
+                        on-tap="next"
+                        disabled$="[[!showNext]]"
+                        hidden$="[[!nav]]"
       ></paper-icon-button>
     </nav>
-  </template>
+    </template>
 
   <script>
     /**
@@ -290,8 +296,8 @@
 
         properties: {
           /**
-            * Total number of slides
-            */
+           * Total number of slides
+           */
           total: {
             type: Number,
             value: 0,
@@ -300,33 +306,26 @@
             readOnly: true,
           },
           /**
-            * Selected slide
-            */
+           * Selected slide
+           */
           selected: {
             type: Number,
             value: 1,
             notify: true,
             reflectToAttribute: true,
+            observer: '_selectedObserver',
           },
           /**
-            * Determines ow mush the sliders container needs to move
-            */
+           * Determines how much the sliders container needs to move
+           */
           translate: {
             type: String,
-            computed: '_computeTranslate(selected, direction)',
+            computed: '_computeTranslate(direction, selected, x, y)',
             readOnly: true,
           },
           /**
-            * Returns translation style.
-            */
-          translateSwipe: {
-            type: String,
-            computed: '_computeTranslateSwipe(direction, x, y)',
-            readOnly: true,
-          },
-          /**
-            * Determines if the next button should be displayed.
-            */
+           * Determines if the next button should be displayed.
+           */
           showNext: {
             type: Boolean,
             value: false,
@@ -336,8 +335,8 @@
             readOnly: true,
           },
           /**
-            * Determines if the previous button should be displayed.
-            */
+           * Determines if the previous button should be displayed.
+           */
           showPrev: {
             type: Boolean,
             value: false,
@@ -347,8 +346,8 @@
             readOnly: true,
           },
           /**
-            * Show navigation controls
-            */
+           * Show navigation controls
+           */
           controls: {
             type: Boolean,
             value: false,
@@ -356,22 +355,22 @@
             computed: '_computeControls(dots, nav)',
           },
           /**
-            * Show navigation next/prev buttons
-            */
+           * Show navigation next/prev buttons
+           */
           nav: {
             type: Boolean,
             value: false,
           },
           /**
-            * Show navigation dots
-            */
+           * Show navigation dots
+           */
           dots: {
             type: Boolean,
             value: false,
           },
           /**
-            * Icon for the previous button
-            */
+           * Icon for the previous button
+           */
           iconPrev: {
             type: String,
             value: 'icons:arrow-back',
@@ -379,8 +378,8 @@
             computed: '_computeIconPrev(direction)',
           },
           /**
-            * Icon for the next button
-            */
+           * Icon for the next button
+           */
           iconNext: {
             type: String,
             value: 'icons:arrow-forward',
@@ -388,86 +387,99 @@
             computed: '_computeIconNext(direction)',
           },
           /**
-            * Returns an array with the slides.
-            * This will be used to create the dot controls.
-            */
+           * Returns an array with the slides.
+           * This will be used to create the dot controls.
+           */
           _dots: {
             type: Array,
             computed: '_computeDots(total)',
             readOnly: true,
           },
           /**
-            * Determines if the carousel should be looped.
-            * This affects the controls and the drag and drop functionality.
-            * Set to `true` if you need to loop the slides.
-            */
+           * Determines if the carousel should be looped.
+           * This affects the controls and the drag and drop functionality.
+           * Set to `true` if you need to loop the slides.
+           */
           loop: {
             type: Boolean,
             value: false,
           },
           /**
-            * Returns true when the carousel has reached the last slide.
-            */
+           * Returns true when the carousel has reached the last slide.
+           */
           end: {
             type: Boolean,
             value: false,
             notify: true,
+            readOny: true,
             reflectToAttribute: true,
+            computed: '_computeEnd(total, selected)',
           },
           /**
-            * Disables component
-            */
+           * Disables component
+           */
           disabled: {
             type: Boolean,
             value: false,
           },
           /**
-            * Disable swipe functionality
-            */
+           * Disable swipe functionality
+           */
           disableSwipe: {
             type: Boolean,
             value: false,
           },
           /**
-            * swipe sensitivity:
-            * high, low or default
-            */
+           * swipe sensitivity:
+           * high, low or default
+           */
           sensitivity: {
             type: String,
             value: 'default',
             notify: true,
           },
           /**
-            * X Axis position (0 - 1)
-            */
+           * X Axis position (0 - 1)
+           */
           x: {
             type: Number,
             value: 0,
           },
           /**
-            * Y Axis position (0 - 1)
-            */
+           * Y Axis position (0 - 1)
+           */
           y: {
             type: Number,
             value: 0,
           },
           /**
-            * Carousel direction (horizontal or vertical)
-            */
+           * Carousel direction (horizontal or vertical)
+           */
           direction: {
             type: String,
             value: 'horizontal',
             reflectToAttribute: true,
           },
           /**
-            * Icon for the next button
-            */
+           * Icon for the next button
+           */
           itemsContainerHeight: {
             type: String,
             value: 'auto',
             computed: '_computeItemsContainerHeight(direction, total)',
             readOnly: true,
           },
+          /**
+           * The user is swiping
+           */
+          swiping: {
+            type: Boolean,
+            value: false,
+            readOnly: true,
+          },
+
+          /** HYBRID SPECIFIC */
+
           /**
             * Elements passed in via <slot>
             */
@@ -563,7 +575,6 @@
         */
         _selectedObserver(selected) {
           if (!this._children || this._children.length < 1) return;
-          this._checkIfEnd(selected);
           this._selectSlotted(selected);
           this._lazyContent(selected);
           let baseSelected = selected;
@@ -661,15 +672,15 @@
         /**
         * Determines if the current item is the last one on the list
         *
+        * @param {number} total
         * @param {number} selected
         * @return {boolean}
         * @private
         */
-        _checkIfEnd(selected) {
-          if (selected <= 1 && this.total <= 1) return this.end = false;
-          const status = selected >= this.total;
-          this.end = status;
+        _computeEnd(total, selected) {
+          const status = selected === total;
           this._event('skeleton-carousel-end', status);
+          return status;
         },
 
         /**
@@ -715,20 +726,20 @@
           let finalY = y / height;
           let finalLeft = 0;
           let finalTop = 0;
-
           if (this.direction === 'horizontal') finalLeft = this.x + finalX;
           if (this.direction === 'vertical') finalTop = this.y + finalY;
-
-          const finalPositionLeft = Number(finalLeft.toFixed(3));
-          const finalPositionTop = Number(finalTop.toFixed(3));
+          const finalPositionLeft = Number(finalLeft);
+          const finalPositionTop = Number(finalTop);
           switch (event.detail.state) {
             case 'track':
               this.x = finalPositionLeft;
               this.y = finalPositionTop;
+              this._setSwiping(true);
               break;
             case 'end':
               this.x = 0;
               this.y = 0;
+              this._setSwiping(false);
               if (finalPositionLeft >= 0.4 || finalPositionTop >= 0.4) {
                 this.prev();
               }
@@ -767,21 +778,48 @@
         * Compute translate swipe
         *
         * @param {string} direction
+        * @param {number} selected
         * @param {number} x
         * @param {number} y
         * @return {string}
         * @private
         */
-        _computeTranslateSwipe(direction, x, y) {
+        _computeTranslate(direction, selected, x, y) {
           let finalX = 0;
           let finalY = 0;
-          if (direction === 'horizontal') finalX = this._calcPercentage(x);
-          if (direction === 'vertical') finalY = this._calcPercentage(y);
-          return `-webkit-transform: translate3d(${finalX}, ${finalY}, 0);
-                  -moz-transform: translate3d(${finalX}, ${finalY}, 0);
-                  -ms-transform: translate3d(${finalX}, ${finalY}, 0);
-                  -o-transform: translate3d(${finalX}, ${finalY}, 0);
-                  transform: translate3d(${finalX}, ${finalY}, 0);`;
+          if (x === 0 && y === 0) {
+            let baseSelected = -Math.abs(--selected);
+            if (selected <= 0) baseSelected = 0;
+            const percentage = this._calcPercentage(baseSelected);
+            if (direction === 'horizontal') finalX = percentage;
+            if (direction === 'vertical') finalY = percentage;
+          }
+          else {
+            if (direction === 'horizontal') {
+              const baseX = this._returnDragPosition(x, selected);
+              finalX = this._calcPercentage(baseX);
+            }
+            if (direction === 'vertical') {
+              const baseY = this._returnDragPosition(y, selected);
+              finalY = this._calcPercentage(baseY);
+            }
+          }
+          return this._returnTransform(finalX, finalY);
+        },
+
+        /**
+        * Compute translate swipe
+        *
+        * @param {number} position
+        * @param {number} selected
+        * @return {number}
+        * @private
+        */
+        _returnDragPosition(position, selected) {
+          if (position < -1) position = -1;
+          if (position > 1) position = 1;
+          if (selected <= 0) selected = 1;
+          return position - --selected;
         },
 
         /**
@@ -792,19 +830,15 @@
         * @return {string}
         * @private
         */
-        _computeTranslate(selected, direction) {
-          let baseSelected = --selected;
+        _translateEnd(selected) {
+          let baseSelected = -Math.abs(--selected);
           if (selected <= 0) baseSelected = 0;
-          const percentage = baseSelected * 100;
+          const percentage = this._calcPercentage(baseSelected);
           let finalX = 0;
           let finalY = 0;
-          if (direction === 'horizontal') finalX = percentage;
-          if (direction === 'vertical') finalY = percentage;
-          return `-webkit-transform: translate3d(-${finalX}%, -${finalY}%, 0);
-                  -moz-transform: translate3d(-${finalX}%, -${finalY}%, 0);
-                  -ms-transform: translate3d(-${finalX}%, -${finalY}%, 0);
-                  -o-transform: translate3d(-${finalX}%, -${finalY}%, 0);
-                  transform: translate3d(-${finalX}%, -${finalY}%, 0);`;
+          if (this.direction === 'horizontal') finalX = percentage;
+          if (this.direction === 'vertical') finalY = percentage;
+          return this._returnTransform(finalX, finalY);
         },
 
         /**
@@ -846,6 +880,22 @@
           this.dispatchEvent(new CustomEvent(name, {
             detail: detail, bubbles: true, composed: true,
           }));
+        },
+
+        /**
+        * Return transform
+        *
+        * @param {number} x
+        * @param {number} y
+        * @return {string}
+        * @private
+        */
+        _returnTransform(x, y) {
+          return `-webkit-transform: translate3d(${x}, ${y}, 0);
+                  -moz-transform: translate3d(${x}, ${y}, 0);
+                  -ms-transform: translate3d(${x}, ${y}, 0);
+                  -o-transform: translate3d(${x}, ${y}, 0);
+                  transform: translate3d(${x}, ${y}, 0);`;
         },
       });
     })();
