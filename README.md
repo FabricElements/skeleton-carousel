@@ -144,7 +144,7 @@ $ bower install --save FabricElements/skeleton-carousel
 
 ### Events
 
-* `skeleton-carousel-end` (boolean) - Returns `true` when the carousel has reached the last slide.
+* `skeleton-carousel-end` - Fired when the carousel has reached the last slide.
 
 ### Styling
 The following custom properties and mixins are available for styling:

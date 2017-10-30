@@ -655,8 +655,8 @@
        * @private
        */
       _computeEnd(total, selected) {
-        const status = selected === total;
-        this._event('skeleton-carousel-end', status);
+        const status = selected === --total;
+        if (status) this._event('skeleton-carousel-end');
         return status;
       }
 
@@ -694,7 +694,11 @@
        * @private
        */
       _drag(event) {
-        if (this.disableSwipe || this.disabled) return;
+        if (this.disableSwipe || this.disabled) {
+          // Reset selected to original in case is changed while dragging
+          this._setSelected(this.selected);
+          return;
+        }
         const width = this.offsetWidth;
         const height = this.offsetHeight;
         const x = event.detail.ddx ? event.detail.ddx : 0;
@@ -707,8 +711,25 @@
         if (this.direction === 'horizontal') finalLeft = this.x + finalX;
         if (this.direction === 'vertical') finalTop = this.y + finalY;
 
-        const finalPositionLeft = Number(finalLeft);
-        const finalPositionTop = Number(finalTop);
+        let finalPositionLeft = Number(finalLeft);
+        let finalPositionTop = Number(finalTop);
+        // Prevent drag to the wrong direction if is not available
+        if (!this.showPrev) {
+          if (finalPositionLeft > 0) {
+            finalPositionLeft = 0;
+          }
+          if (finalPositionTop > 0) {
+            finalPositionTop = 0;
+          }
+        }
+        if (!this.showNext) {
+          if (finalPositionLeft < 0) {
+            finalPositionLeft = 0;
+          }
+          if (finalPositionTop < 0) {
+            finalPositionTop = 0;
+          }
+        }
         switch (event.detail.state) {
           case 'track':
             this.x = finalPositionLeft;
