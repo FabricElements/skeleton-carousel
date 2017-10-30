@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
@@ -289,13 +289,14 @@
     /**
      * `skeleton-carousel`
      *
-     * @appliesMixin Polymer.GestureEventListeners
      * @extends Polymer.Element
      * @customElement
      * @polymer
      * @demo demo/index.html
      */
-    class SkeletonCarousel extends Polymer.GestureEventListeners(Polymer.Element) {
+    class SkeletonCarousel extends Polymer.mixinBehaviors([
+      Polymer.IronA11yKeysBehavior,
+    ], Polymer.Element) {
       /**
        * @return {string}
        */
@@ -509,10 +510,18 @@
       connectedCallback() {
         super.connectedCallback();
         this._slotChanged();
+        this.tabIndex = 0;
         const container = this.shadowRoot.querySelector('slot');
         new Polymer.FlattenedNodesObserver(container, () => {
           this._slotChanged();
         });
+      }
+
+      get keyBindings() {
+        return {
+          'left up': '_prevKey',
+          'right down': '_nextKey',
+        };
       }
 
       /**
@@ -524,6 +533,16 @@
         const total = this.children.length;
         this._setTotal(total);
         if (total >= 1) this._lazyContent(1);
+      }
+
+      _prevKey(event) {
+        event.preventDefault();
+        return this.prev();
+      }
+
+      _nextKey(event) {
+        event.preventDefault();
+        return this.next();
       }
 
       /**
