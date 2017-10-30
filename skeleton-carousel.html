@@ -570,10 +570,10 @@
        * @private
        */
       _selectedObserver(selected) {
-        if (selected >= 0) {
-          this._lazyContent(selected);
-        }
-        if (selected >= 0 && selected < --this.total) {
+        this._lazyContent(selected);
+        let selectedChild = this.children[selected];
+        this._setSelectedItem(selectedChild);
+        if (selected < --this.total) {
           this._lazyContent(++selected);
         }
       }
