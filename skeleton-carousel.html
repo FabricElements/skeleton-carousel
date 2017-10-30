@@ -316,6 +316,14 @@
             reflectToAttribute: true,
           },
           /**
+           * Selected item
+           */
+           selectedItem: {
+            type: Object,
+            notify: true,
+            readOnly: true,
+          },
+          /**
            * Determines how much the sliders container needs to move
            */
           translate: {
@@ -475,6 +483,7 @@
           swiping: {
             type: Boolean,
             value: false,
+            notify: true,
             readOnly: true,
           },
 
@@ -596,12 +605,13 @@
         * @private
         */
         _selectSlotted(selected) {
-          if (!this._children || this._children.length < 1) return;
-          let i = 0;
-          for (i; i < this._children.length; ++i) {
-            this._children[i].classList.remove('selected');
+          if (this.children.length < 1) return;
+          for (let i = 0; i < this.children.length; ++i) {
+            this.children[i].classList.remove('selected');
           }
-          this._children[--selected].classList.add('selected');
+          let selectedChild = this.children[--selected];
+          selectedChild.classList.add('selected');
+          this._setSelectedItem(selectedChild);
         },
 
         /**
