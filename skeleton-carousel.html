@@ -315,7 +315,7 @@
             readOnly: true,
           },
           /**
-           * Selected slide
+           * Selected slide index
            */
           selected: {
             type: Number,
@@ -323,6 +323,14 @@
             notify: true,
             reflectToAttribute: true,
             observer: '_selectedObserver',
+          },
+          /**
+           * Selected item
+           */
+           selectedItem: {
+            type: Object,
+            notify: true,
+            readOnly: true,
           },
           /**
            * Determines how much the sliders container needs to move
@@ -484,6 +492,7 @@
           swiping: {
             type: Boolean,
             value: false,
+            notify: true,
             readOnly: true,
           },
         };
@@ -572,11 +581,12 @@
        */
       _selectSlotted(selected) {
         if (this.children.length < 1) return;
-        let i = 0;
-        for (i; i < this.children.length; ++i) {
+        for (let i = 0; i < this.children.length; ++i) {
           this.children[i].classList.remove('selected');
         }
-        this.children[--selected].classList.add('selected');
+        let selectedChild = this.children[--selected];
+        selectedChild.classList.add('selected');
+        this._setSelectedItem(selectedChild);
       }
 
       /**
