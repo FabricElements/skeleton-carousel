@@ -43,6 +43,7 @@
         --skeleton-carousel-nav-disabled: {
         };
         --skeleton-carousel-nav-color: var(--paper-grey-900);
+        --skeleton-carousel-nav-disabled-color: var(--paper-grey-600);
         --skeleton-carousel-nav-prev: {
         };
         --skeleton-carousel-nav-next: {
@@ -205,6 +206,7 @@
 
       #prev[disabled],
       #next[disabled] {
+        color: var(--skeleton-carousel-nav-disabled-color);
         @apply --skeleton-carousel-nav-disabled;
       }
 
@@ -246,9 +248,13 @@
       <div id="items"
            style$="[[translate]]"
            on-track="_drag">
-        <div id="itemsContainer" style$="[[itemsContainerHeight]]">
+        <iron-selector id="itemsContainer"
+                       selected="{{selected}}"
+                       fallback-selection="0"
+                       selected-class="selected"
+                       style$="[[itemsContainerHeight]]">
           <slot></slot>
-        </div>
+        </iron-selector>
       </div>
     </div>
     <nav id="controls" hidden$="[[!controls]]">
@@ -259,15 +265,13 @@
                          hidden$="[[!nav]]"
       ></paper-icon-button>
       <iron-selector id="dots"
-                     attr-for-selected="name"
                      selected="{{selected}}"
-                     fallback-selection="1"
+                     fallback-selection="0"
                      selected-class="selected"
                      hidden$="[[!dots]]"
                      tabindex="-1">
         <template is="dom-repeat" items="[[_dots]]">
-          <paper-icon-button name$="[[item]]"
-                             icon="[[_iconDot(item, selected)]]"
+          <paper-icon-button icon="[[_iconDot(item, selected)]]"
                              disabled$="[[disabled]]"
           ></paper-icon-button>
         </template>
@@ -319,7 +323,7 @@
            */
           selected: {
             type: Number,
-            value: 1,
+            value: 0,
             notify: true,
             reflectToAttribute: true,
             observer: '_selectedObserver',
@@ -327,7 +331,7 @@
           /**
            * Selected item
            */
-           selectedItem: {
+          selectedItem: {
             type: Object,
             notify: true,
             readOnly: true,
@@ -494,6 +498,7 @@
             value: false,
             notify: true,
             readOnly: true,
+            reflectToAttribute: true,
           },
         };
       }
@@ -528,8 +533,8 @@
        */
       next() {
         if (this.disabled) return;
-        if (this.selected < this.total) return this.selected++;
-        else if (this.showNext) return this.selected = 1;
+        const element = this.shadowRoot.querySelector('#itemsContainer');
+        if (this.selected < --this.total || this.loop) return element.selectNext();
       }
 
       /**
@@ -539,8 +544,8 @@
        */
       prev() {
         if (this.disabled) return;
-        if (this.selected >= 2) return this.selected--;
-        else if (this.showPrev) return this.selected = this.total;
+        const element = this.shadowRoot.querySelector('#itemsContainer');
+        if (this.selected > 0 || this.loop) return element.selectPrevious();
       }
 
       /**
@@ -552,6 +557,7 @@
        * @private
        */
       _iconDot(item, selected) {
+        item--;
         let icon = 'icons:radio-button-unchecked';
         if (Number(item) === Number(selected)) icon = 'icons:radio-button-checked';
         return icon;
@@ -564,29 +570,12 @@
        * @private
        */
       _selectedObserver(selected) {
-        this._selectSlotted(selected);
         this._lazyContent(selected);
-        let baseSelected = selected;
-        if (selected === 1 || selected < this.total) {
-          this._lazyContent(++baseSelected);
-        }
-        if (selected > 1) this._lazyContent(--baseSelected);
-      }
-
-      /**
-       * Adds class `selected` to the current slide
-       *
-       * @param {number} selected
-       * @private
-       */
-      _selectSlotted(selected) {
-        if (this.children.length < 1) return;
-        for (let i = 0; i < this.children.length; ++i) {
-          this.children[i].classList.remove('selected');
-        }
-        let selectedChild = this.children[--selected];
-        selectedChild.classList.add('selected');
+        let selectedChild = this.children[selected];
         this._setSelectedItem(selectedChild);
+        if (selected < --this.total) {
+          this._lazyContent(++selected);
+        }
       }
 
       /**
@@ -597,7 +586,7 @@
        * @private
        */
       _lazyContent(selected) {
-        const child = this.children[--selected];
+        const child = this.children[selected];
         if (!child) return;
         const content = child.querySelectorAll('[data-src]');
         if (content.length <= 0) return;
@@ -621,7 +610,7 @@
       _computeShowNext(disabled, total, selected, loop) {
         if (disabled) return false;
         if (loop) return true;
-        return selected < total;
+        return selected < --total;
       }
 
       /**
@@ -636,7 +625,7 @@
       _computeShowPrev(disabled, selected, loop) {
         if (disabled) return false;
         if (loop) return true;
-        return selected > 1;
+        return selected > 0;
       }
 
       /**
@@ -666,8 +655,8 @@
        * @private
        */
       _computeEnd(total, selected) {
-        const status = selected === total;
-        this._event('skeleton-carousel-end', status);
+        const status = selected === --total;
+        if (status) this._event('skeleton-carousel-end');
         return status;
       }
 
@@ -705,7 +694,11 @@
        * @private
        */
       _drag(event) {
-        if (this.disableSwipe || this.disabled) return;
+        if (this.disableSwipe || this.disabled) {
+          // Reset selected to original in case is changed while dragging
+          this._setSelected(this.selected);
+          return;
+        }
         const width = this.offsetWidth;
         const height = this.offsetHeight;
         const x = event.detail.ddx ? event.detail.ddx : 0;
@@ -718,8 +711,25 @@
         if (this.direction === 'horizontal') finalLeft = this.x + finalX;
         if (this.direction === 'vertical') finalTop = this.y + finalY;
 
-        const finalPositionLeft = Number(finalLeft);
-        const finalPositionTop = Number(finalTop);
+        let finalPositionLeft = Number(finalLeft);
+        let finalPositionTop = Number(finalTop);
+        // Prevent drag to the wrong direction if is not available
+        if (!this.showPrev) {
+          if (finalPositionLeft > 0) {
+            finalPositionLeft = 0;
+          }
+          if (finalPositionTop > 0) {
+            finalPositionTop = 0;
+          }
+        }
+        if (!this.showNext) {
+          if (finalPositionLeft < 0) {
+            finalPositionLeft = 0;
+          }
+          if (finalPositionTop < 0) {
+            finalPositionTop = 0;
+          }
+        }
         switch (event.detail.state) {
           case 'track':
             this.x = finalPositionLeft;
@@ -777,21 +787,22 @@
       _computeTranslate(direction, selected, x, y) {
         let finalX = 0;
         let finalY = 0;
+        let baseSelected = -Math.abs(selected);
+        if (selected <= 0) baseSelected = 0;
         if (x === 0 && y === 0) {
-          let baseSelected = -Math.abs(--selected);
-          if (selected <= 0) baseSelected = 0;
           const percentage = this._calcPercentage(baseSelected);
           if (direction === 'horizontal') finalX = percentage;
           if (direction === 'vertical') finalY = percentage;
         }
         else {
+          // add baseSelected to the original value of the drag value
+          x = baseSelected + x;
+          y = baseSelected + y;
           if (direction === 'horizontal') {
-            const baseX = this._returnDragPosition(x, selected);
-            finalX = this._calcPercentage(baseX);
+            finalX = this._calcPercentage(x);
           }
           if (direction === 'vertical') {
-            const baseY = this._returnDragPosition(y, selected);
-            finalY = this._calcPercentage(baseY);
+            finalY = this._calcPercentage(y);
           }
         }
         return this._returnTransform(finalX, finalY);
@@ -806,11 +817,7 @@
        * @private
        */
       _returnDragPosition(position, selected) {
-        if (position < -1) position = -1;
-        if (position > 1) position = 1;
-
-        if (selected <= 0) selected = 1;
-        return position - --selected;
+        return position - selected;
       }
 
       /**
