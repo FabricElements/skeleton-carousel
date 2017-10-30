@@ -210,6 +210,7 @@
       #prev {
         @apply --skeleton-carousel-nav-prev;
       }
+      
       #next {
         @apply --skeleton-carousel-nav-next;
       }
@@ -289,7 +290,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    (function() {
+    (() => {
       /* eslint new-cap: 0 */
       Polymer({
         is: 'skeleton-carousel',
@@ -313,7 +314,6 @@
             value: 1,
             notify: true,
             reflectToAttribute: true,
-            observer: '_selectedObserver',
           },
           /**
            * Determines how much the sliders container needs to move
@@ -488,8 +488,8 @@
             observer: '_slotChanged',
           },
           /**
-            * Accepted node names as children, passed in via <slot>
-            */
+           * Accepted node names as children, passed in via <slot>
+           */
           acceptedChildNodeNames: {
             type: Array,
             value() {
@@ -504,10 +504,16 @@
           },
         },
 
+        /**
+         * Observers
+         */
         observers: [
           '_selectedObserver(selected, _children)',
         ],
 
+        /**
+         * Ready event
+         */
         ready() {
           Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
             this._children = this.getContentChildNodes().filter((n) => {
@@ -519,10 +525,10 @@
         },
 
         /**
-        * On slot change
-        *
-        * @private
-        */
+         * On slot change
+         *
+         * @private
+         */
         _slotChanged() {
           const total = this._children.length;
           this._setTotal(total);
@@ -530,10 +536,10 @@
         },
 
         /**
-        * Go to next slide
-        *
-        * @return {*}
-        */
+         * Go to next slide
+         *
+         * @return {*}
+         */
         next() {
           if (this.disabled) return;
           if (this.selected < this.total) return this.selected++;
@@ -541,10 +547,10 @@
         },
 
         /**
-        * Go to previous slide
-        *
-        * @return {*}
-        */
+         * Go to previous slide
+         *
+         * @return {*}
+         */
         prev() {
           if (this.disabled) return;
           if (this.selected >= 2) return this.selected--;
@@ -621,15 +627,15 @@
         },
 
         /**
-        * Determine if it should show the next button
-        *
-        * @param {boolean} disabled
-        * @param {number} total
-        * @param {number} selected
-        * @param {boolean} loop
-        * @return {boolean}
-        * @private
-        */
+         * Determine if it should show the next button
+         *
+         * @param {boolean} disabled
+         * @param {number} total
+         * @param {number} selected
+         * @param {boolean} loop
+         * @return {boolean}
+         * @private
+         */
         _computeShowNext(disabled, total, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
@@ -637,14 +643,14 @@
         },
 
         /**
-        * Determine if it should show the next button
-        *
-        * @param {boolean} disabled
-        * @param {number} selected
-        * @param {boolean} loop
-        * @return {boolean}
-        * @private
-        */
+         * Determine if it should show the next button
+         *
+         * @param {boolean} disabled
+         * @param {number} selected
+         * @param {boolean} loop
+         * @return {boolean}
+         * @private
+         */
         _computeShowPrev(disabled, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
@@ -652,12 +658,12 @@
         },
 
         /**
-        * Returns the dots array
-        *
-        * @param {number} total
-        * @return {Array}
-        * @private
-        */
+         * Returns the dots array
+         *
+         * @param {number} total
+         * @return {Array}
+         * @private
+         */
         _computeDots(total) {
           let array = [];
           if (total <= 0) return array;
@@ -711,11 +717,11 @@
         },
 
         /**
-        * Listen for track and move the container
-        *
-        * @param {object} event
-        * @private
-        */
+         * Listen for track and move the container
+         *
+         * @param {object} event
+         * @private
+         */
         _drag(event) {
           if (this.disableSwipe || this.disabled) return;
           const width = this.offsetWidth;
@@ -751,24 +757,24 @@
         },
 
         /**
-        * Compute icon previews
-        *
-        * @param {string|null} direction
-        * @return {string}
-        * @private
-        */
+         * Compute icon previews
+         *
+         * @param {string|null} direction
+         * @return {string}
+         * @private
+         */
         _computeIconPrev(direction) {
           if (direction === 'vertical') return 'icons:arrow-upward';
           return 'icons:arrow-back';
         },
 
         /**
-        * Compute icon next
-        *
-        * @param {string|null} direction
-        * @return {string}
-        * @private
-        */
+         * Compute icon next
+         *
+         * @param {string|null} direction
+         * @return {string}
+         * @private
+         */
         _computeIconNext(direction) {
           if (direction === 'vertical') return 'icons:arrow-downward';
           return 'icons:arrow-forward';
@@ -857,25 +863,25 @@
         },
 
         /**
-        * Compute Controls
-        * Returns true if needs to display the control.s
-        *
-        * @param {boolean} dots
-        * @param {boolean} nav
-        * @return {boolean}
-        * @private
-        */
+         * Compute Controls
+         * Returns true if needs to display the control.s
+         *
+         * @param {boolean} dots
+         * @param {boolean} nav
+         * @return {boolean}
+         * @private
+         */
         _computeControls(dots, nav) {
           return (dots || nav);
         },
 
         /**
-        * Fire event
-        *
-        * @param {string} name
-        * @param {string|boolean|null} detail
-        * @private
-        */
+         * Fire event
+         *
+         * @param {string} name
+         * @param {string|boolean|null} detail
+         * @private
+         */
         _event(name, detail = null) {
           this.dispatchEvent(new CustomEvent(name, {
             detail: detail, bubbles: true, composed: true,
