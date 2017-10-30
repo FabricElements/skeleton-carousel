@@ -210,6 +210,7 @@
       #prev {
         @apply --skeleton-carousel-nav-prev;
       }
+
       #next {
         @apply --skeleton-carousel-nav-next;
       }
@@ -289,7 +290,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    (function() {
+    (() => {
       /* eslint new-cap: 0 */
       Polymer({
         is: 'skeleton-carousel',
@@ -313,7 +314,6 @@
             value: 1,
             notify: true,
             reflectToAttribute: true,
-            observer: '_selectedObserver',
           },
           /**
            * Determines how much the sliders container needs to move
@@ -503,11 +503,15 @@
             },
           },
         },
-
+        /**
+         * Observers
+         */
         observers: [
           '_selectedObserver(selected, _children)',
         ],
-
+        /**
+         * Ready event
+         */
         ready() {
           Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
             this._children = this.getContentChildNodes().filter((n) => {
@@ -519,10 +523,10 @@
         },
 
         /**
-        * On slot change
-        *
-        * @private
-        */
+         * On slot change
+         *
+         * @private
+         */
         _slotChanged() {
           const total = this._children.length;
           this._setTotal(total);
@@ -530,10 +534,10 @@
         },
 
         /**
-        * Go to next slide
-        *
-        * @return {*}
-        */
+         * Go to next slide
+         *
+         * @return {*}
+         */
         next() {
           if (this.disabled) return;
           if (this.selected < this.total) return this.selected++;
@@ -541,10 +545,10 @@
         },
 
         /**
-        * Go to previous slide
-        *
-        * @return {*}
-        */
+         * Go to previous slide
+         *
+         * @return {*}
+         */
         prev() {
           if (this.disabled) return;
           if (this.selected >= 2) return this.selected--;
@@ -600,12 +604,12 @@
         },
 
         /**
-        * Lazy load content for the given slider number
-        * Replaces 'data-src' attribute to 'src'.
-        *
-        * @param {number} selected
-        * @private
-        */
+         * Lazy load content for the given slider number
+         * Replaces 'data-src' attribute to 'src'.
+         *
+         * @param {number} selected
+         * @private
+         */
         _lazyContent(selected) {
           if (!this._children || this._children.length < 1) return;
           const child = this._children[--selected];
@@ -637,14 +641,14 @@
         },
 
         /**
-        * Determine if it should show the next button
-        *
-        * @param {boolean} disabled
-        * @param {number} selected
-        * @param {boolean} loop
-        * @return {boolean}
-        * @private
-        */
+         * Determine if it should show the next button
+         *
+         * @param {boolean} disabled
+         * @param {number} selected
+         * @param {boolean} loop
+         * @return {boolean}
+         * @private
+         */
         _computeShowPrev(disabled, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
@@ -711,11 +715,11 @@
         },
 
         /**
-        * Listen for track and move the container
-        *
-        * @param {object} event
-        * @private
-        */
+         * Listen for track and move the container
+         *
+         * @param {object} event
+         * @private
+         */
         _drag(event) {
           if (this.disableSwipe || this.disabled) return;
           const width = this.offsetWidth;
@@ -726,10 +730,12 @@
           let finalY = y / height;
           let finalLeft = 0;
           let finalTop = 0;
+
           if (this.direction === 'horizontal') finalLeft = this.x + finalX;
           if (this.direction === 'vertical') finalTop = this.y + finalY;
           const finalPositionLeft = Number(finalLeft);
           const finalPositionTop = Number(finalTop);
+
           switch (event.detail.state) {
             case 'track':
               this.x = finalPositionLeft;
@@ -739,7 +745,9 @@
             case 'end':
               this.x = 0;
               this.y = 0;
+
               this._setSwiping(false);
+
               if (finalPositionLeft >= 0.4 || finalPositionTop >= 0.4) {
                 this.prev();
               }

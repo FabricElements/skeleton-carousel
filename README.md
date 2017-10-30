@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/FabricElements/skeleton-carousel.svg?branch=master)](https://travis-ci.org/FabricElements/skeleton-carousel)
+[![Build Status](https://travis-ci.org/FabricElements/skeleton-carousel.svg?branch=hybrid)](https://travis-ci.org/FabricElements/skeleton-carousel)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/FabricElements/skeleton-carousel)
 
 ## \<skeleton-carousel\>
