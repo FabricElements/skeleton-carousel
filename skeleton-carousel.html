@@ -210,7 +210,7 @@
       #prev {
         @apply --skeleton-carousel-nav-prev;
       }
-      
+
       #next {
         @apply --skeleton-carousel-nav-next;
       }
@@ -503,7 +503,6 @@
             },
           },
         },
-
         /**
          * Observers
          */
@@ -606,12 +605,12 @@
         },
 
         /**
-        * Lazy load content for the given slider number
-        * Replaces 'data-src' attribute to 'src'.
-        *
-        * @param {number} selected
-        * @private
-        */
+         * Lazy load content for the given slider number
+         * Replaces 'data-src' attribute to 'src'.
+         *
+         * @param {number} selected
+         * @private
+         */
         _lazyContent(selected) {
           if (!this._children || this._children.length < 1) return;
           const child = this._children[--selected];
@@ -627,15 +626,15 @@
         },
 
         /**
-         * Determine if it should show the next button
-         *
-         * @param {boolean} disabled
-         * @param {number} total
-         * @param {number} selected
-         * @param {boolean} loop
-         * @return {boolean}
-         * @private
-         */
+        * Determine if it should show the next button
+        *
+        * @param {boolean} disabled
+        * @param {number} total
+        * @param {number} selected
+        * @param {boolean} loop
+        * @return {boolean}
+        * @private
+        */
         _computeShowNext(disabled, total, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
@@ -658,12 +657,12 @@
         },
 
         /**
-         * Returns the dots array
-         *
-         * @param {number} total
-         * @return {Array}
-         * @private
-         */
+        * Returns the dots array
+        *
+        * @param {number} total
+        * @return {Array}
+        * @private
+        */
         _computeDots(total) {
           let array = [];
           if (total <= 0) return array;
@@ -732,10 +731,12 @@
           let finalY = y / height;
           let finalLeft = 0;
           let finalTop = 0;
+
           if (this.direction === 'horizontal') finalLeft = this.x + finalX;
           if (this.direction === 'vertical') finalTop = this.y + finalY;
           const finalPositionLeft = Number(finalLeft);
           const finalPositionTop = Number(finalTop);
+
           switch (event.detail.state) {
             case 'track':
               this.x = finalPositionLeft;
@@ -745,7 +746,9 @@
             case 'end':
               this.x = 0;
               this.y = 0;
+
               this._setSwiping(false);
+
               if (finalPositionLeft >= 0.4 || finalPositionTop >= 0.4) {
                 this.prev();
               }
@@ -757,24 +760,24 @@
         },
 
         /**
-         * Compute icon previews
-         *
-         * @param {string|null} direction
-         * @return {string}
-         * @private
-         */
+        * Compute icon previews
+        *
+        * @param {string|null} direction
+        * @return {string}
+        * @private
+        */
         _computeIconPrev(direction) {
           if (direction === 'vertical') return 'icons:arrow-upward';
           return 'icons:arrow-back';
         },
 
         /**
-         * Compute icon next
-         *
-         * @param {string|null} direction
-         * @return {string}
-         * @private
-         */
+        * Compute icon next
+        *
+        * @param {string|null} direction
+        * @return {string}
+        * @private
+        */
         _computeIconNext(direction) {
           if (direction === 'vertical') return 'icons:arrow-downward';
           return 'icons:arrow-forward';
@@ -863,25 +866,25 @@
         },
 
         /**
-         * Compute Controls
-         * Returns true if needs to display the control.s
-         *
-         * @param {boolean} dots
-         * @param {boolean} nav
-         * @return {boolean}
-         * @private
-         */
+        * Compute Controls
+        * Returns true if needs to display the control.s
+        *
+        * @param {boolean} dots
+        * @param {boolean} nav
+        * @return {boolean}
+        * @private
+        */
         _computeControls(dots, nav) {
           return (dots || nav);
         },
 
         /**
-         * Fire event
-         *
-         * @param {string} name
-         * @param {string|boolean|null} detail
-         * @private
-         */
+        * Fire event
+        *
+        * @param {string} name
+        * @param {string|boolean|null} detail
+        * @private
+        */
         _event(name, detail = null) {
           this.dispatchEvent(new CustomEvent(name, {
             detail: detail, bubbles: true, composed: true,
