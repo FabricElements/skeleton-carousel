@@ -141,6 +141,7 @@ $ bower install --save FabricElements/skeleton-carousel
 * `disabled` (boolean) - Disables component.
 * `disable-swipe` (boolean) - Disables swipe functionality.
 * `direction` (string) - Carousel direction (horizontal or vertical).
+* `alt` (boolean) - Flips the position of the navigation. Puts the navigation at the top of the carousel for the horizontal layout and to the left for the vertical layout.
 
 ### Events
 
