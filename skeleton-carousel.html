@@ -517,6 +517,9 @@
         });
       }
 
+      /**
+       * @return {object}
+       */
       get keyBindings() {
         return {
           'left up': '_prevKey',
@@ -535,11 +538,25 @@
         if (total >= 1) this._lazyContent(1);
       }
 
+      /**
+       * Prev key
+       *
+       * @param {object} event
+       * @private
+       * @return {*}
+       */
       _prevKey(event) {
         event.preventDefault();
         return this.prev();
       }
 
+      /**
+       * Next key
+       *
+       * @param {object} event
+       * @private
+       * @return {*} 
+       */
       _nextKey(event) {
         event.preventDefault();
         return this.next();
