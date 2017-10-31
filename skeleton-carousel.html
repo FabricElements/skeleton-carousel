@@ -639,11 +639,11 @@
         * @private
         */
         _selectSlotted(selected) {
-          if (this.children.length < 1) return;
-          for (let i = 0; i < this.children.length; ++i) {
-            this.children[i].classList.remove('selected');
+          if (this._children.length < 1) return;
+          for (let i = 0; i < this._children.length; ++i) {
+            this._children[i].classList.remove('selected');
           }
-          let selectedChild = this.children[--selected];
+          let selectedChild = this._children[--selected];
           selectedChild.classList.add('selected');
           this._setSelectedItem(selectedChild);
         },
