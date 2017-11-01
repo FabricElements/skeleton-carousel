@@ -536,10 +536,12 @@
         const transitions = {
             'transition': 'transitionend',
             'WebkitTransition': 'webkitTransitionEnd',
-          };
+        };
+
+        const items = this.shadowRoot.querySelector('#items');
 
         Object.keys(transitions).forEach((k) => {
-          this.$.items.addEventListener(transitions[k], (i) => {
+          items.addEventListener(transitions[k], (i) => {
             if (i.propertyName !== 'transform' || !this._endAnimationStarted)
             {
               return;
