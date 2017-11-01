@@ -9,9 +9,11 @@
 
 * Horizontal and vertical carousel.
 * Lazy load content with the property `data-src`.
-* Swipe capabilities.
+* Swipe navigation capabilities.
+* Keyboard navigation. `←` `↑` `→` `↓`
 * Hide/Display only the navigation that you need.
 * Custom styles.
+* Automatic animation with custom time.
 
 ## Installation
 
@@ -132,20 +134,29 @@ $ bower install --save FabricElements/skeleton-carousel
 
 ### Attributes
 
-* `total` (number) - Read-only value that reflects the total number of slides.
-* `selected` (number) - Selected slide
-* `nav` (boolean) - Show navigation next/prev buttons.
-* `dots` (boolean) - Show navigation dots.
-* `loop` (boolean) - Determines if the carousel should be looped.  This affects the controls and the drag and drop functionality. Set to `true` if you need to loop the slides.
-* `end` (boolean) - Detail returns `true` when the carousel has reached the last slide.
+* `alt` (boolean) - Flips the position of the navigation. Puts the navigation at the top of the carousel for the horizontal layout and to the left for the vertical layout.
+* `animating` (boolean) - Indicates if the carousel is been animated (Transition).
+* `direction` (string) - Carousel direction (horizontal or vertical).
 * `disabled` (boolean) - Disables component.
 * `disable-swipe` (boolean) - Disables swipe functionality.
-* `direction` (string) - Carousel direction (horizontal or vertical).
-* `alt` (boolean) - Flips the position of the navigation. Puts the navigation at the top of the carousel for the horizontal layout and to the left for the vertical layout.
+* `dots` (boolean) - Show navigation dots.
+* `end` (boolean) - Detail returns `true` when the carousel has reached the last slide.
+* `loop` (boolean) - Determines if the carousel should be looped.  This affects the controls and the drag and drop functionality. Set to `true` if you need to loop the slides.
+* `nav` (boolean) - Show navigation next/prev buttons.
+* `selected` (number) - Selected slide (Starts at `0`)
+* `total` (number) - Read-only value that reflects the total number of slides.
 
 ### Events
 
-* `skeleton-carousel-end` - Fired when the carousel has reached the last slide.
+* `animating-changed` - Fired when the `animating` property has changed.
+* `end` - Fired when the carousel has reached the last slide.
+* `end-changed` - Fired when the `end` property has changed.
+* `selected-changed` - Fired when the `selected` property has changed.
+* `selected-item-changed` - Fired when the `selectedItem` property has changed.
+* `show-next-changed` - Fired when the `showNext` property has changed.
+* `show-prev-changed` - Fired when the `showPrev` property has changed.
+* `swiping-changed` - Fired when the `swiping` property has changed.
+* `total-changed` - Fired when the `total` property has changed.
 
 ### Styling
 The following custom properties and mixins are available for styling:
