@@ -8,6 +8,8 @@
 <dom-module id="skeleton-carousel">
   <template>
     <!--suppress CssInvalidPseudoSelector -->
+    <!--suppress CssUnresolvedCustomProperty -->
+    <!--suppress CssUnresolvedCustomPropertySet -->
     <style>
       :host {
         display: block;
@@ -15,41 +17,8 @@
         overflow: hidden;
         contain: content;
         @apply --layout-flex-auto;
-        /* Custom variables and mixins */
-        --skeleton-carousel: {
-        };
         @apply --skeleton-carousel;
-        --skeleton-carousel-min-height: 300px;
-        min-height: var(--skeleton-carousel-min-height);
-        --skeleton-carousel-item: {
-        };
-        --skeleton-carousel-controls: {
-        };
-        --skeleton-carousel-controls-horizontal: {
-        };
-        --skeleton-carousel-controls-vertical: {
-        };
-        --skeleton-carousel-dots: {
-        };
-        --skeleton-carousel-dot: {
-        };
-        --skeleton-carousel-dot-color: var(--paper-grey-900);
-        --skeleton-carousel-dot-selected: {
-        };
-        --skeleton-carousel-dot-disabled: {
-        };
-        --skeleton-carousel-nav: {
-        };
-        --skeleton-carousel-nav-disabled: {
-        };
-        --skeleton-carousel-nav-color: var(--paper-grey-900);
-        --skeleton-carousel-nav-disabled-color: var(--paper-grey-600);
-        --skeleton-carousel-nav-prev: {
-        };
-        --skeleton-carousel-nav-next: {
-        };
-        --skeleton-carousel-transition: {
-        };
+        min-height: var(--skeleton-carousel-min-height, 300px);
       }
 
       :host([direction="horizontal"]) {
@@ -179,7 +148,7 @@
       }
 
       #dots paper-icon-button {
-        color: var(--skeleton-carousel-dot-color);
+        color: var(--skeleton-carousel-dot-color, var(--paper-grey-900));
         opacity: .4;
         @apply --skeleton-carousel-dot;
       }
@@ -196,7 +165,7 @@
 
       #prev,
       #next {
-        color: var(--skeleton-carousel-nav-color);
+        color: var(--skeleton-carousel-nav-color, var(--paper-grey-900));
       }
 
       #prev,
@@ -206,7 +175,7 @@
 
       #prev[disabled],
       #next[disabled] {
-        color: var(--skeleton-carousel-nav-disabled-color);
+        color: var(--skeleton-carousel-nav-disabled-color, var(--paper-grey-600));
         @apply --skeleton-carousel-nav-disabled;
       }
 
@@ -246,19 +215,19 @@
 
     <div id="carousel">
       <div id="items"
-           style$="[[translate]]"
+           style$="[[_translate]]"
            on-track="_drag">
         <iron-selector id="itemsContainer"
                        selected="{{selected}}"
                        fallback-selection="0"
                        selected-class="selected"
-                       style$="[[itemsContainerHeight]]">
+                       style$="[[_itemsContainerHeight]]">
           <slot></slot>
         </iron-selector>
       </div>
     </div>
-    <nav id="controls" hidden$="[[!controls]]">
-      <paper-icon-button icon$="[[iconPrev]]"
+    <nav id="controls" hidden$="[[!_controls]]">
+      <paper-icon-button icon$="[[_iconPrev]]"
                          id="prev"
                          on-tap="prev"
                          disabled$="[[!showPrev]]"
@@ -276,7 +245,7 @@
           ></paper-icon-button>
         </template>
       </iron-selector>
-      <paper-icon-button icon$="[[iconNext]]"
+      <paper-icon-button icon$="[[_iconNext]]"
                          id="next"
                          on-tap="next"
                          disabled$="[[!showNext]]"
@@ -310,14 +279,74 @@
       static get properties() {
         return {
           /**
-           * Total number of slides
+           * Indicates if the carousel is been animated (Transition)
            */
-          total: {
-            type: Number,
-            value: 0,
-            notify: true,
-            reflectToAttribute: true,
+          animating: {
+            type: Boolean,
+            value: false,
             readOnly: true,
+            reflectToAttribute: true,
+            notify: true,
+          },
+          /**
+           * Change slides automatically
+           */
+          auto: {
+            type: Boolean,
+            value: false,
+            observer: '_autoObserver',
+          },
+          /**
+           * Carousel direction (horizontal or vertical)
+           */
+          direction: {
+            type: String,
+            value: 'horizontal',
+            reflectToAttribute: true,
+          },
+          /**
+           * Disables component
+           */
+          disabled: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Show navigation dots
+           */
+          dots: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Disable swipe functionality
+           */
+          disableSwipe: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Autoplay interval time in milliseconds
+           */
+          duration: {
+            type: Number,
+            value: 4000,
+          },
+          /**
+           * Determines if the carousel should be looped.
+           * This affects the controls and the drag and drop functionality.
+           * Set to `true` if you need to loop the slides.
+           */
+          loop: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Show navigation next/prev buttons
+           */
+          nav: {
+            type: Boolean,
+            value: false,
           },
           /**
            * Selected slide index
@@ -338,12 +367,35 @@
             readOnly: true,
           },
           /**
-           * Determines how much the sliders container needs to move
+           * The user is swiping
            */
-          translate: {
-            type: String,
-            computed: '_computeTranslate(direction, selected, x, y)',
+          swiping: {
+            type: Boolean,
+            value: false,
+            notify: true,
             readOnly: true,
+            reflectToAttribute: true,
+          },
+          /**
+           * Total number of slides
+           */
+          total: {
+            type: Number,
+            value: 0,
+            notify: true,
+            reflectToAttribute: true,
+            readOnly: true,
+          },
+          /**
+           * Returns true when the carousel has reached the last slide.
+           */
+          end: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            readOny: true,
+            reflectToAttribute: true,
+            computed: '_computeEnd(total, selected)',
           },
           /**
            * Determines if the next button should be displayed.
@@ -368,62 +420,19 @@
             readOnly: true,
           },
           /**
-           * Change images automatically
+           * Auto interval
            */
-          auto: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            reflectToAttribute: true,
-            observer: '_autoplayComputation',
-          },
-          /**
-           * Autoplay interval time
-           */
-          duration: {
-            type: Number,
-            value: 2000,
+          _autoInterval: {
+            type: Object,
           },
           /**
            * Show navigation controls
            */
-          controls: {
+          _controls: {
             type: Boolean,
             value: false,
             readOnly: true,
             computed: '_computeControls(dots, nav)',
-          },
-          /**
-           * Show navigation next/prev buttons
-           */
-          nav: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Show navigation dots
-           */
-          dots: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Icon for the previous button
-           */
-          iconPrev: {
-            type: String,
-            value: 'icons:arrow-back',
-            readOnly: true,
-            computed: '_computeIconPrev(direction)',
-          },
-          /**
-           * Icon for the next button
-           */
-          iconNext: {
-            type: String,
-            value: 'icons:arrow-forward',
-            readOnly: true,
-            computed: '_computeIconNext(direction)',
           },
           /**
            * Returns an array with the slides.
@@ -433,106 +442,57 @@
             type: Array,
             computed: '_computeDots(total)',
             readOnly: true,
+            value: [],
           },
           /**
-           * Determines if the carousel should be looped.
-           * This affects the controls and the drag and drop functionality.
-           * Set to `true` if you need to loop the slides.
+           * Icon for the previous button
            */
-          loop: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Returns true when the carousel has reached the last slide.
-           */
-          end: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            readOny: true,
-            reflectToAttribute: true,
-            computed: '_computeEnd(total, selected)',
-          },
-          /**
-           * Disables component
-           */
-          disabled: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Disable swipe functionality
-           */
-          disableSwipe: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * swipe sensitivity:
-           * high, low or default
-           */
-          sensitivity: {
+          _iconPrev: {
             type: String,
-            value: 'default',
-            notify: true,
+            value: 'icons:arrow-back',
+            readOnly: true,
+            computed: '_computeIconPrev(direction)',
+          },
+          /**
+           * Icon for the next button
+           */
+          _iconNext: {
+            type: String,
+            value: 'icons:arrow-forward',
+            readOnly: true,
+            computed: '_computeIconNext(direction)',
+          },
+          /**
+           * Icon for the next button
+           */
+          _itemsContainerHeight: {
+            type: String,
+            value: 'height: 100%;',
+            computed: '_computeItemsContainerHeight(direction, total)',
+            readOnly: true,
           },
           /**
            * X Axis position (0 - 1)
            */
-          x: {
+          _x: {
             type: Number,
             value: 0,
           },
           /**
            * Y Axis position (0 - 1)
            */
-          y: {
+          _y: {
             type: Number,
             value: 0,
           },
           /**
-           * Carousel direction (horizontal or vertical)
+           * Determines how much the sliders container needs to move
            */
-          direction: {
+          _translate: {
             type: String,
-            value: 'horizontal',
-            reflectToAttribute: true,
-          },
-          /**
-           * Icon for the next button
-           */
-          itemsContainerHeight: {
-            type: String,
-            value: 'auto',
-            computed: '_computeItemsContainerHeight(direction, total)',
+            computed: '_computeTranslate(direction, selected, _x, _y)',
             readOnly: true,
-          },
-          /**
-           * The user is swiping
-           */
-          swiping: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            readOnly: true,
-            reflectToAttribute: true,
-          },
-          /**
-           * Indicates if the final animation has ended
-           */
-           animationEnded: {
-            type: Boolean,
-            value: false,
-            readOnly: true,
-          },
-          /**
-           * Indicates if the last swipe animation has started
-           * e.g. swipe to initial position or to next slide
-           */
-          _endAnimationStarted: {
-            type: Boolean,
-            value: false,
+            value: '',
           },
         };
       }
@@ -549,23 +509,14 @@
           this._slotChanged();
         });
 
-        // Listen for transition end events and set ´animationEnded´
-        const transitions = {
-            'transition': 'transitionend',
-            'WebkitTransition': 'webkitTransitionEnd',
-        };
-
+        // Handle transition end
         const items = this.shadowRoot.querySelector('#items');
-
-        Object.keys(transitions).forEach((k) => {
-          items.addEventListener(transitions[k], (i) => {
-            if (i.propertyName !== 'transform' || !this._endAnimationStarted)
-            {
-              return;
-            }
-            this._setAnimationEnded(true);
-            this._event('animation-end');
-          });
+        items.addEventListener('transitionend', (e) => {
+          e.preventDefault();
+          if (this.swiping || e.propertyName !== 'transform') {
+            return;
+          }
+          this._setAnimating(false);
         });
       }
 
@@ -618,45 +569,41 @@
       /**
        * Observer on auto to turn on and off the feature
        *
+       * @param {boolean} auto
        * @private
        */
-      _autoplayComputation() {
-        this.auto
-          ? (this._autoplay(), this._setProperty(true) )
-          : clearInterval(this._intervalId);
-      }
-
-      /**
-       * Autoplay
-       *
-       * @private
-       */
-      _autoplay() {
-        this._intervalId = setInterval(() => {
-          return this.next();
-        }, this.duration);
+      _autoObserver(auto) {
+        if (auto) {
+          this._autoInterval = setInterval(() => {
+            this.next();
+          }, this.duration);
+        } else {
+          clearInterval(this._autoInterval);
+        }
       }
 
       /**
        * Go to next slide
-       *
-       * @return {*}
        */
       next() {
         if (this.disabled) return;
         const element = this.shadowRoot.querySelector('#itemsContainer');
-        if (this.selected < --this.total || this.loop) return element.selectNext();
+        if (this.selected < --this.total || this.loop) {
+          this._setAnimating(true);
+          element.selectNext();
+        }
       }
 
       /**
        * Go to previous slide
-       *
-       * @return {*}
        */
       prev() {
         if (this.disabled) return;
         const element = this.shadowRoot.querySelector('#itemsContainer');
-        if (this.selected > 0 || this.loop) return element.selectPrevious();
+        if (this.selected > 0 || this.loop) {
+          this._setAnimating(true);
+          element.selectPrevious();
+        }
       }
 
       /**
@@ -677,15 +624,16 @@
       /**
        * Listen for changes on the selected item
        *
-       * @param {number} selected
+       * @param {number} newValue
+       * @param {number} oldValue
        * @private
        */
-      _selectedObserver(selected) {
-        this._lazyContent(selected);
-        let selectedChild = this.children[selected];
+      _selectedObserver(newValue, oldValue) {
+        this._lazyContent(newValue);
+        let selectedChild = this.children[newValue];
         this._setSelectedItem(selectedChild);
-        if (selected < --this.total) {
-          this._lazyContent(++selected);
+        if (newValue < --this.total) {
+          this._lazyContent(++newValue);
         }
       }
 
@@ -767,7 +715,7 @@
        */
       _computeEnd(total, selected) {
         const status = selected === --total;
-        if (status) this._event('skeleton-carousel-end');
+        if (status) this._event('end');
         return status;
       }
 
@@ -819,8 +767,8 @@
         let finalLeft = 0;
         let finalTop = 0;
 
-        if (this.direction === 'horizontal') finalLeft = this.x + finalX;
-        if (this.direction === 'vertical') finalTop = this.y + finalY;
+        if (this.direction === 'horizontal') finalLeft = this._x + finalX;
+        if (this.direction === 'vertical') finalTop = this._y + finalY;
 
         let finalPositionLeft = Number(finalLeft);
         let finalPositionTop = Number(finalTop);
@@ -843,15 +791,13 @@
         }
         switch (event.detail.state) {
           case 'track':
-            this.x = finalPositionLeft;
-            this.y = finalPositionTop;
+            this._x = finalPositionLeft;
+            this._y = finalPositionTop;
             this._setSwiping(true);
-            this._setAnimationEnded(false);
-            this._endAnimationStarted = false;
             break;
           case 'end':
-            this.x = 0;
-            this.y = 0;
+            this._x = 0;
+            this._y = 0;
             this._setSwiping(false);
             if (finalPositionLeft >= 0.4 || finalPositionTop >= 0.4) {
               this.prev();
@@ -859,7 +805,6 @@
             else if (finalPositionLeft <= -0.4 || finalPositionTop <= -0.4) {
               this.next();
             }
-            this._endAnimationStarted = true;
             break;
         }
       }
@@ -919,6 +864,9 @@
             finalY = this._calcPercentage(y);
           }
         }
+        if (x !== 0 || y !== 0) {
+          this._setAnimating(true);
+        }
         return this._returnTransform(finalX, finalY);
       }
 
@@ -932,25 +880,6 @@
        */
       _returnDragPosition(position, selected) {
         return position - selected;
-      }
-
-      /**
-       * Returns the percentage to translate
-       *
-       * @param {number} selected
-       * @param {string} direction
-       * @return {string}
-       * @private
-       */
-      _translateEnd(selected) {
-        let baseSelected = -Math.abs(--selected);
-        if (selected <= 0) baseSelected = 0;
-        const percentage = this._calcPercentage(baseSelected);
-        let finalX = 0;
-        let finalY = 0;
-        if (this.direction === 'horizontal') finalX = percentage;
-        if (this.direction === 'vertical') finalY = percentage;
-        return this._returnTransform(finalX, finalY);
       }
 
       /**
