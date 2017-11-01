@@ -104,7 +104,7 @@ $ bower install --save FabricElements/skeleton-carousel
 ```
 -->
 ```html
-<skeleton-carousel dots nav loop direction="vertical">
+<skeleton-carousel dots nav loop direction="vertical" auto>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
                 data-src="https://source.unsplash.com/category/nature/400x400"
@@ -136,9 +136,11 @@ $ bower install --save FabricElements/skeleton-carousel
 
 * `alt` (boolean) - Flips the position of the navigation. Puts the navigation at the top of the carousel for the horizontal layout and to the left for the vertical layout.
 * `animating` (boolean) - Indicates if the carousel is been animated (Transition).
+* `auto` (boolean) - Change slides automatically.
 * `direction` (string) - Carousel direction (horizontal or vertical).
 * `disabled` (boolean) - Disables component.
 * `disable-swipe` (boolean) - Disables swipe functionality.
+* `durantion` (number) - Autoplay interval time in milliseconds (Default: `4000`)
 * `dots` (boolean) - Show navigation dots.
 * `end` (boolean) - Detail returns `true` when the carousel has reached the last slide.
 * `loop` (boolean) - Determines if the carousel should be looped.  This affects the controls and the drag and drop functionality. Set to `true` if you need to loop the slides.

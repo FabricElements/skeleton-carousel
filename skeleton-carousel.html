@@ -196,11 +196,11 @@
       #itemsContainer ::slotted(*),
       paper-icon-button {
         will-change: transform, transition;
-        -webkit-transition: all 3000ms cubic-bezier(.51, .92, .24, 1);
-        -moz-transition: all 3000ms cubic-bezier(.51, .92, .24, 1);
-        -ms-transition: all 3000ms cubic-bezier(.51, .92, .24, 1);
-        -o-transition: all 3000ms cubic-bezier(.51, .92, .24, 1);
-        transition: all 3000ms cubic-bezier(.51, .92, .24, 1);
+        -webkit-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        -moz-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        -ms-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        -o-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
+        transition: all 300ms cubic-bezier(.51, .92, .24, 1);
         @apply --skeleton-carousel-transition;
       }
 
@@ -289,6 +289,14 @@
             notify: true,
           },
           /**
+           * Change slides automatically
+           */
+          auto: {
+            type: Boolean,
+            value: false,
+            observer: '_autoObserver',
+          },
+          /**
            * Carousel direction (horizontal or vertical)
            */
           direction: {
@@ -316,6 +324,13 @@
           disableSwipe: {
             type: Boolean,
             value: false,
+          },
+          /**
+           * Autoplay interval time in milliseconds
+           */
+          duration: {
+            type: Number,
+            value: 4000,
           },
           /**
            * Determines if the carousel should be looped.
@@ -403,6 +418,12 @@
             notify: true,
             reflectToAttribute: true,
             readOnly: true,
+          },
+          /**
+           * Auto interval
+           */
+          _autoInterval: {
+            type: Object,
           },
           /**
            * Show navigation controls
@@ -522,7 +543,7 @@
       }
 
       /**
-       * Prev key
+       * Go to the previous slide with keybindings
        *
        * @param {object} event
        * @private
@@ -534,7 +555,7 @@
       }
 
       /**
-       * Next key
+       * Go to the next slide with keybindings
        *
        * @param {object} event
        * @private
@@ -543,6 +564,22 @@
       _nextKey(event) {
         event.preventDefault();
         return this.next();
+      }
+
+      /**
+       * Observer on auto to turn on and off the feature
+       *
+       * @param {boolean} auto
+       * @private
+       */
+      _autoObserver(auto) {
+        if (auto) {
+          this._autoInterval = setInterval(() => {
+            this.next();
+          }, this.duration);
+        } else {
+          clearInterval(this._autoInterval);
+        }
       }
 
       /**
