@@ -368,6 +368,23 @@
             readOnly: true,
           },
           /**
+           * Change images automatically
+           */
+          auto: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true,
+            observer: '_autoplayComputation',
+          },
+          /**
+           * Autoplay interval time
+           */
+          duration: {
+            type: Number,
+            value: 2000,
+          },
+          /**
            * Show navigation controls
            */
           controls: {
@@ -575,7 +592,7 @@
       }
 
       /**
-       * Prev key
+       * Go to the previous slide with keybindings
        *
        * @param {object} event
        * @private
@@ -587,7 +604,7 @@
       }
 
       /**
-       * Next key
+       * Go to the next slide with keybindings
        *
        * @param {object} event
        * @private
@@ -596,6 +613,28 @@
       _nextKey(event) {
         event.preventDefault();
         return this.next();
+      }
+
+      /**
+       * Observer on auto to turn on and off the feature
+       *
+       * @private
+       */
+      _autoplayComputation() {
+        this.auto
+          ? (this._autoplay(), this._setProperty(true) )
+          : clearInterval(this._intervalId);
+      }
+
+      /**
+       * Autoplay
+       *
+       * @private
+       */
+      _autoplay() {
+        this._intervalId = setInterval(() => {
+          return this.next();
+        }, this.duration);
       }
 
       /**
