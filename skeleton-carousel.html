@@ -486,6 +486,23 @@
             notify: true,
             readOnly: true,
           },
+          /**
+           * Indicates if the final animation has ended
+           */
+          animationEnded: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            readOnly: true,
+          },
+          /**
+           * Indicates if the last swipe animation has started
+           * e.g. swipe to initial position or to next slide
+           */
+          _endAnimationStarted: {
+            type: Boolean,
+            value: false,
+          },
 
           /** HYBRID SPECIFIC */
 
@@ -523,11 +540,29 @@
          * Ready event
          */
         ready() {
+          // Observe slot and set ´_children´
           Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
             this._children = this.getContentChildNodes().filter((n) => {
               return this.acceptedChildNodeNames.indexOf(
                 n.nodeName.toLowerCase()
               ) > -1;
+            });
+          });
+
+          // Listen for transition end events and set ´animationEnded´
+          const transitions = {
+            'transition': 'transitionend',
+            'WebkitTransition': 'webkitTransitionEnd',
+          };
+
+          Object.keys(transitions).forEach((k) => {
+            this.$.items.addEventListener(transitions[k], (i) => {
+              if (i.propertyName !== 'transform' || !this._endAnimationStarted)
+              {
+                return;
+              }
+              this._setAnimationEnded(true);
+              this._event('animation-end');
             });
           });
         },
@@ -605,11 +640,11 @@
         * @private
         */
         _selectSlotted(selected) {
-          if (this.children.length < 1) return;
-          for (let i = 0; i < this.children.length; ++i) {
-            this.children[i].classList.remove('selected');
+          if (this._children.length < 1) return;
+          for (let i = 0; i < this._children.length; ++i) {
+            this._children[i].classList.remove('selected');
           }
-          let selectedChild = this.children[--selected];
+          let selectedChild = this._children[--selected];
           selectedChild.classList.add('selected');
           this._setSelectedItem(selectedChild);
         },
@@ -752,6 +787,8 @@
               this.x = finalPositionLeft;
               this.y = finalPositionTop;
               this._setSwiping(true);
+              this._setAnimationEnded(false);
+              this._endAnimationStarted = false;
               break;
             case 'end':
               this.x = 0;
@@ -765,6 +802,7 @@
               else if (finalPositionLeft <= -0.4 || finalPositionTop <= -0.4) {
                 this.next();
               }
+              this._endAnimationStarted = true;
               break;
           }
         },
