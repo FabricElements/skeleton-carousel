@@ -501,6 +501,22 @@
             readOnly: true,
             reflectToAttribute: true,
           },
+          /**
+           * Indicates if the final animation has ended
+           */
+           animationEnded: {
+            type: Boolean,
+            value: false,
+            readOnly: true,
+          },
+          /**
+           * Indicates if the last swipe animation has started
+           * e.g. swipe to initial position or to next slide
+           */
+          _endAnimationStarted: {
+            type: Boolean,
+            value: false,
+          },
         };
       }
 
@@ -514,6 +530,25 @@
         const container = this.shadowRoot.querySelector('slot');
         new Polymer.FlattenedNodesObserver(container, () => {
           this._slotChanged();
+        });
+
+        // Listen for transition end events and set ´animationEnded´
+        const transitions = {
+            'transition': 'transitionend',
+            'WebkitTransition': 'webkitTransitionEnd',
+        };
+
+        const items = this.shadowRoot.querySelector('#items');
+
+        Object.keys(transitions).forEach((k) => {
+          items.addEventListener(transitions[k], (i) => {
+            if (i.propertyName !== 'transform' || !this._endAnimationStarted)
+            {
+              return;
+            }
+            this._setAnimationEnded(true);
+            this._event('animation-end');
+          });
         });
       }
 
@@ -772,6 +807,8 @@
             this.x = finalPositionLeft;
             this.y = finalPositionTop;
             this._setSwiping(true);
+            this._setAnimationEnded(false);
+            this._endAnimationStarted = false;
             break;
           case 'end':
             this.x = 0;
@@ -783,6 +820,7 @@
             else if (finalPositionLeft <= -0.4 || finalPositionTop <= -0.4) {
               this.next();
             }
+            this._endAnimationStarted = true;
             break;
         }
       }
