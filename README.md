@@ -3,7 +3,7 @@
 
 ## \<skeleton-carousel\>
 
-`skeleton-carousel` is a [Polymer 2](http://polymer-project.org) element that provides a carousel for images and other content.
+`skeleton-carousel` is a web component that provides a carousel for images and other content.
 
 ## Features
 
@@ -19,8 +19,13 @@
 
 Install skeleton-carousel with Bower
 
+#### Polymer 2 projects
 ```shell
 $ bower install --save FabricElements/skeleton-carousel
+```
+#### Hybrid projects
+```shell
+$ bower install --save FabricElements/skeleton-carousel#^1.0.0
 ```
 
 ## Examples
