@@ -111,12 +111,15 @@
 </test-fixture>
 
 <script>
+
   suite('Basic behaviour', () => {
     let element;
 
     setup(() => {
       element = fixture('basicCarousel');
     });
+
+    a11ySuite('basicCarousel');
 
     test('Total property should return all the childs', (done) => {
       expect(element.total).to.equal(2);
