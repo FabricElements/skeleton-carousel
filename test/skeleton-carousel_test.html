@@ -189,6 +189,39 @@
       });
     });
   });
+
+  suite('Keyboard actions', () => {
+    let element;
+    let keyCodes = {
+      'right': 39,
+      'left': 37,
+      'up': 38,
+      'down': 40,
+    };
+
+    test('Should control prev and next slide with keybindings', (done) => {
+      element = fixture('basicCarousel');
+      flush(() => {
+        // Press right arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.right);
+        expect(element.selected).to.equal(1);
+
+        // Press left arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.left);
+        expect(element.selected).to.equal(0);
+
+        // Press down arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.down);
+        expect(element.selected).to.equal(1);
+
+        // Press up arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.up);
+        expect(element.selected).to.equal(0);
+
+        done();
+      });
+    });
+  });
 </script>
 </body>
 </html>
