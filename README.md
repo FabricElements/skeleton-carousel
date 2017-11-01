@@ -135,7 +135,7 @@ $ bower install --save FabricElements/skeleton-carousel
 ### Attributes
 
 * `alt` (boolean) - Flips the position of the navigation. Puts the navigation at the top of the carousel for the horizontal layout and to the left for the vertical layout.
-* `animating` (boolean) - Indicates if the carousel is been animated (Transition).
+* `animating` (boolean) - Read-only value that indicates if the carousel is been animated (Transition).
 * `auto` (boolean) - Change slides automatically.
 * `direction` (string) - Carousel direction (horizontal or vertical).
 * `disabled` (boolean) - Disables component.
