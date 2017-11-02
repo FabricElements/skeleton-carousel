@@ -195,7 +195,6 @@
       #items,
       #itemsContainer ::slotted(*),
       paper-icon-button {
-        will-change: transform, transition;
         -webkit-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
         -moz-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
         -ms-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
@@ -213,10 +212,8 @@
       }
     </style>
 
-    <div id="carousel">
-      <div id="items"
-           style$="[[_translate]]"
-           on-track="_drag">
+    <div id="carousel" on-track="_drag">
+      <div id="items">
         <iron-selector id="itemsContainer"
                        selected="{{selected}}"
                        fallback-selection="0"
@@ -294,7 +291,7 @@
           auto: {
             type: Boolean,
             value: false,
-            observer: '_autoObserver',
+            observer: '_autoAnimate',
           },
           /**
            * Carousel direction (horizontal or vertical)
@@ -485,15 +482,6 @@
             type: Number,
             value: 0,
           },
-          /**
-           * Determines how much the sliders container needs to move
-           */
-          _translate: {
-            type: String,
-            computed: '_computeTranslate(direction, selected, _x, _y)',
-            readOnly: true,
-            value: '',
-          },
         };
       }
 
@@ -518,6 +506,15 @@
           }
           this._setAnimating(false);
         });
+      }
+
+      /**
+       * @return {Array}
+       */
+      static get observers() {
+        return [
+          '_translateObserver(direction, selected, _x, _y)',
+        ];
       }
 
       /**
@@ -572,7 +569,7 @@
        * @param {boolean} auto
        * @private
        */
-      _autoObserver(auto) {
+      _autoAnimate(auto) {
         if (auto) {
           this._autoInterval = setInterval(() => {
             this.next();
@@ -635,6 +632,9 @@
         if (newValue < --this.total) {
           this._lazyContent(++newValue);
         }
+        // Reset auto
+        this._autoAnimate(false);
+        this._autoAnimate(this.auto);
       }
 
       /**
@@ -738,11 +738,12 @@
       /**
        * Returns the percentage that will to position the icon
        *
-       * @param {number} value
+       * @param {number|string} value
        * @return {string}
        * @private
        */
       _calcPercentage(value) {
+        value = value.toFixed(2);
         return `${value * 100}%`;
       }
 
@@ -834,40 +835,45 @@
       }
 
       /**
-       * Compute translate swipe
+       * Translate swipe observer
        *
        * @param {string} direction
        * @param {number} selected
-       * @param {number} x
-       * @param {number} y
-       * @return {string}
+       * @param {number} _x
+       * @param {number} _y
        * @private
        */
-      _computeTranslate(direction, selected, x, y) {
+      _translateObserver(direction, selected, _x, _y) {
         let finalX = 0;
         let finalY = 0;
         let baseSelected = -Math.abs(selected);
         if (selected <= 0) baseSelected = 0;
-        if (x === 0 && y === 0) {
+        if (_x === 0 && _y === 0) {
           const percentage = this._calcPercentage(baseSelected);
           if (direction === 'horizontal') finalX = percentage;
           if (direction === 'vertical') finalY = percentage;
         }
         else {
           // add baseSelected to the original value of the drag value
-          x = baseSelected + x;
-          y = baseSelected + y;
+          _x = baseSelected + _x;
+          _y = baseSelected + _y;
           if (direction === 'horizontal') {
-            finalX = this._calcPercentage(x);
+            finalX = this._calcPercentage(_x);
           }
           if (direction === 'vertical') {
-            finalY = this._calcPercentage(y);
+            finalY = this._calcPercentage(_y);
           }
         }
-        if (x !== 0 || y !== 0) {
+        if (_x !== 0 || _y !== 0) {
           this._setAnimating(true);
         }
-        return this._returnTransform(finalX, finalY);
+        const element = this.shadowRoot.querySelector('#items');
+        const transform = `translate3d(${finalX}, ${finalY}, 0)`;
+        element.style.webkitTransform = transform;
+        element.style.MozTransform = transform;
+        element.style.msTransform = transform;
+        element.style.OTransform = transform;
+        element.style.transform = transform;
       }
 
       /**
@@ -921,22 +927,6 @@
         this.dispatchEvent(new CustomEvent(name, {
           detail: detail, bubbles: true, composed: true,
         }));
-      }
-
-      /**
-       * Return transform
-       *
-       * @param {number} x
-       * @param {number} y
-       * @return {string}
-       * @private
-       */
-      _returnTransform(x, y) {
-        return `-webkit-transform: translate3d(${x}, ${y}, 0);
-                -moz-transform: translate3d(${x}, ${y}, 0);
-                -ms-transform: translate3d(${x}, ${y}, 0);
-                -o-transform: translate3d(${x}, ${y}, 0);
-                transform: translate3d(${x}, ${y}, 0);`;
       }
     }
 
