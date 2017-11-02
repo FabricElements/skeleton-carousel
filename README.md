@@ -145,7 +145,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
 * `direction` (string) - Carousel direction (horizontal or vertical).
 * `disabled` (boolean) - Disables component.
 * `disable-swipe` (boolean) - Disables swipe functionality.
-* `durantion` (number) - Autoplay interval time in milliseconds (Default: `4000`)
+* `duration` (number) - Autoplay interval time in milliseconds (Default: `4000`)
 * `dots` (boolean) - Show navigation dots.
 * `end` (boolean) - Detail returns `true` when the carousel has reached the last slide.
 * `loop` (boolean) - Determines if the carousel should be looped.  This affects the controls and the drag and drop functionality. Set to `true` if you need to loop the slides.
