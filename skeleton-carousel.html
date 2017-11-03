@@ -108,6 +108,7 @@
       #itemsContainer {
         @apply --layout-fit;
         @apply --layout-inline;
+        @apply --skeleton-carousel-container;
       }
 
       :host([direction="horizontal"]) #itemsContainer {
@@ -130,6 +131,10 @@
         width: 100%;
         will-change: auto;
         @apply --skeleton-carousel-item;
+      }
+
+      #itemsContainer ::slotted(.selected) {
+        opacity: 1;
       }
 
       #itemsContainer ::slotted(:not(.selected)) {
