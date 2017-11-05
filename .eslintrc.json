@@ -47,12 +47,13 @@
     ]
   },
   "globals": {
-    "Polymer": true,
+    "a11ySuite": true,
+    "Fabric": true,
+    "firebase": true,
     "fixture": true,
     "flush": true,
     "MockInteractions": true,
-    "WCT": true,
-    "firebase": true,
-    "Fabric": true
+    "Polymer": true,
+    "WCT": true
   }
 }

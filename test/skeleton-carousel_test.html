@@ -118,6 +118,8 @@
       element = fixture('basicCarousel');
     });
 
+    a11ySuite('basicCarousel');
+
     test('Total property should return all the childs', (done) => {
       expect(element.total).to.equal(2);
       done();
@@ -178,12 +180,45 @@
       flush(() => {
         const buttons = element
           .shadowRoot
-          .querySelector('iron-selector')
+          .querySelector('#dots')
           .querySelectorAll('paper-icon-button');
 
         buttons.forEach((button) => {
           expect(button.disabled).to.be.true;
         });
+
+        done();
+      });
+    });
+  });
+
+  suite('Keyboard actions', () => {
+    let element;
+    let keyCodes = {
+      'right': 39,
+      'left': 37,
+      'up': 38,
+      'down': 40,
+    };
+
+    test('Should control prev and next slide with keybindings', (done) => {
+      element = fixture('basicCarousel');
+      flush(() => {
+        // Press right arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.right);
+        expect(element.selected).to.equal(1);
+
+        // Press left arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.left);
+        expect(element.selected).to.equal(0);
+
+        // Press down arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.down);
+        expect(element.selected).to.equal(1);
+
+        // Press up arrow key
+        MockInteractions.pressAndReleaseKeyOn(element, keyCodes.up);
+        expect(element.selected).to.equal(0);
 
         done();
       });
