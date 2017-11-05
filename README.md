@@ -37,23 +37,16 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../iron-image/iron-image.html">
-    <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="skeleton-carousel.html">
     <style is="custom-style">
       iron-image {
         display: block;
-        background-color: var(--paper-grey-200);
-        @apply --layout-flex-auto;
+        background-color: black;
+        min-height: 350px;
       }
-
+    
       skeleton-carousel {
-        --skeleton-carousel: {
-          background-color: var(--paper-grey-50);
-        };
-        --skeleton-carousel-item: {
-          text-align: center;
-          background-color: var(--paper-grey-100);
-        };
+        min-height: 350px;
       }
     </style>
     <next-code-block></next-code-block>
@@ -98,23 +91,16 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../iron-image/iron-image.html">
-    <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="skeleton-carousel.html">
     <style is="custom-style">
       iron-image {
         display: block;
-        background-color: var(--paper-grey-200);
-        @apply --layout-flex-auto;
+        background-color: black;
+        min-height: 350px;
       }
-
+    
       skeleton-carousel {
-        --skeleton-carousel: {
-          background-color: var(--paper-grey-50);
-        };
-        --skeleton-carousel-item: {
-          text-align: center;
-          background-color: var(--paper-grey-100);
-        };
+        min-height: 350px;
       }
     </style>
     <next-code-block></next-code-block>
