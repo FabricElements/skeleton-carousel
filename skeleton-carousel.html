@@ -16,6 +16,7 @@
         position: relative;
         overflow: hidden;
         contain: content;
+        box-sizing: border-box;
         @apply --layout-flex-auto;
         @apply --skeleton-carousel;
         min-height: var(--skeleton-carousel-min-height, 300px);
@@ -40,16 +41,18 @@
 
       :host,
       #carousel *,
-      #itemsContainer ::slotted(*) {
+      #container ::slotted(*) {
+        -webkit-touch-callout: none;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
       }
 
       #carousel,
       #items,
-      #itemsContainer {
+      #container {
         display: block;
         position: relative;
         width: 100%;
@@ -57,7 +60,7 @@
       }
 
       #carousel,
-      #itemsContainer {
+      #container {
         @apply --layout-vertical;
       }
 
@@ -76,21 +79,31 @@
         will-change: transform;
       }
 
-      #itemsContainer {
+      :host([direction="horizontal"]) #items {
+        @apply --layout-vertical;
+      }
+
+      :host([direction="vertical"]) #items {
         @apply --layout-fit;
+      }
+
+      #container {
         @apply --layout-inline;
+        @apply --skeleton-carousel-container;
       }
 
-      :host([direction="horizontal"]) #itemsContainer {
+      :host([direction="horizontal"]) #container {
         @apply --layout-horizontal;
+        @apply --skeleton-carousel-container-horizontal;
       }
 
-      :host([direction="vertical"]) #itemsContainer {
+      :host([direction="vertical"]) #container {
         @apply --layout-vertical;
         @apply --layout-wrap;
+        @apply --skeleton-carousel-container-vertical;
       }
 
-      #itemsContainer ::slotted(*) {
+      #container ::slotted(*) {
         display: block;
         position: relative;
         overflow: hidden;
@@ -100,11 +113,13 @@
         max-width: 100%;
         width: 100%;
         will-change: auto;
+        opacity: .8;
         @apply --skeleton-carousel-item;
       }
 
-      #itemsContainer ::slotted(:not(.selected)) {
-        opacity: .8;
+      #container ::slotted(.selected) {
+        opacity: 1;
+        @apply --skeleton-carousel-item-selected;
       }
 
       /*
@@ -193,7 +208,7 @@
 
       /* Apply transition */
       #items,
-      #itemsContainer ::slotted(*),
+      #container ::slotted(*),
       paper-icon-button {
         -webkit-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
         -moz-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
@@ -214,11 +229,11 @@
 
     <div id="carousel" on-track="_drag">
       <div id="items">
-        <iron-selector id="itemsContainer"
+        <iron-selector id="container"
                        selected="{{selected}}"
                        fallback-selection="0"
                        selected-class="selected"
-                       style$="[[_itemsContainerHeight]]">
+                       style$="[[_containerHeight]]">
           <slot></slot>
         </iron-selector>
       </div>
@@ -462,10 +477,10 @@
           /**
            * Icon for the next button
            */
-          _itemsContainerHeight: {
+          _containerHeight: {
             type: String,
             value: 'height: 100%;',
-            computed: '_computeItemsContainerHeight(direction, total)',
+            computed: '_computeContainerHeight(direction, total)',
             readOnly: true,
           },
           /**
@@ -584,7 +599,7 @@
        */
       next() {
         if (this.disabled) return;
-        const element = this.shadowRoot.querySelector('#itemsContainer');
+        const element = this.shadowRoot.querySelector('#container');
         if (this.selected < --this.total || this.loop) {
           this._setAnimating(true);
           element.selectNext();
@@ -596,7 +611,7 @@
        */
       prev() {
         if (this.disabled) return;
-        const element = this.shadowRoot.querySelector('#itemsContainer');
+        const element = this.shadowRoot.querySelector('#container');
         if (this.selected > 0 || this.loop) {
           this._setAnimating(true);
           element.selectPrevious();
@@ -792,11 +807,13 @@
         }
         switch (event.detail.state) {
           case 'track':
+            this._autoAnimate(false);
             this._x = finalPositionLeft;
             this._y = finalPositionTop;
             this._setSwiping(true);
             break;
           case 'end':
+            this._autoAnimate(this.auto);
             this._x = 0;
             this._y = 0;
             this._setSwiping(false);
@@ -844,6 +861,9 @@
        * @private
        */
       _translateObserver(direction, selected, _x, _y) {
+        if (_x !== 0 || _y !== 0) {
+          this._setAnimating(true);
+        }
         let finalX = 0;
         let finalY = 0;
         let baseSelected = -Math.abs(selected);
@@ -864,11 +884,15 @@
             finalY = this._calcPercentage(_y);
           }
         }
-        if (_x !== 0 || _y !== 0) {
-          this._setAnimating(true);
-        }
+
         const element = this.shadowRoot.querySelector('#items');
-        const transform = `translate3d(${finalX}, ${finalY}, 0)`;
+        let transform = '';
+        if (direction === 'horizontal') {
+          transform = `translateX(${finalX})`;
+        }
+        if (direction === 'vertical') {
+          transform = `translateY(${finalY})`;
+        }
         element.style.webkitTransform = transform;
         element.style.MozTransform = transform;
         element.style.msTransform = transform;
@@ -896,7 +920,7 @@
        * @return {string}
        * @private
        */
-      _computeItemsContainerHeight(direction, total) {
+      _computeContainerHeight(direction, total) {
         let height = 'auto';
         if (direction === 'vertical') height = this._calcPercentage(total);
 
