@@ -807,11 +807,13 @@
         }
         switch (event.detail.state) {
           case 'track':
+            this._autoAnimate(false);
             this._x = finalPositionLeft;
             this._y = finalPositionTop;
             this._setSwiping(true);
             break;
           case 'end':
+            this._autoAnimate(this.auto);
             this._x = 0;
             this._y = 0;
             this._setSwiping(false);
