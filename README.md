@@ -172,7 +172,11 @@ The following custom properties and mixins are available for styling:
 | ----------------------------------------- |:---------------------------------------:| -----------------------:|
 | `--skeleton-carousel`                     | Mixin applied to the carousel           | `{}`                    |
 | `--skeleton-carousel-min-height`          | Carousel minimum height                 | `300px`                 |
+| `--skeleton-carousel-container`           | Mixin applied to the container          | `{}`                    |
+| `--skeleton-carousel-container-horizontal`| Mixin applied to horizontal container   | `{}`                    |
+| `--skeleton-carousel-container-vertical`  | Mixin applied to vertical container     | `{}`                    |
 | `--skeleton-carousel-item`                | Mixin applied to slotted item           | `{}`                    |
+| `--skeleton-carousel-item-selected`       | Mixin applied to slotted selected item  | `{}`                    |
 | `--skeleton-carousel-controls`            | Mixin applied to the controls           | `{}`                    |
 | `--skeleton-carousel-controls-horizontal` | Mixin applied to horizontal controls    | `{}`                    |
 | `--skeleton-carousel-controls-vertical`   | Mixin applied to vertical controls      | `{}`                    |
