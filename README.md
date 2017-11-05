@@ -37,16 +37,23 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../iron-image/iron-image.html">
+    <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="skeleton-carousel.html">
     <style is="custom-style">
       iron-image {
         display: block;
-        background-color: black;
-        min-height: 500px;
+        background-color: var(--paper-grey-200);
+        @apply --layout-flex-auto;
       }
-    
+
       skeleton-carousel {
-        min-height: 500px;
+        --skeleton-carousel: {
+          background-color: var(--paper-grey-50);
+        };
+        --skeleton-carousel-item: {
+          text-align: center;
+          background-color: var(--paper-grey-100);
+        };
       }
     </style>
     <next-code-block></next-code-block>
@@ -58,7 +65,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
 <skeleton-carousel dots nav loop>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                data-src="https://source.unsplash.com/category/nature/400x400"
+                data-src="https://source.unsplash.com/category/nature/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -66,7 +73,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                data-src="https://source.unsplash.com/category/food/400x400"
+                data-src="https://source.unsplash.com/category/food/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -74,7 +81,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                data-src="https://source.unsplash.com/category/buildings/400x400"
+                data-src="https://source.unsplash.com/category/buildings/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -91,16 +98,23 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../iron-image/iron-image.html">
+    <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="skeleton-carousel.html">
     <style is="custom-style">
       iron-image {
         display: block;
-        background-color: black;
-        min-height: 500px;
+        background-color: var(--paper-grey-200);
+        @apply --layout-flex-auto;
       }
-    
+
       skeleton-carousel {
-        min-height: 500px;
+        --skeleton-carousel: {
+          background-color: var(--paper-grey-50);
+        };
+        --skeleton-carousel-item: {
+          text-align: center;
+          background-color: var(--paper-grey-100);
+        };
       }
     </style>
     <next-code-block></next-code-block>
@@ -112,7 +126,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
 <skeleton-carousel dots nav loop direction="vertical" auto>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                data-src="https://source.unsplash.com/category/nature/400x400"
+                data-src="https://source.unsplash.com/category/nature/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -120,7 +134,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                data-src="https://source.unsplash.com/category/food/400x400"
+                data-src="https://source.unsplash.com/category/food/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -128,7 +142,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                data-src="https://source.unsplash.com/category/buildings/400x400"
+                data-src="https://source.unsplash.com/category/buildings/500x300"
                 sizing="cover"
                 preload
                 fade
