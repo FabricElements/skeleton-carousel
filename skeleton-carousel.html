@@ -817,10 +817,10 @@
             this._x = 0;
             this._y = 0;
             this._setSwiping(false);
-            if (finalPositionLeft >= 0.4 || finalPositionTop >= 0.4) {
+            if (finalPositionLeft >= 0.1 || finalPositionTop >= 0.1) {
               this.prev();
             }
-            else if (finalPositionLeft <= -0.4 || finalPositionTop <= -0.4) {
+            else if (finalPositionLeft <= -0.1 || finalPositionTop <= -0.1) {
               this.next();
             }
             break;
