@@ -11,8 +11,8 @@ addons:
     packages:
       - google-chrome-stable
 before_script:
-  - npm install -g polymer-cli
+  - npm install -g polymer-cli web-component-tester
   - polymer install
   - npm run lint
 script:
-  - xvfb-run polymer test --skip-plugin sauce
+  - xvfb-run wct --skip-plugin sauce

@@ -42,11 +42,11 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
       iron-image {
         display: block;
         background-color: black;
-        min-height: 500px;
+        min-height: 350px;
       }
     
       skeleton-carousel {
-        min-height: 500px;
+        min-height: 350px;
       }
     </style>
     <next-code-block></next-code-block>
@@ -58,7 +58,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
 <skeleton-carousel dots nav loop>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                data-src="https://source.unsplash.com/category/nature/400x400"
+                data-src="https://source.unsplash.com/category/nature/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -66,7 +66,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                data-src="https://source.unsplash.com/category/food/400x400"
+                data-src="https://source.unsplash.com/category/food/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -74,7 +74,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                data-src="https://source.unsplash.com/category/buildings/400x400"
+                data-src="https://source.unsplash.com/category/buildings/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -96,11 +96,11 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
       iron-image {
         display: block;
         background-color: black;
-        min-height: 500px;
+        min-height: 350px;
       }
     
       skeleton-carousel {
-        min-height: 500px;
+        min-height: 350px;
       }
     </style>
     <next-code-block></next-code-block>
@@ -112,7 +112,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
 <skeleton-carousel dots nav loop direction="vertical" auto>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                data-src="https://source.unsplash.com/category/nature/400x400"
+                data-src="https://source.unsplash.com/category/nature/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -120,7 +120,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                data-src="https://source.unsplash.com/category/food/400x400"
+                data-src="https://source.unsplash.com/category/food/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -128,7 +128,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
   </div>
   <div>
     <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                data-src="https://source.unsplash.com/category/buildings/400x400"
+                data-src="https://source.unsplash.com/category/buildings/500x300"
                 sizing="cover"
                 preload
                 fade
@@ -172,7 +172,11 @@ The following custom properties and mixins are available for styling:
 | ----------------------------------------- |:---------------------------------------:| -----------------------:|
 | `--skeleton-carousel`                     | Mixin applied to the carousel           | `{}`                    |
 | `--skeleton-carousel-min-height`          | Carousel minimum height                 | `300px`                 |
+| `--skeleton-carousel-container`           | Mixin applied to the container          | `{}`                    |
+| `--skeleton-carousel-container-horizontal`| Mixin applied to horizontal container   | `{}`                    |
+| `--skeleton-carousel-container-vertical`  | Mixin applied to vertical container     | `{}`                    |
 | `--skeleton-carousel-item`                | Mixin applied to slotted item           | `{}`                    |
+| `--skeleton-carousel-item-selected`       | Mixin applied to slotted selected item  | `{}`                    |
 | `--skeleton-carousel-controls`            | Mixin applied to the controls           | `{}`                    |
 | `--skeleton-carousel-controls-horizontal` | Mixin applied to horizontal controls    | `{}`                    |
 | `--skeleton-carousel-controls-vertical`   | Mixin applied to vertical controls      | `{}`                    |
