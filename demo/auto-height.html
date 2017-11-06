@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, height=device-height, minimum-scale=1, maximum-scale=1, initial-scale=1, user-scalable=no">
+
+  <title>skeleton-carousel auto height demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="../../iron-image/iron-image.html">
+  <link rel="import" href="../skeleton-carousel.html">
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      body {
+        font-family: 'Roboto', sans-serif;
+        padding: 0;
+        margin: 0;
+      }
+
+      iron-image {
+        @apply --layout-flex-auto;
+        display: flex;
+        justify-content: center;
+        background-color: gray;
+      }
+      skeleton-carousel {
+        --skeleton-carousel-item: {
+          height: 0;
+        };
+        --skeleton-carousel-item-selected: {
+          height: auto;
+          text-align: center;
+        };
+      }
+    </style>
+  </custom-style>
+</head>
+<body>
+  <h3>Basic skeleton-carousel natural height demo</h3>
+      <skeleton-carousel dots nav loop>
+        <div>
+          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
+                      data-src="https://source.unsplash.com/category/nature/500x300"
+                      preload
+                      fade
+          ></iron-image>
+          <h3>Sizing: null == natural size</h3>
+        </div>
+        <div>
+          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
+                      data-src="https://source.unsplash.com/category/food/500x300"
+                      sizing="cover"
+                      preload
+                      fade
+          ></iron-image>
+          <h3>Sizing: cover</h3>
+        </div>
+        <div>
+          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
+                      data-src="https://source.unsplash.com/category/buildings/500x300"
+                      sizing="contain"
+                      preload
+                      fade
+          ></iron-image>
+          <h3>Sizing: contain</h3>
+        </div>
+      </skeleton-carousel>
+    </template>
+</div>
+</body>
+</html>

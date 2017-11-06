@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
@@ -7,47 +8,18 @@
 <dom-module id="skeleton-carousel">
   <template>
     <!--suppress CssInvalidPseudoSelector -->
+    <!--suppress CssUnresolvedCustomProperty -->
+    <!--suppress CssUnresolvedCustomPropertySet -->
     <style>
       :host {
         display: block;
         position: relative;
         overflow: hidden;
         contain: content;
+        box-sizing: border-box;
         @apply --layout-flex-auto;
-        /* Custom variables and mixins */
-        --skeleton-carousel: {
-        };
         @apply --skeleton-carousel;
-        --skeleton-carousel-min-height: 300px;
-        min-height: var(--skeleton-carousel-min-height);
-        --skeleton-carousel-item: {
-        };
-        --skeleton-carousel-controls: {
-        };
-        --skeleton-carousel-controls-horizontal: {
-        };
-        --skeleton-carousel-controls-vertical: {
-        };
-        --skeleton-carousel-dots: {
-        };
-        --skeleton-carousel-dot: {
-        };
-        --skeleton-carousel-dot-color: var(--paper-grey-900);
-        --skeleton-carousel-dot-selected: {
-        };
-        --skeleton-carousel-dot-disabled: {
-        };
-        --skeleton-carousel-nav: {
-        };
-        --skeleton-carousel-nav-disabled: {
-        };
-        --skeleton-carousel-nav-color: var(--paper-grey-900);
-        --skeleton-carousel-nav-prev: {
-        };
-        --skeleton-carousel-nav-next: {
-        };
-        --skeleton-carousel-transition: {
-        };
+        min-height: var(--skeleton-carousel-min-height, 300px);
       }
 
       :host([direction="horizontal"]) {
@@ -69,16 +41,18 @@
 
       :host,
       #carousel *,
-      #itemsContainer ::slotted(*) {
+      #container ::slotted(*) {
+        -webkit-touch-callout: none;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
       }
 
       #carousel,
       #items,
-      #itemsContainer {
+      #container {
         display: block;
         position: relative;
         width: 100%;
@@ -86,7 +60,7 @@
       }
 
       #carousel,
-      #itemsContainer {
+      #container {
         @apply --layout-vertical;
       }
 
@@ -105,21 +79,31 @@
         will-change: transform;
       }
 
-      #itemsContainer {
+      :host([direction="horizontal"]) #items {
+        @apply --layout-vertical;
+      }
+
+      :host([direction="vertical"]) #items {
         @apply --layout-fit;
+      }
+
+      #container {
         @apply --layout-inline;
+        @apply --skeleton-carousel-container;
       }
 
-      :host([direction="horizontal"]) #itemsContainer {
+      :host([direction="horizontal"]) #container {
         @apply --layout-horizontal;
+        @apply --skeleton-carousel-container-horizontal;
       }
 
-      :host([direction="vertical"]) #itemsContainer {
+      :host([direction="vertical"]) #container {
         @apply --layout-vertical;
         @apply --layout-wrap;
+        @apply --skeleton-carousel-container-vertical;
       }
 
-      #itemsContainer ::slotted(*) {
+      #container ::slotted(*) {
         display: block;
         position: relative;
         overflow: hidden;
@@ -129,11 +113,13 @@
         max-width: 100%;
         width: 100%;
         will-change: auto;
+        opacity: .8;
         @apply --skeleton-carousel-item;
       }
 
-      #itemsContainer ::slotted(:not(.selected)) {
-        opacity: .8;
+      #container ::slotted(.selected) {
+        opacity: 1;
+        @apply --skeleton-carousel-item-selected;
       }
 
       /*
@@ -177,7 +163,7 @@
       }
 
       #dots paper-icon-button {
-        color: var(--skeleton-carousel-dot-color);
+        color: var(--skeleton-carousel-dot-color, var(--paper-grey-900));
         opacity: .4;
         @apply --skeleton-carousel-dot;
       }
@@ -194,7 +180,7 @@
 
       #prev,
       #next {
-        color: var(--skeleton-carousel-nav-color);
+        color: var(--skeleton-carousel-nav-color, var(--paper-grey-900));
       }
 
       #prev,
@@ -204,6 +190,7 @@
 
       #prev[disabled],
       #next[disabled] {
+        color: var(--skeleton-carousel-nav-disabled-color, var(--paper-grey-600));
         @apply --skeleton-carousel-nav-disabled;
       }
 
@@ -221,9 +208,8 @@
 
       /* Apply transition */
       #items,
-      #itemsContainer ::slotted(*),
+      #container ::slotted(*),
       paper-icon-button {
-        will-change: transform, transition;
         -webkit-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
         -moz-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
         -ms-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
@@ -241,61 +227,161 @@
       }
     </style>
 
-    <div id="carousel">
-      <div id="items"
-          style$="[[translate]]"
-          on-track="_drag">
-        <div id="itemsContainer" style$="[[itemsContainerHeight]]">
+    <div id="carousel" on-track="_drag">
+      <div id="items">
+        <iron-selector id="container"
+                       selected="{{selected}}"
+                       fallback-selection="0"
+                       selected-class="selected"
+                       style$="[[_containerHeight]]">
           <slot></slot>
-        </div>
+        </iron-selector>
       </div>
     </div>
-    <nav id="controls" hidden$="[[!controls]]">
-      <paper-icon-button icon$="[[iconPrev]]"
-                        id="prev"
-                        on-tap="prev"
-                        disabled$="[[!showPrev]]"
-                        hidden$="[[!nav]]"
+    <nav id="controls" hidden$="[[!_controls]]">
+      <paper-icon-button icon$="[[_iconPrev]]"
+                         id="prev"
+                         on-tap="prev"
+                         disabled$="[[!showPrev]]"
+                         hidden$="[[!nav]]"
       ></paper-icon-button>
       <iron-selector id="dots"
-                    attr-for-selected="name"
-                    selected="{{selected}}"
-                    fallback-selection="1"
-                    selected-class="selected"
-                    hidden$="[[!dots]]"
-                    tabindex="-1">
+                     selected="{{selected}}"
+                     fallback-selection="0"
+                     selected-class="selected"
+                     hidden$="[[!dots]]"
+                     tabindex="-1">
         <template is="dom-repeat" items="[[_dots]]">
-          <paper-icon-button name$="[[item]]"
-                            icon="[[_iconDot(item, selected)]]"
-                            disabled$="[[disabled]]"
+          <paper-icon-button icon="[[_iconDot(item, selected)]]"
+                             disabled$="[[disabled]]"
           ></paper-icon-button>
         </template>
       </iron-selector>
-      <paper-icon-button icon$="[[iconNext]]"
-                        id="next"
-                        on-tap="next"
-                        disabled$="[[!showNext]]"
-                        hidden$="[[!nav]]"
+      <paper-icon-button icon$="[[_iconNext]]"
+                         id="next"
+                         on-tap="next"
+                         disabled$="[[!showNext]]"
+                         hidden$="[[!nav]]"
       ></paper-icon-button>
     </nav>
-    </template>
+  </template>
 
   <script>
     /**
      * `skeleton-carousel`
      *
-     * @appliesMixin Polymer.GestureEventListeners
      * @extends Polymer.Element
      * @customElement
      * @polymer
      * @demo demo/index.html
      */
-    (() => {
+     (() => {
       /* eslint new-cap: 0 */
       Polymer({
         is: 'skeleton-carousel',
 
+        behaviors: [
+          Polymer.IronA11yKeysBehavior,
+        ],
+
         properties: {
+          /**
+           * Indicates if the carousel is beeing animated (Transition)
+           */
+          animating: {
+            type: Boolean,
+            value: false,
+            readOnly: true,
+            reflectToAttribute: true,
+            notify: true,
+          },
+          /**
+           * Change slides automatically
+           */
+          auto: {
+            type: Boolean,
+            value: false,
+            observer: '_autoAnimate',
+          },
+          /**
+           * Carousel direction (horizontal or vertical)
+           */
+          direction: {
+            type: String,
+            value: 'horizontal',
+            reflectToAttribute: true,
+          },
+          /**
+           * Disables component
+           */
+          disabled: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Show navigation dots
+           */
+          dots: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Disable swipe functionality
+           */
+          disableSwipe: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Autoplay interval time in milliseconds
+           */
+          duration: {
+            type: Number,
+            value: 4000,
+          },
+          /**
+           * Determines if the carousel should be looped.
+           * This affects the controls and the drag and drop functionality.
+           * Set to `true` if you need to loop the slides.
+           */
+          loop: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Show navigation next/prev buttons
+           */
+          nav: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Selected slide index
+           */
+          selected: {
+            type: Number,
+            value: 0,
+            notify: true,
+            reflectToAttribute: true,
+          },
+          /**
+           * Selected item
+           */
+          selectedItem: {
+            type: Object,
+            notify: true,
+            readOnly: true,
+          },
+          /**
+           * The user is swiping
+           */
+          swiping: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+          },
           /**
            * Total number of slides
            */
@@ -307,29 +393,15 @@
             readOnly: true,
           },
           /**
-           * Selected slide
+           * Returns true when the carousel has reached the last slide.
            */
-          selected: {
-            type: Number,
-            value: 1,
+          end: {
+            type: Boolean,
+            value: false,
             notify: true,
+            readOny: true,
             reflectToAttribute: true,
-          },
-          /**
-           * Selected item
-           */
-           selectedItem: {
-            type: Object,
-            notify: true,
-            readOnly: true,
-          },
-          /**
-           * Determines how much the sliders container needs to move
-           */
-          translate: {
-            type: String,
-            computed: '_computeTranslate(direction, selected, x, y)',
-            readOnly: true,
+            computed: '_computeEnd(total, selected)',
           },
           /**
            * Determines if the next button should be displayed.
@@ -354,45 +426,19 @@
             readOnly: true,
           },
           /**
+           * Auto interval
+           */
+          _autoInterval: {
+            type: Object,
+          },
+          /**
            * Show navigation controls
            */
-          controls: {
+          _controls: {
             type: Boolean,
             value: false,
             readOnly: true,
             computed: '_computeControls(dots, nav)',
-          },
-          /**
-           * Show navigation next/prev buttons
-           */
-          nav: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Show navigation dots
-           */
-          dots: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Icon for the previous button
-           */
-          iconPrev: {
-            type: String,
-            value: 'icons:arrow-back',
-            readOnly: true,
-            computed: '_computeIconPrev(direction)',
-          },
-          /**
-           * Icon for the next button
-           */
-          iconNext: {
-            type: String,
-            value: 'icons:arrow-forward',
-            readOnly: true,
-            computed: '_computeIconNext(direction)',
           },
           /**
            * Returns an array with the slides.
@@ -402,106 +448,48 @@
             type: Array,
             computed: '_computeDots(total)',
             readOnly: true,
+            value: [],
           },
           /**
-           * Determines if the carousel should be looped.
-           * This affects the controls and the drag and drop functionality.
-           * Set to `true` if you need to loop the slides.
+           * Icon for the previous button
            */
-          loop: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Returns true when the carousel has reached the last slide.
-           */
-          end: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            readOny: true,
-            reflectToAttribute: true,
-            computed: '_computeEnd(total, selected)',
-          },
-          /**
-           * Disables component
-           */
-          disabled: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * Disable swipe functionality
-           */
-          disableSwipe: {
-            type: Boolean,
-            value: false,
-          },
-          /**
-           * swipe sensitivity:
-           * high, low or default
-           */
-          sensitivity: {
+          _iconPrev: {
             type: String,
-            value: 'default',
-            notify: true,
+            value: 'icons:arrow-back',
+            readOnly: true,
+            computed: '_computeIconPrev(direction)',
+          },
+          /**
+           * Icon for the next button
+           */
+          _iconNext: {
+            type: String,
+            value: 'icons:arrow-forward',
+            readOnly: true,
+            computed: '_computeIconNext(direction)',
+          },
+          /**
+           * Icon for the next button
+           */
+          _containerHeight: {
+            type: String,
+            value: 'height: 100%;',
+            computed: '_computeContainerHeight(direction, total)',
+            readOnly: true,
           },
           /**
            * X Axis position (0 - 1)
            */
-          x: {
+          _x: {
             type: Number,
             value: 0,
           },
           /**
            * Y Axis position (0 - 1)
            */
-          y: {
+          _y: {
             type: Number,
             value: 0,
-          },
-          /**
-           * Carousel direction (horizontal or vertical)
-           */
-          direction: {
-            type: String,
-            value: 'horizontal',
-            reflectToAttribute: true,
-          },
-          /**
-           * Icon for the next button
-           */
-          itemsContainerHeight: {
-            type: String,
-            value: 'auto',
-            computed: '_computeItemsContainerHeight(direction, total)',
-            readOnly: true,
-          },
-          /**
-           * The user is swiping
-           */
-          swiping: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            readOnly: true,
-          },
-          /**
-           * Indicates if the final animation has ended
-           */
-          animationEnded: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            readOnly: true,
-          },
-          /**
-           * Indicates if the last swipe animation has started
-           * e.g. swipe to initial position or to next slide
-           */
-          _endAnimationStarted: {
-            type: Boolean,
-            value: false,
           },
 
           /** HYBRID SPECIFIC */
@@ -509,7 +497,7 @@
           /**
             * Elements passed in via <slot>
             */
-          _children: {
+            _children: {
             type: Array,
             observer: '_slotChanged',
           },
@@ -529,19 +517,32 @@
             },
           },
         },
-        /**
-         * Observers
-         */
+
         observers: [
+          '_translateObserver(direction, selected, _x, _y)',
           '_selectedObserver(selected, _children)',
         ],
 
         /**
-         * Ready event
-         */
+        * Key bindings
+        * @return {object}
+        */
+        get keyBindings() {
+          return {
+            'left up': '_prevKey',
+            'right down': '_nextKey',
+          };
+        },
+
+        /**
+        * Ready event
+        */
         ready() {
-          // Observe slot and set ´_children´
-          Polymer.dom(this.$.itemsContainer).observeNodes((info) => {
+          this._slotChanged();
+          this.tabIndex = 0;
+          const container = this.$$('slot');
+
+          Polymer.dom(container).observeNodes((info) => {
             this._children = this.getContentChildNodes().filter((n) => {
               return this.acceptedChildNodeNames.indexOf(
                 n.nodeName.toLowerCase()
@@ -549,55 +550,104 @@
             });
           });
 
-          // Listen for transition end events and set ´animationEnded´
-          const transitions = {
-            'transition': 'transitionend',
-            'WebkitTransition': 'webkitTransitionEnd',
-          };
-
-          Object.keys(transitions).forEach((k) => {
-            this.$.items.addEventListener(transitions[k], (i) => {
-              if (i.propertyName !== 'transform' || !this._endAnimationStarted)
-              {
-                return;
-              }
-              this._setAnimationEnded(true);
-              this._event('animation-end');
-            });
+          // Handle transition end
+          const items = this.$$('#items');
+          items.addEventListener('transitionend', (e) => {
+            e.preventDefault();
+            if (this.swiping || e.propertyName !== 'transform') {
+              return;
+            }
+            this._setAnimating(false);
           });
         },
 
         /**
-         * On slot change
-         *
-         * @private
-         */
+        * Returns true if _children is not empty
+        *
+        * @private
+        * @return {Boolean}
+        */
+        _hasChildren() {
+          return this._children && this._children.length > 0;
+        },
+
+        /**
+        * On slot change
+        *
+        * @private
+        */
         _slotChanged() {
+          if (!this._hasChildren()) {
+            this._setTotal(0);
+            return;
+          }
           const total = this._children.length;
           this._setTotal(total);
           if (total >= 1) this._lazyContent(1);
         },
 
         /**
-         * Go to next slide
-         *
-         * @return {*}
-         */
-        next() {
-          if (this.disabled) return;
-          if (this.selected < this.total) return this.selected++;
-          else if (this.showNext) return this.selected = 1;
+        * Go to the previous slide with keybindings
+        *
+        * @param {object} event
+        * @private
+        * @return {*}
+        */
+        _prevKey(event) {
+          event.preventDefault();
+          return this.prev();
         },
 
         /**
-         * Go to previous slide
-         *
-         * @return {*}
-         */
+        * Go to the next slide with keybindings
+        *
+        * @param {object} event
+        * @private
+        * @return {*}
+        */
+        _nextKey(event) {
+          event.preventDefault();
+          return this.next();
+        },
+
+        /**
+        * Observer on auto to turn on and off the feature
+        *
+        * @param {boolean} auto
+        * @private
+        */
+        _autoAnimate(auto) {
+          if (auto) {
+            this._autoInterval = setInterval(() => {
+              this.next();
+            }, this.duration);
+          } else {
+            clearInterval(this._autoInterval);
+          }
+        },
+
+        /**
+        * Go to next slide
+        */
+        next() {
+          if (this.disabled) return;
+          const element = this.$$('#container');
+          if (this.selected < --this.total || this.loop) {
+            this._setAnimating(true);
+            element.selectNext();
+          }
+        },
+
+        /**
+        * Go to previous slide
+        */
         prev() {
           if (this.disabled) return;
-          if (this.selected >= 2) return this.selected--;
-          else if (this.showPrev) return this.selected = this.total;
+          const element = this.$$('#container');
+          if (this.selected > 0 || this.loop) {
+            this._setAnimating(true);
+            element.selectPrevious();
+          }
         },
 
         /**
@@ -609,6 +659,7 @@
         * @private
         */
         _iconDot(item, selected) {
+          item--;
           let icon = 'icons:radio-button-unchecked';
           if (Number(item) === Number(selected)) {
             icon = 'icons:radio-button-checked';
@@ -619,53 +670,39 @@
         /**
         * Listen for changes on the selected item
         *
-        * @param {number} selected
+        * @param {number} newValue
+        * @param {number} oldValue
         * @private
         */
-        _selectedObserver(selected) {
-          if (!this._children || this._children.length < 1) return;
-          this._selectSlotted(selected);
-          this._lazyContent(selected);
-          let baseSelected = selected;
-          if (selected === 1 || selected < this.total) {
-            this._lazyContent(++baseSelected);
+        _selectedObserver(newValue, oldValue) {
+          if (!this._hasChildren()) return;
+          this._lazyContent(newValue);
+          let selectedChild = this._children[newValue];
+          this._setSelectedItem(selectedChild);
+          if (newValue < --this.total) {
+            this._lazyContent(++newValue);
           }
-          if (selected > 1) this._lazyContent(--baseSelected);
+          // Reset auto
+          this._autoAnimate(false);
+          this._autoAnimate(this.auto);
         },
 
         /**
-        * Adds class `selected` to the current slide
+        * Lazy load content for the given slider number
+        * Replaces 'data-src' attribute to 'src'.
         *
         * @param {number} selected
         * @private
         */
-        _selectSlotted(selected) {
-          if (this._children.length < 1) return;
-          for (let i = 0; i < this._children.length; ++i) {
-            this._children[i].classList.remove('selected');
-          }
-          let selectedChild = this._children[--selected];
-          selectedChild.classList.add('selected');
-          this._setSelectedItem(selectedChild);
-        },
-
-        /**
-         * Lazy load content for the given slider number
-         * Replaces 'data-src' attribute to 'src'.
-         *
-         * @param {number} selected
-         * @private
-         */
         _lazyContent(selected) {
-          if (!this._children || this._children.length < 1) return;
-          const child = this._children[--selected];
+          if (!this._hasChildren()) return;
+          const child = this._children[selected];
           if (!child) return;
           const content = child.querySelectorAll('[data-src]');
           if (content.length <= 0) return;
           let i = 0;
           for (i; i < content.length; ++i) {
-            const value = content[i].getAttribute('data-src');
-            content[i].src = value;
+            content[i].src = content[i].getAttribute('data-src');
             content[i].removeAttribute('data-src');
           }
         },
@@ -683,22 +720,22 @@
         _computeShowNext(disabled, total, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
-          return selected < total;
+          return selected < --total;
         },
 
         /**
-         * Determine if it should show the next button
-         *
-         * @param {boolean} disabled
-         * @param {number} selected
-         * @param {boolean} loop
-         * @return {boolean}
-         * @private
-         */
+        * Determine if it should show the next button
+        *
+        * @param {boolean} disabled
+        * @param {number} selected
+        * @param {boolean} loop
+        * @return {boolean}
+        * @private
+        */
         _computeShowPrev(disabled, selected, loop) {
           if (disabled) return false;
           if (loop) return true;
-          return selected > 1;
+          return selected > 0;
         },
 
         /**
@@ -728,8 +765,8 @@
         * @private
         */
         _computeEnd(total, selected) {
-          const status = selected === total;
-          this._event('skeleton-carousel-end', status);
+          const status = selected === --total;
+          if (status) this._event('end');
           return status;
         },
 
@@ -752,22 +789,27 @@
         /**
         * Returns the percentage that will to position the icon
         *
-        * @param {number} value
+        * @param {number|string} value
         * @return {string}
         * @private
         */
         _calcPercentage(value) {
+          value = value.toFixed(2);
           return `${value * 100}%`;
         },
 
         /**
-         * Listen for track and move the container
-         *
-         * @param {object} event
-         * @private
-         */
+        * Listen for track and move the container
+        *
+        * @param {object} event
+        * @private
+        */
         _drag(event) {
-          if (this.disableSwipe || this.disabled) return;
+          if (this.disableSwipe || this.disabled) {
+            // Reset selected to original in case is changed while dragging
+            this._setSelected(this.selected);
+            return;
+          }
           const width = this.offsetWidth;
           const height = this.offsetHeight;
           const x = event.detail.ddx ? event.detail.ddx : 0;
@@ -777,32 +819,46 @@
           let finalLeft = 0;
           let finalTop = 0;
 
-          if (this.direction === 'horizontal') finalLeft = this.x + finalX;
-          if (this.direction === 'vertical') finalTop = this.y + finalY;
-          const finalPositionLeft = Number(finalLeft);
-          const finalPositionTop = Number(finalTop);
+          if (this.direction === 'horizontal') finalLeft = this._x + finalX;
+          if (this.direction === 'vertical') finalTop = this._y + finalY;
 
+          let finalPositionLeft = Number(finalLeft);
+          let finalPositionTop = Number(finalTop);
+          // Prevent drag to the wrong direction if is not available
+          if (!this.showPrev) {
+            if (finalPositionLeft > 0) {
+              finalPositionLeft = 0;
+            }
+            if (finalPositionTop > 0) {
+              finalPositionTop = 0;
+            }
+          }
+          if (!this.showNext) {
+            if (finalPositionLeft < 0) {
+              finalPositionLeft = 0;
+            }
+            if (finalPositionTop < 0) {
+              finalPositionTop = 0;
+            }
+          }
           switch (event.detail.state) {
             case 'track':
-              this.x = finalPositionLeft;
-              this.y = finalPositionTop;
+              this._autoAnimate(false);
+              this._x = finalPositionLeft;
+              this._y = finalPositionTop;
               this._setSwiping(true);
-              this._setAnimationEnded(false);
-              this._endAnimationStarted = false;
               break;
             case 'end':
-              this.x = 0;
-              this.y = 0;
-
+              this._autoAnimate(this.auto);
+              this._x = 0;
+              this._y = 0;
               this._setSwiping(false);
-
-              if (finalPositionLeft >= 0.4 || finalPositionTop >= 0.4) {
+              if (finalPositionLeft >= 0.1 || finalPositionTop >= 0.1) {
                 this.prev();
               }
-              else if (finalPositionLeft <= -0.4 || finalPositionTop <= -0.4) {
+              else if (finalPositionLeft <= -0.1 || finalPositionTop <= -0.1) {
                 this.next();
               }
-              this._endAnimationStarted = true;
               break;
           }
         },
@@ -832,36 +888,52 @@
         },
 
         /**
-        * Compute translate swipe
+        * Translate swipe observer
         *
         * @param {string} direction
         * @param {number} selected
-        * @param {number} x
-        * @param {number} y
-        * @return {string}
+        * @param {number} _x
+        * @param {number} _y
         * @private
         */
-        _computeTranslate(direction, selected, x, y) {
+        _translateObserver(direction, selected, _x, _y) {
+          if (_x !== 0 || _y !== 0) {
+            this._setAnimating(true);
+          }
           let finalX = 0;
           let finalY = 0;
-          if (x === 0 && y === 0) {
-            let baseSelected = -Math.abs(--selected);
-            if (selected <= 0) baseSelected = 0;
+          let baseSelected = -Math.abs(selected);
+          if (selected <= 0) baseSelected = 0;
+          if (_x === 0 && _y === 0) {
             const percentage = this._calcPercentage(baseSelected);
             if (direction === 'horizontal') finalX = percentage;
             if (direction === 'vertical') finalY = percentage;
           }
           else {
+            // add baseSelected to the original value of the drag value
+            _x = baseSelected + _x;
+            _y = baseSelected + _y;
             if (direction === 'horizontal') {
-              const baseX = this._returnDragPosition(x, selected);
-              finalX = this._calcPercentage(baseX);
+              finalX = this._calcPercentage(_x);
             }
             if (direction === 'vertical') {
-              const baseY = this._returnDragPosition(y, selected);
-              finalY = this._calcPercentage(baseY);
+              finalY = this._calcPercentage(_y);
             }
           }
-          return this._returnTransform(finalX, finalY);
+
+          const element = this.$$('#items');
+          let transform = '';
+          if (direction === 'horizontal') {
+            transform = `translateX(${finalX})`;
+          }
+          if (direction === 'vertical') {
+            transform = `translateY(${finalY})`;
+          }
+          element.style.webkitTransform = transform;
+          element.style.MozTransform = transform;
+          element.style.msTransform = transform;
+          element.style.OTransform = transform;
+          element.style.transform = transform;
         },
 
         /**
@@ -873,29 +945,7 @@
         * @private
         */
         _returnDragPosition(position, selected) {
-          if (position < -1) position = -1;
-          if (position > 1) position = 1;
-          if (selected <= 0) selected = 1;
-          return position - --selected;
-        },
-
-        /**
-        * Returns the percentage to translate
-        *
-        * @param {number} selected
-        * @param {string} direction
-        * @return {string}
-        * @private
-        */
-        _translateEnd(selected) {
-          let baseSelected = -Math.abs(--selected);
-          if (selected <= 0) baseSelected = 0;
-          const percentage = this._calcPercentage(baseSelected);
-          let finalX = 0;
-          let finalY = 0;
-          if (this.direction === 'horizontal') finalX = percentage;
-          if (this.direction === 'vertical') finalY = percentage;
-          return this._returnTransform(finalX, finalY);
+          return position - selected;
         },
 
         /**
@@ -906,7 +956,7 @@
         * @return {string}
         * @private
         */
-        _computeItemsContainerHeight(direction, total) {
+        _computeContainerHeight(direction, total) {
           let height = 'auto';
           if (direction === 'vertical') height = this._calcPercentage(total);
 
@@ -937,22 +987,6 @@
           this.dispatchEvent(new CustomEvent(name, {
             detail: detail, bubbles: true, composed: true,
           }));
-        },
-
-        /**
-        * Return transform
-        *
-        * @param {number} x
-        * @param {number} y
-        * @return {string}
-        * @private
-        */
-        _returnTransform(x, y) {
-          return `-webkit-transform: translate3d(${x}, ${y}, 0);
-                  -moz-transform: translate3d(${x}, ${y}, 0);
-                  -ms-transform: translate3d(${x}, ${y}, 0);
-                  -o-transform: translate3d(${x}, ${y}, 0);
-                  transform: translate3d(${x}, ${y}, 0);`;
         },
       });
     })();
