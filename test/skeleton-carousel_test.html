@@ -130,7 +130,8 @@
     test('Selected Item', (done) => {
       setTimeout(() => {
         expect(element.selectedItem).to.be.not.undefined;
-        expect(Array.from(element.selectedItem.classList).indexOf('selected')).to.not.equal(-1);
+        let idx = Array.from(element.selectedItem.classList).indexOf('selected');
+        expect(idx).to.not.equal(-1);
         done();
       }, 50);
     });

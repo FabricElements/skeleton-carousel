@@ -541,7 +541,7 @@
           this._slotChanged();
           this.tabIndex = 0;
           const container = this.$$('slot');
-          
+
           Polymer.dom(container).observeNodes((info) => {
             this._children = this.getContentChildNodes().filter((n) => {
               return this.acceptedChildNodeNames.indexOf(
@@ -561,10 +561,11 @@
           });
         },
 
-      /**
+        /**
         * Returns true if _children is not empty
         *
         * @private
+        * @return {Boolean}
         */
         _hasChildren() {
           return this._children && this._children.length > 0;
@@ -660,7 +661,9 @@
         _iconDot(item, selected) {
           item--;
           let icon = 'icons:radio-button-unchecked';
-          if (Number(item) === Number(selected)) icon = 'icons:radio-button-checked';
+          if (Number(item) === Number(selected)) {
+            icon = 'icons:radio-button-checked';
+          }
           return icon;
         },
 
