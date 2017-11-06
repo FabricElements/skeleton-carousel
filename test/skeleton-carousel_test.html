@@ -121,8 +121,18 @@
     a11ySuite('basicCarousel');
 
     test('Total property should return all the childs', (done) => {
-      expect(element.total).to.equal(2);
-      done();
+      setTimeout(() => {
+        expect(element.total).to.equal(2);
+        done();
+      }, 50);
+    });
+
+    test('Selected Item', (done) => {
+      setTimeout(() => {
+        expect(element.selectedItem).to.be.not.undefined;
+        expect(Array.from(element.selectedItem.classList).indexOf('selected')).to.not.equal(-1);
+        done();
+      }, 50);
     });
   });
 
@@ -134,8 +144,10 @@
     });
 
     test('End should be true if last item is selected', (done) => {
-      expect(element.end).to.be.true;
-      done();
+      setTimeout(() => {
+        expect(element.end).to.be.true;
+        done();
+      }, 50);
     });
   });
 
@@ -160,8 +172,8 @@
 
     setup(() => {
       element = fixture('listBoundaries');
-      next = element.shadowRoot.querySelector('#next');
-      prev = element.shadowRoot.querySelector('#prev');
+      next = element.$$('#next');
+      prev = element.$$('#prev');
     });
 
     test('showPrev & showNext should be disable', (done) => {
@@ -178,10 +190,8 @@
     test('showPrev & showNext should be disable', (done) => {
       let element = fixture('disabledCarousel');
       flush(() => {
-        const buttons = element
-          .shadowRoot
-          .querySelector('#dots')
-          .querySelectorAll('paper-icon-button');
+        const dots = element.$$('#dots');
+        const buttons = Polymer.dom(dots).querySelectorAll('paper-icon-button');
 
         buttons.forEach((button) => {
           expect(button.disabled).to.be.true;
