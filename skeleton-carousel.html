@@ -233,6 +233,7 @@
                        selected="{{selected}}"
                        fallback-selection="0"
                        selected-class="selected"
+                       items="{{_children}}"
                        style$="[[_containerHeight]]">
           <slot></slot>
         </iron-selector>
@@ -279,6 +280,10 @@
       /* eslint new-cap: 0 */
       Polymer({
         is: 'skeleton-carousel',
+
+        hostAttributes: {
+          tabindex: 0
+        },
 
         behaviors: [
           Polymer.IronA11yKeysBehavior,
@@ -539,16 +544,6 @@
         */
         ready() {
           this._slotChanged();
-          this.tabIndex = 0;
-          const container = this.$$('slot');
-
-          Polymer.dom(container).observeNodes((info) => {
-            this._children = this.getContentChildNodes().filter((n) => {
-              return this.acceptedChildNodeNames.indexOf(
-                n.nodeName.toLowerCase()
-              ) > -1;
-            });
-          });
 
           // Handle transition end
           const items = this.$$('#items');
@@ -670,17 +665,16 @@
         /**
         * Listen for changes on the selected item
         *
-        * @param {number} newValue
-        * @param {number} oldValue
+        * @param {number} selected
         * @private
         */
-        _selectedObserver(newValue, oldValue) {
+        _selectedObserver(selected) {
           if (!this._hasChildren()) return;
-          this._lazyContent(newValue);
-          let selectedChild = this._children[newValue];
+          this._lazyContent(selected);
+          let selectedChild = this._children[selected];
           this._setSelectedItem(selectedChild);
-          if (newValue < --this.total) {
-            this._lazyContent(++newValue);
+          if (selected < --this.total) {
+            this._lazyContent(++selected);
           }
           // Reset auto
           this._autoAnimate(false);
