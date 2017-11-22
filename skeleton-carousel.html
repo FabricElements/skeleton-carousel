@@ -780,7 +780,9 @@
       _drag(event) {
         if (this.disableSwipe || this.disabled) {
           // Reset selected to original in case is changed while dragging
-          this._setSelected(this.selected);
+          this._x = 0;
+          this._y = 0;
+          this._setSwiping(false);
           return;
         }
         const width = this.offsetWidth;
