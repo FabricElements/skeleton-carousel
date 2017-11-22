@@ -338,6 +338,13 @@
             value: false,
           },
           /**
+           * Disable keybindings functionality
+           */
+           disableKeybindings: {
+            type: Boolean,
+            value: false,
+          },
+          /**
            * Autoplay interval time in milliseconds
            */
           duration: {
@@ -562,6 +569,7 @@
        * @return {*}
        */
       _prevKey(event) {
+        if (this.disableKeybindings || this.disabled) return;
         event.preventDefault();
         return this.prev();
       }
@@ -574,6 +582,7 @@
        * @return {*}
        */
       _nextKey(event) {
+        if (this.disableKeybindings || this.disabled) return;
         event.preventDefault();
         return this.next();
       }
@@ -771,7 +780,9 @@
       _drag(event) {
         if (this.disableSwipe || this.disabled) {
           // Reset selected to original in case is changed while dragging
-          this._setSelected(this.selected);
+          this._x = 0;
+          this._y = 0;
+          this._setSwiping(false);
           return;
         }
         const width = this.offsetWidth;
