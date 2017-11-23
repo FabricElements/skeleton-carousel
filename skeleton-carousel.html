@@ -47,6 +47,7 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        outline: none;
         -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
       }
 
@@ -338,14 +339,14 @@
             value: false,
           },
           /**
-           * Disable keybindings functionality
+           * Disable keyboard navigation
            */
-           disableKeybindings: {
+           disableKeys: {
             type: Boolean,
             value: false,
           },
           /**
-           * Autoplay interval time in milliseconds
+           * Auto play interval time in milliseconds
            */
           duration: {
             type: Number,
@@ -569,7 +570,7 @@
        * @return {*}
        */
       _prevKey(event) {
-        if (this.disableKeybindings || this.disabled) return;
+        if (this.disableKeys || this.disabled) return;
         event.preventDefault();
         return this.prev();
       }
@@ -582,7 +583,7 @@
        * @return {*}
        */
       _nextKey(event) {
-        if (this.disableKeybindings || this.disabled) return;
+        if (this.disableKeys || this.disabled) return;
         event.preventDefault();
         return this.next();
       }
