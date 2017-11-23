@@ -145,6 +145,7 @@ $ bower install --save FabricElements/skeleton-carousel#^1.0.0
 * `direction` (string) - Carousel direction (horizontal or vertical).
 * `disabled` (boolean) - Disables component.
 * `disable-swipe` (boolean) - Disables swipe functionality.
+* `disable-keys` (boolean) - Disables keyboard navigation.
 * `duration` (number) - Autoplay interval time in milliseconds (Default: `4000`)
 * `dots` (boolean) - Show navigation dots.
 * `end` (boolean) - Detail returns `true` when the carousel has reached the last slide.
