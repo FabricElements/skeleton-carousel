@@ -437,7 +437,7 @@
            */
           _children: {
             type: Array,
-            observer: '_childrenChanged'
+            observer: '_childrenChanged',
           },
           /**
            * Auto interval
@@ -514,7 +514,6 @@
       connectedCallback() {
         super.connectedCallback();
         this.tabIndex = 0;
-        const container = this.shadowRoot.querySelector('slot');
 
         // Handle transition end
         const items = this.shadowRoot.querySelector('#items');
@@ -550,6 +549,7 @@
       /**
        * On children change
        *
+       * @param {Array} children
        * @private
        */
        _childrenChanged(children) {
