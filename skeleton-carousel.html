@@ -502,9 +502,9 @@
           /**
             * Elements passed in via <slot>
             */
-            _children: {
+          _children: {
             type: Array,
-            observer: '_slotChanged',
+            observer: '_childrenChanged',
           },
         },
 
@@ -528,8 +528,6 @@
         * Ready event
         */
         ready() {
-          this._slotChanged();
-
           // Handle transition end
           const items = this.$$('#items');
           items.addEventListener('transitionend', (e) => {
@@ -556,12 +554,12 @@
         *
         * @private
         */
-        _slotChanged() {
+        _childrenChanged(children) {
           if (!this._hasChildren()) {
             this._setTotal(0);
             return;
           }
-          const total = this._children.length;
+          const total = children.length;
           this._setTotal(total);
           if (total >= 1) this._lazyContent(1);
         },
