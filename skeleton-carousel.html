@@ -47,6 +47,7 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        outline: none;
         -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
       }
 
@@ -339,7 +340,14 @@
             value: false,
           },
           /**
-           * Autoplay interval time in milliseconds
+           * Disable keyboard navigation
+           */
+           disableKeys: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Auto play interval time in milliseconds
            */
           duration: {
             type: Number,
@@ -566,6 +574,7 @@
        * @return {*}
        */
       _prevKey(event) {
+        if (this.disableKeys || this.disabled) return;
         event.preventDefault();
         return this.prev();
       }
@@ -578,6 +587,7 @@
        * @return {*}
        */
       _nextKey(event) {
+        if (this.disableKeys || this.disabled) return;
         event.preventDefault();
         return this.next();
       }
@@ -775,7 +785,9 @@
       _drag(event) {
         if (this.disableSwipe || this.disabled) {
           // Reset selected to original in case is changed while dragging
-          this._setSelected(this.selected);
+          this._x = 0;
+          this._y = 0;
+          this._setSwiping(false);
           return;
         }
         const width = this.offsetWidth;
