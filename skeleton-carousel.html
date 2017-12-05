@@ -234,7 +234,8 @@
                        selected="{{selected}}"
                        fallback-selection="0"
                        selected-class="selected"
-                       style$="[[_containerHeight]]">
+                       style$="[[_containerHeight]]"
+                       items="{{_children}}">
           <slot></slot>
         </iron-selector>
       </div>
@@ -440,6 +441,13 @@
             readOnly: true,
           },
           /**
+           * The slot items.
+           */
+          _children: {
+            type: Array,
+            observer: '_childrenChanged',
+          },
+          /**
            * Auto interval
            */
           _autoInterval: {
@@ -513,12 +521,7 @@
        */
       connectedCallback() {
         super.connectedCallback();
-        this._slotChanged();
         this.tabIndex = 0;
-        const container = this.shadowRoot.querySelector('slot');
-        new Polymer.FlattenedNodesObserver(container, () => {
-          this._slotChanged();
-        });
 
         // Handle transition end
         const items = this.shadowRoot.querySelector('#items');
@@ -552,12 +555,13 @@
       }
 
       /**
-       * On slot change
+       * On children change
        *
+       * @param {Array} children
        * @private
        */
-      _slotChanged() {
-        const total = this.children.length;
+       _childrenChanged(children) {
+        const total = children.length;
         this._setTotal(total);
         if (total >= 1) this._lazyContent(1);
       }
@@ -652,7 +656,7 @@
        */
       _selectedObserver(newValue, oldValue) {
         this._lazyContent(newValue);
-        let selectedChild = this.children[newValue];
+        let selectedChild = this._children[newValue];
         this._setSelectedItem(selectedChild);
         if (newValue < --this.total) {
           this._lazyContent(++newValue);
@@ -670,7 +674,7 @@
        * @private
        */
       _lazyContent(selected) {
-        const child = this.children[selected];
+        const child = this._children[selected];
         if (!child) return;
         const content = child.querySelectorAll('[data-src]');
         if (content.length <= 0) return;
