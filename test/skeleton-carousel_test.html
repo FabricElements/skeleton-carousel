@@ -154,7 +154,7 @@
     });
 
     test('End should be true if last item is selected', (done) => {
-      oncePropChanged(element, 'total').then(() => {      
+      oncePropChanged(element, 'total').then(() => {
         expect(element.end).to.be.true;
         done();
       })
