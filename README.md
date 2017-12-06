@@ -17,15 +17,10 @@
 
 ## Installation
 
-Install skeleton-carousel with Bower
+Install `skeleton-carousel` with Bower for *Polymer 2* projects
 
-#### Polymer 2 projects
 ```shell
 $ bower install --save FabricElements/skeleton-carousel
-```
-#### Hybrid projects
-```shell
-$ bower install --save FabricElements/skeleton-carousel#^1.0.0
 ```
 
 ## Examples
