@@ -529,11 +529,14 @@
        */
       connectedCallback() {
         super.connectedCallback();
-        this._children = Polymer.FlattenedNodesObserver.getFlattenedNodes(this)
-          .filter((n) =>
-            n.nodeType === Node.ELEMENT_NODE
-            && n.nodeName !== 'DOM-REPEAT'
-            && n.nodeName !== 'TEMPLATE');
+        const container = this.shadowRoot.querySelector('slot');
+        new Polymer.FlattenedNodesObserver(container, () => {
+          this._children = Polymer.FlattenedNodesObserver.getFlattenedNodes(this)
+            .filter((n) =>
+              n.nodeType === Node.ELEMENT_NODE
+              && n.nodeName !== 'DOM-REPEAT'
+              && n.nodeName !== 'TEMPLATE');
+        });
         // Handle transition end
         const items = this.shadowRoot.querySelector('#items');
         items.addEventListener('transitionend', (e) => {
