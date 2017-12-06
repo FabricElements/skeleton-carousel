@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "eslint": "^4.10.0",
+    "eslint": "^4.12.1",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-html": "^3.2.2"
   },
@@ -11,7 +11,8 @@
     "lint": "npm run lint:javascript && polymer lint",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
     "test": "polymer test",
-    "test:integration": "polymer build # test that psk builds without error with the CLI"
+    "test:integration": "polymer build # test that psk builds without error with the CLI",
+    "serve": "polymer serve -H 0.0.0.0"
   },
   "dependencies": {}
 }
