@@ -121,8 +121,10 @@
     a11ySuite('basicCarousel');
 
     test('Total property should return all the childs', (done) => {
-      expect(element.total).to.equal(2);
-      done();
+      setTimeout(() => {
+        expect(element.total).to.equal(2);
+        done();
+      });
     });
   });
 
@@ -134,8 +136,10 @@
     });
 
     test('End should be true if last item is selected', (done) => {
-      expect(element.end).to.be.true;
-      done();
+      setTimeout(() => {
+        expect(element.end).to.be.true;
+        done();
+      });
     });
   });
 
