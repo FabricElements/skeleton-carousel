@@ -468,7 +468,7 @@
             type: Boolean,
             value: false,
             readOnly: true,
-            computed: '_computeControls(dots, nav)',
+            computed: '_computeControls(dots, nav, total)',
           },
           /**
            * Returns an array with the slides.
@@ -969,11 +969,12 @@
        *
        * @param {boolean} dots
        * @param {boolean} nav
+       * @param {number} total
        * @return {boolean}
        * @private
        */
-      _computeControls(dots, nav) {
-        return (dots || nav);
+      _computeControls(dots, nav, total) {
+        return total > 1 && (dots || nav);
       }
 
       /**
