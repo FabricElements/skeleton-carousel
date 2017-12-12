@@ -253,7 +253,7 @@
                      hidden$="[[!dots]]"
                      tabindex="-1">
         <template is="dom-repeat" items="[[_dots]]">
-          <paper-icon-button icon="[[_iconDot(item, selected)]]"
+          <paper-icon-button icon="[[_iconDot(item, selected, iconDotUnchecked, iconDotChecked)]]"
                              disabled$="[[disabled]]"
           ></paper-icon-button>
         </template>
@@ -446,6 +446,20 @@
             notify: true,
             reflectToAttribute: true,
             readOnly: true,
+          },
+          /**
+           * Determines the icon to use for the dots when not checked
+           */
+          iconDotUnchecked: {
+            type: String,
+            value: 'icons:radio-button-unchecked',
+          },
+          /**
+           * Determines the icon to use for the dots when checked
+           */
+          iconDotChecked: {
+            type: String,
+            value: 'icons:radio-button-checked',
           },
           /**
            * Auto interval
@@ -651,13 +665,15 @@
        *
        * @param {number} item
        * @param {number} selected
+       * @param {String} iconDotUnchecked
+       * @param {String} iconDotChecked
        * @return {string}
        * @private
        */
-      _iconDot(item, selected) {
+      _iconDot(item, selected, iconDotUnchecked, iconDotChecked) {
         item--;
-        let icon = 'icons:radio-button-unchecked';
-        if (Number(item) === Number(selected)) icon = 'icons:radio-button-checked';
+        let icon = iconDotUnchecked;
+        if (Number(item) === Number(selected)) icon = iconDotChecked;
         return icon;
       }
 
