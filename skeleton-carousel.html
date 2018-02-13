@@ -72,10 +72,6 @@
 
       #items {
         position: relative;
-        -webkit-transform: translate3d(0%, 0%, 0);
-        -moz-transform: translate3d(0%, 0%, 0);
-        -ms-transform: translate3d(0%, 0%, 0);
-        -o-transform: translate3d(0%, 0%, 0);
         transform: translate3d(0%, 0%, 0);
         will-change: transform;
       }
@@ -929,10 +925,6 @@
         if (direction === 'vertical') {
           transform = `translateY(${finalY})`;
         }
-        element.style.webkitTransform = transform;
-        element.style.MozTransform = transform;
-        element.style.msTransform = transform;
-        element.style.OTransform = transform;
         element.style.transform = transform;
       }
 
