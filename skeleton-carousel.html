@@ -229,6 +229,9 @@
         <iron-selector id="container"
                        selected="{{selected}}"
                        fallback-selection="0"
+                       attr-for-selected="{{attrForSelected}}"
+                       selected-attribute="{{selectedAttribute}}"
+                       on-selected-item-changed="onSelectedItemChanged"
                        selected-class="selected"
                        style$="[[_containerHeight]]">
           <slot></slot>
@@ -381,6 +384,12 @@
             type: Object,
             notify: true,
             readOnly: true,
+          },
+          attrForSelected: {
+            type: String,
+          },
+          selectedAttribute: {
+            type: String,
           },
           /**
            * The user is swiping
@@ -980,6 +989,14 @@
         this.dispatchEvent(new CustomEvent(name, {
           detail: detail, bubbles: true, composed: true,
         }));
+      }
+
+      /**
+       * Sets the selectedItem
+       * @param  {Event} event Polymer change event
+       */
+      onSelectedItemChanged(event) {
+        this._setSelectedItem(event.detail.value);
       }
     }
 
