@@ -555,6 +555,18 @@
             type: Number,
             value: 0,
           },
+
+          nextKeys: {
+            type: String,
+            value: 'left up',
+            observer: 'prevKeysChanged',
+          },
+
+          prevKeys: {
+            type: String,
+            value: 'right down',
+            observer: 'nextKeysChanged',
+          },
         };
       }
 
@@ -592,13 +604,31 @@
       }
 
       /**
+       * Sets keybindings for previous
+       * @param  {String} prevKeys keybindings
+       * @param  {String} old old keybindings
+       */
+      prevKeysChanged(prevKeys, old) {
+        if (old) this.removeOwnKeyBindings();
+        this.addOwnKeyBinding(prevKeys, '_prevKey');
+      }
+
+      /**
+       * Sets keybindings for next
+       * @param  {String} nextKeys keybindings
+       * @param  {String} old old keybindings
+       */
+      nextKeysChanged(nextKeys, old) {
+        if (old) this.removeOwnKeyBindings();
+        this.addOwnKeyBinding(nextKeys, '_nextKey');
+      }
+
+      /**
        * Key bindings
        * @return {object}
        */
       get keyBindings() {
         return {
-          'left up': '_prevKey',
-          'right down': '_nextKey',
         };
       }
 
