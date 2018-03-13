@@ -290,6 +290,7 @@
        */
       static get properties() {
         return {
+
           /**
            * Indicates if the carousel is been animated (Transition)
            */
@@ -300,6 +301,7 @@
             reflectToAttribute: true,
             notify: true,
           },
+
           /**
            * Change slides automatically
            */
@@ -308,6 +310,7 @@
             value: false,
             observer: '_autoAnimate',
           },
+
           /**
            * Carousel direction (horizontal or vertical)
            */
@@ -316,6 +319,7 @@
             value: 'horizontal',
             reflectToAttribute: true,
           },
+
           /**
            * Disables component
            */
@@ -323,6 +327,7 @@
             type: Boolean,
             value: false,
           },
+
           /**
            * Show navigation dots
            */
@@ -330,6 +335,7 @@
             type: Boolean,
             value: false,
           },
+
           /**
            * Disable swipe functionality
            */
@@ -337,6 +343,7 @@
             type: Boolean,
             value: false,
           },
+
           /**
            * Disable keyboard navigation
            */
@@ -344,6 +351,7 @@
             type: Boolean,
             value: false,
           },
+
           /**
            * Auto play interval time in milliseconds
            */
@@ -351,6 +359,7 @@
             type: Number,
             value: 4000,
           },
+
           /**
            * Determines if the carousel should be looped.
            * This affects the controls and the drag and drop functionality.
@@ -360,6 +369,7 @@
             type: Boolean,
             value: false,
           },
+
           /**
            * Show navigation next/prev buttons
            */
@@ -367,6 +377,7 @@
             type: Boolean,
             value: false,
           },
+
           /**
            * Selected slide index
            */
@@ -377,6 +388,7 @@
             reflectToAttribute: true,
             observer: '_selectedObserver',
           },
+
           /**
            * Selected item
            */
@@ -385,12 +397,15 @@
             notify: true,
             readOnly: true,
           },
+
           attrForSelected: {
             type: String,
           },
+
           selectedAttribute: {
             type: String,
           },
+
           /**
            * The user is swiping
            */
@@ -401,6 +416,7 @@
             readOnly: true,
             reflectToAttribute: true,
           },
+
           /**
            * tabindex
            */
@@ -409,6 +425,7 @@
             value: 0,
             reflectToAttribute: true,
           },
+
           /**
            * Total number of slides
            */
@@ -419,6 +436,7 @@
             reflectToAttribute: true,
             readOnly: true,
           },
+
           /**
            * Returns true when the carousel has reached the last slide.
            */
@@ -430,6 +448,7 @@
             reflectToAttribute: true,
             computed: '_computeEnd(total, selected)',
           },
+
           /**
            * Determines if the next button should be displayed.
            */
@@ -441,6 +460,7 @@
             reflectToAttribute: true,
             readOnly: true,
           },
+
           /**
            * Determines if the previous button should be displayed.
            */
@@ -452,12 +472,14 @@
             reflectToAttribute: true,
             readOnly: true,
           },
+
           /**
            * Auto interval
            */
           _autoInterval: {
             type: Object,
           },
+
           /**
            * Children elements
            */
@@ -466,6 +488,7 @@
             value: [],
             observer: '_childrenObserver',
           },
+
           /**
            * Show navigation controls
            */
@@ -475,6 +498,7 @@
             readOnly: true,
             computed: '_computeControls(dots, nav, total)',
           },
+
           /**
            * Returns an array with the slides.
            * This will be used to create the dot controls.
@@ -485,6 +509,7 @@
             readOnly: true,
             value: [],
           },
+
           /**
            * Icon for the previous button
            */
@@ -494,6 +519,7 @@
             readOnly: true,
             computed: '_computeIconPrev(direction)',
           },
+
           /**
            * Icon for the next button
            */
@@ -503,6 +529,7 @@
             readOnly: true,
             computed: '_computeIconNext(direction)',
           },
+
           /**
            * Icon for the next button
            */
@@ -512,6 +539,7 @@
             computed: '_computeContainerHeight(direction, total)',
             readOnly: true,
           },
+
           /**
            * X Axis position (0 - 1)
            */
@@ -519,6 +547,7 @@
             type: Number,
             value: 0,
           },
+
           /**
            * Y Axis position (0 - 1)
            */
@@ -829,32 +858,28 @@
 
         let finalPositionLeft = Number(finalLeft);
         let finalPositionTop = Number(finalTop);
+
         // Prevent drag to the wrong direction if is not available
         if (!this.showPrev) {
-          if (finalPositionLeft > 0) {
-            finalPositionLeft = 0;
-          }
-          if (finalPositionTop > 0) {
-            finalPositionTop = 0;
-          }
+          if (finalPositionLeft > 0) finalPositionLeft = 0;
+          if (finalPositionTop > 0) finalPositionTop = 0;
         }
+
         if (!this.showNext) {
-          if (finalPositionLeft < 0) {
-            finalPositionLeft = 0;
-          }
-          if (finalPositionTop < 0) {
-            finalPositionTop = 0;
-          }
+          if (finalPositionLeft < 0) finalPositionLeft = 0;
+          if (finalPositionTop < 0) finalPositionTop = 0;
         }
+
         switch (event.detail.state) {
           case 'track': {
-            const ratio = event.detail.dx / event.detail.dy;
+            const {dx, dy} = event.detail;
+            const horizontal = Math.abs(dx) > Math.abs(dy);
             this._autoAnimate(false);
             this._x = finalPositionLeft;
             this._y = finalPositionTop;
             const swiping =
-                this.direction === 'horizontal' ? ratio > 1
-              : this.direction === 'vertical' ? ratio < 1
+                this.direction === 'horizontal' ? horizontal
+              : this.direction === 'vertical' ? !horizontal
               : true;
             this._setSwiping(swiping);
             break;
