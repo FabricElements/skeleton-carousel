@@ -604,6 +604,14 @@
       }
 
       /**
+       * Shadows iron-selector select
+       * @param  {Number} index index to select
+       */
+      select(index) {
+        this.$.container.select(index);
+      }
+
+      /**
        * Sets keybindings for previous
        * @param  {String} prevKeys keybindings
        * @param  {String} old old keybindings
