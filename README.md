@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/FabricElements/skeleton-carousel.svg?branch=master)](https://travis-ci.org/FabricElements/skeleton-carousel)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/FabricElements/skeleton-carousel)
+  
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/FabricElementsskeleton-carousel)
+[![Stars on vaadin.com/directory](https://img.shields.io/vaadin-directory/star/FabricElementsskeleton-carousel.svg)](https://vaadin.com/directory/component/FabricElementsskeleton-carousel)
+
 
 ## \<skeleton-carousel\>
 
