@@ -12,7 +12,6 @@ addons:
       - google-chrome-stable
 before_script:
   - npm install -g polymer-cli web-component-tester
-  - polymer install
   - npm run lint
-script:
-  - xvfb-run wct --skip-plugin sauce
+script: xvfb-run wct --module-resolution=node --npm --skip-plugin sauce
+
