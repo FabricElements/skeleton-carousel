@@ -7,16 +7,27 @@
 
   <title>demo</title>
 
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
-  <link rel="import" href="../../iron-image/iron-image.html">
-  <link rel="import" href="../../polymer/lib/elements/dom-repeat.html">
-  <link rel="import" href="../skeleton-carousel.html">
+  <script type="module" src="../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+  <script type="module" src="../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+  <script type="module" src="../../@polymer/iron-flex-layout/iron-flex-layout.js"></script>
+  <script type="module" src="../../@polymer/iron-image/iron-image.js"></script>
+  <script type="module" src="../../@polymer/polymer/lib/elements/dom-repeat.js"></script>
+  <script type="module" src="../skeleton-carousel.js"></script>
 
-  <custom-style>
+  <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
       body {
         font-family: 'Roboto', sans-serif;
@@ -47,175 +58,220 @@
         };
       }
     </style>
-  </custom-style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </head>
 <body>
-<div class="vertical-section-container centered">
+<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
   <h3>Basic demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-carousel dots nav>
+      <skeleton-carousel dots="" nav="">
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image 
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image 
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image 
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
     </template>
   </demo-snippet>
-</div>
-<div class="vertical-section-container centered">
+</div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
   <h3>Basic demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-carousel dots nav direction="vertical">
+      <skeleton-carousel dots="" nav="" direction="vertical">
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
     </template>
   </demo-snippet>
-</div>
-<div class="vertical-section-container centered">
+</div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
   <h3>Basic skeleton-carousel loop demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-carousel dots nav loop>
+      <skeleton-carousel dots="" nav="" loop="">
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
     </template>
   </demo-snippet>
-</div>
+</div>`;
 
-<div class="vertical-section-container centered">
+document.body.appendChild($_documentContainer.content);
+</script>
+
+<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
   <h3>Basic skeleton-carousel autoplay demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-carousel dots nav loop auto>
+      <skeleton-carousel dots="" nav="" loop="" auto="">
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
     </template>
   </demo-snippet>
-</div>
-<div class="vertical-section-container centered">
+</div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
   <h3>dom-repeat demo</h3>
   <demo-snippet>
     <template>
       <dom-bind>
         <template>
-          <skeleton-carousel dots nav>
-            <template is="dom-repeat"
-                      items='["https://source.unsplash.com/category/nature/500x300", "https://source.unsplash.com/category/buildings/500x300", "https://source.unsplash.com/category/food/500x300"]'>
-              <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                          data-src$="[[item]]"
-                          sizing="cover"
-                          preload
-                          fade
-              ></iron-image>
+          <skeleton-carousel dots="" nav="">
+            <template is="dom-repeat" items="[&quot;https://source.unsplash.com/category/nature/500x300&quot;, &quot;https://source.unsplash.com/category/buildings/500x300&quot;, &quot;https://source.unsplash.com/category/food/500x300&quot;]">
+              <iron-image
+                placeholder="https://source.unsplash.com/category/nature/10x10"
+                data-src\$="[[item]]"
+                sizing="cover"
+                preload=""
+                fade="">
+              </iron-image>
             </template>
           </skeleton-carousel>
         </template>
       </dom-bind>
     </template>
   </demo-snippet>
-</div>
+</div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </body>
 </html>

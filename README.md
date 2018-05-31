@@ -21,10 +21,8 @@
 
 ## Installation
 
-Install `skeleton-carousel` with Bower for *Polymer 2* projects
-
 ```shell
-$ bower install --save FabricElements/skeleton-carousel
+$ npm install skeleton-carousel
 ```
 
 ## Examples
