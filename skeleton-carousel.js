@@ -14,7 +14,6 @@ import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 /**
  * `skeleton-carousel`
  *
- * @extends Polymer.Element
  * @customElement
  * @polymer
  * @demo demo/index.html
@@ -22,6 +21,10 @@ import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 class SkeletonCarousel extends mixinBehaviors([
   IronA11yKeysBehavior,
 ], PolymerElement) {
+  /**
+   * Template element
+   * @return {!HTMLTemplateElement}
+   */
   static get template() {
     return html`
     <!--suppress CssInvalidPseudoSelector -->
@@ -961,7 +964,7 @@ class SkeletonCarousel extends mixinBehaviors([
    * @param {null|string|boolean} detail
    * @private
    */
-  _event(name, detail = "") {
+  _event(name, detail = '') {
     this.dispatchEvent(new CustomEvent(name, {
       detail: detail, bubbles: true, composed: true,
     }));

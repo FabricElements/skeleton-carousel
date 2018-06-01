@@ -4,7 +4,8 @@
     "google"
   ],
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "env": {
     "browser": true,
@@ -12,9 +13,7 @@
     "mocha": true,
     "jasmine": true
   },
-  "plugins": [
-    "html"
-  ],
+  "plugins": [],
   "rules": {
     "brace-style": "off",
     "new-cap": [
@@ -43,6 +42,14 @@
         "max": 1,
         "maxBOF": 0,
         "maxEOF": 1
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "ignoreTemplateLiterals": true,
+        "ignoreUrls": true,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+;$"
       }
     ]
   },
