@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/FabricElements/skeleton-carousel.svg?branch=master)](https://travis-ci.org/FabricElements/skeleton-carousel)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/FabricElements/skeleton-carousel)
-  
 [![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/FabricElementsskeleton-carousel)
 [![Stars on vaadin.com/directory](https://img.shields.io/vaadin-directory/star/FabricElementsskeleton-carousel.svg)](https://vaadin.com/directory/component/FabricElementsskeleton-carousel)
 
@@ -22,7 +21,7 @@
 ## Installation
 
 ```shell
-$ npm install skeleton-carousel
+$ npm install FabricElements/skeleton-carousel
 ```
 
 ## Examples
@@ -32,9 +31,10 @@ $ npm install skeleton-carousel
 ```
 <custom-element-demo>
   <template>
-    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../iron-image/iron-image.html">
-    <link rel="import" href="skeleton-carousel.html">
+    <script src="../webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
+    <script type="module">
+        import '@polymer/iron-image/iron-image.js';
+        import '../skeleton-carousel.js';</script>
     <style is="custom-style">
       iron-image {
         display: block;
@@ -80,8 +80,10 @@ $ npm install skeleton-carousel
 ```
 <custom-element-demo>
   <template>
-    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../iron-image/iron-image.html">
+    <script src="../webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
+        <script type="module">
+            import '@polymer/iron-image/iron-image.js';
+            import '../skeleton-carousel.js';</script>
     <link rel="import" href="skeleton-carousel.html">
     <style is="custom-style">
       iron-image {

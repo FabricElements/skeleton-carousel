@@ -1,12 +1,16 @@
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-import { IronA11yKeysBehavior } from '@polymer/iron-a11y-keys-behavior/iron-a11y-keys-behavior.js';
+/**
+ * @license
+ * Copyright FabricElements. All Rights Reserved.
+ */
+import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {IronA11yKeysBehavior} from '@polymer/iron-a11y-keys-behavior/iron-a11y-keys-behavior.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-icons/iron-icons.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer.js';
-import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import {FlattenedNodesObserver} from '@polymer/polymer/lib/utils/flattened-nodes-observer.js';
+import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+
 /**
  * `skeleton-carousel`
  *
@@ -239,19 +243,19 @@ class SkeletonCarousel extends mixinBehaviors([
 
     <div id="carousel" on-track="_drag">
       <div id="items">
-        <iron-selector id="container" selected="{{selected}}" fallback-selection="0" selected-class="selected" style\$="[[_containerHeight]]">
+        <iron-selector id="container" selected="{{selected}}" fallback-selection="0" selected-class="selected" style$="[[_containerHeight]]">
           <slot></slot>
         </iron-selector>
       </div>
     </div>
-    <nav id="controls" hidden\$="[[!_controls]]">
-      <paper-icon-button icon\$="[[_iconPrev]]" id="prev" on-tap="prev" disabled\$="[[!showPrev]]" hidden\$="[[!nav]]"></paper-icon-button>
-      <iron-selector id="dots" selected="{{selected}}" fallback-selection="0" selected-class="selected" hidden\$="[[!dots]]" tabindex="-1">
+    <nav id="controls" hidden$="[[!_controls]]">
+      <paper-icon-button icon$="[[_iconPrev]]" id="prev" on-tap="prev" disabled$="[[!showPrev]]" hidden$="[[!nav]]"></paper-icon-button>
+      <iron-selector id="dots" selected="{{selected}}" fallback-selection="0" selected-class="selected" hidden$="[[!dots]]" tabindex="-1">
         <template is="dom-repeat" items="[[_dots]]">
-          <paper-icon-button icon="[[_iconDot(item, selected)]]" disabled\$="[[disabled]]"></paper-icon-button>
+          <paper-icon-button icon="[[_iconDot(item, selected)]]" disabled$="[[disabled]]"></paper-icon-button>
         </template>
       </iron-selector>
-      <paper-icon-button icon\$="[[_iconNext]]" id="next" on-tap="next" disabled\$="[[!showNext]]" hidden\$="[[!nav]]"></paper-icon-button>
+      <paper-icon-button icon$="[[_iconNext]]" id="next" on-tap="next" disabled$="[[!showNext]]" hidden$="[[!nav]]"></paper-icon-button>
     </nav>
 `;
   }
@@ -954,10 +958,10 @@ class SkeletonCarousel extends mixinBehaviors([
    * Fire event
    *
    * @param {string} name
-   * @param {string|boolean|null} detail
+   * @param {null|string|boolean} detail
    * @private
    */
-  _event(name, detail = null) {
+  _event(name, detail = "") {
     this.dispatchEvent(new CustomEvent(name, {
       detail: detail, bubbles: true, composed: true,
     }));
