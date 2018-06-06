@@ -10,6 +10,9 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-icons/iron-icons.js';
 import {FlattenedNodesObserver} from '@polymer/polymer/lib/utils/flattened-nodes-observer.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import * as Gestures from '@polymer/polymer/lib/utils/gestures.js';
+
 
 /**
  * `skeleton-carousel`
@@ -20,6 +23,7 @@ import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
  */
 class SkeletonCarousel extends mixinBehaviors([
   IronA11yKeysBehavior,
+  GestureEventListeners,
 ], PolymerElement) {
   /**
    * Template element
@@ -244,7 +248,7 @@ class SkeletonCarousel extends mixinBehaviors([
       }
     </style>
 
-    <div id="carousel" on-track="_drag">
+    <div id="carousel">
       <div id="items">
         <iron-selector id="container" selected="{{selected}}" fallback-selection="0" selected-class="selected" style$="[[_containerHeight]]">
           <slot></slot>
@@ -514,6 +518,12 @@ class SkeletonCarousel extends mixinBehaviors([
   connectedCallback() {
     super.connectedCallback();
     const container = this.shadowRoot.querySelector('slot');
+
+    // Allow vertical scrolling
+    const carousel = this.shadowRoot.querySelector('#carousel');
+    Gestures.addListener(carousel, 'track', this._drag.bind(this));
+    this.setScrollDirection('all', carousel);
+
     new FlattenedNodesObserver(container, () => {
       this._children = FlattenedNodesObserver.getFlattenedNodes(this)
         .filter((n) =>
