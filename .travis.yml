@@ -2,7 +2,7 @@ notifications:
   email: false
 language: node_js
 sudo: false
-node_js: stable
+node_js: 8
 addons:
   firefox: latest
   apt:
@@ -11,7 +11,5 @@ addons:
     packages:
       - google-chrome-stable
 before_script:
-  - npm install -g polymer-cli web-component-tester
   - npm run lint
-script: xvfb-run wct --module-resolution=node --npm --skip-plugin sauce
-
+script: xvfb-run npm run test

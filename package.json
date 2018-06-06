@@ -32,7 +32,7 @@
   "scripts": {
     "lint": "npm run lint:javascript && polymer lint",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
-    "test": "polymer test",
+    "test": "polymer test --npm --skip-plugin sauce",
     "test:integration": "polymer build # test that psk builds without error with the CLI",
     "serve": "polymer serve -H 0.0.0.0",
     "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
@@ -53,6 +53,8 @@
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "eslint": "^4.12.1",
     "eslint-config-google": "^0.9.1",
+    "eslint-plugin-html": "^4.0.3",
+    "polymer-cli": "^1.7.2",
     "wct-browser-legacy": "^1.0.0"
   },
   "resolutions": {
