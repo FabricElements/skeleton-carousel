@@ -13,7 +13,9 @@
     "mocha": true,
     "jasmine": true
   },
-  "plugins": [],
+  "plugins": [
+    "html"
+  ],
   "rules": {
     "brace-style": "off",
     "new-cap": [

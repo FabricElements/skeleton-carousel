@@ -53,6 +53,7 @@
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "eslint": "^4.12.1",
     "eslint-config-google": "^0.9.1",
+    "eslint-plugin-html": "^4.0.3",
     "wct-browser-legacy": "^1.0.0"
   },
   "resolutions": {
