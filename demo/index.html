@@ -7,14 +7,16 @@
 
   <title>demo</title>
 
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
-  <link rel="import" href="../../iron-image/iron-image.html">
-  <link rel="import" href="../../polymer/lib/elements/dom-repeat.html">
-  <link rel="import" href="../skeleton-carousel.html">
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+    import '@polymer/iron-demo-helpers/demo-snippet';
+    import '@polymer/iron-flex-layout/iron-flex-layout.js';
+    import '@polymer/iron-image/iron-image.js';
+    import '@polymer/polymer/lib/elements/dom-repeat.js';
+    import '@polymer/polymer/lib/elements/dom-bind.js';
+    import '../skeleton-carousel.js';
+  </script>
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -56,30 +58,33 @@
     <template>
       <skeleton-carousel dots nav>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
@@ -92,30 +97,33 @@
     <template>
       <skeleton-carousel dots nav direction="vertical">
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
@@ -128,67 +136,72 @@
     <template>
       <skeleton-carousel dots nav loop>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
     </template>
   </demo-snippet>
 </div>
-
 <div class="vertical-section-container centered">
   <h3>Basic skeleton-carousel autoplay demo</h3>
   <demo-snippet>
     <template>
       <skeleton-carousel dots nav loop auto>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src="https://source.unsplash.com/category/nature/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 1</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/food/10x10"
-                      data-src="https://source.unsplash.com/category/food/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 2</h3>
         </div>
         <div>
-          <iron-image placeholder="https://source.unsplash.com/category/buildings/10x10"
-                      data-src="https://source.unsplash.com/category/buildings/500x300"
-                      sizing="cover"
-                      preload
-                      fade
-          ></iron-image>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
           <h3>Title 3</h3>
         </div>
       </skeleton-carousel>
@@ -199,23 +212,64 @@
   <h3>dom-repeat demo</h3>
   <demo-snippet>
     <template>
-      <dom-bind>
-        <template>
-          <skeleton-carousel dots nav>
-            <template is="dom-repeat"
-                      items='["https://source.unsplash.com/category/nature/500x300", "https://source.unsplash.com/category/buildings/500x300", "https://source.unsplash.com/category/food/500x300"]'>
-              <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                          data-src$="[[item]]"
-                          sizing="cover"
-                          preload
-                          fade
-              ></iron-image>
-            </template>
-          </skeleton-carousel>
-        </template>
-      </dom-bind>
+      <demo-element></demo-element>
     </template>
   </demo-snippet>
 </div>
+<script type="module">
+  import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+  import '@polymer/iron-flex-layout/iron-flex-layout.js';
+
+  /**
+   * `demo-element`
+   *
+   *
+   * @customElement
+   * @polymer
+   * @demo demo/index.html
+   */
+  class DemoElement extends PolymerElement {
+    /**
+     * Template element
+     * @return {!HTMLTemplateElement}
+     */
+    static get template() {
+      return html`
+      <style>
+        :host {
+          display: block;
+          @apply --layout-flex-auto;
+          @apply --layout-vertical;
+        }
+        skeleton-carousel {
+          @apply --layout-flex-auto;
+        }
+      </style>
+      <skeleton-carousel dots nav>
+        <template is="dom-repeat" items="{{images}}">
+          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
+                      data-src$="[[item]]"
+                      sizing="cover"
+                      preload=""
+                      fade=""></iron-image>
+        </template>
+      </skeleton-carousel>
+    `;
+    }
+    /**
+     * @return {object}
+     */
+    static get properties() {
+      return {
+        images: {
+          type: Array,
+          value: ['https://source.unsplash.com/category/nature/500x300', 'https://source.unsplash.com/category/buildings/500x300', 'https://source.unsplash.com/category/food/500x300'],
+        },
+      };
+    }
+  }
+
+  window.customElements.define('demo-element', DemoElement);
+</script>
 </body>
 </html>

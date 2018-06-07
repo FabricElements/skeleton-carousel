@@ -4,7 +4,8 @@
     "google"
   ],
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "env": {
     "browser": true,
@@ -43,6 +44,14 @@
         "max": 1,
         "maxBOF": 0,
         "maxEOF": 1
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "ignoreTemplateLiterals": true,
+        "ignoreUrls": true,
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+;$"
       }
     ]
   },

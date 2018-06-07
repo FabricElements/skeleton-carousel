@@ -1,18 +1,65 @@
 {
-  "name": "name",
-  "version": "0.0.1",
-  "license": "BSD-3-Clause",
-  "devDependencies": {
-    "eslint": "^4.12.1",
-    "eslint-config-google": "^0.9.1",
-    "eslint-plugin-html": "^3.2.2"
+  "name": "@fabricelements/skeleton-carousel",
+  "description": "skeleton-carousel provides a carousel for images and other content",
+  "main": "skeleton-carousel.js",
+  "author": "The FabricElements Authors",
+  "keywords": [
+    "gallery",
+    "carousel",
+    "swipe",
+    "media",
+    "images",
+    "slider",
+    "pictures",
+    "vertical",
+    "horizontal",
+    "lazy-loading",
+    "lazy",
+    "material-design",
+    "material design",
+    "web-components",
+    "polymer",
+    "FabricElements",
+    "fabric",
+    "responsive"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FabricElements/skeleton-carousel.git"
   },
+  "version": "3.0.0",
+  "license": "BSD-3-Clause",
   "scripts": {
     "lint": "npm run lint:javascript && polymer lint",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
-    "test": "polymer test",
+    "test": "polymer test --npm --skip-plugin sauce",
     "test:integration": "polymer build # test that psk builds without error with the CLI",
-    "serve": "polymer serve -H 0.0.0.0"
+    "serve": "polymer serve -H 0.0.0.0",
+    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
   },
-  "dependencies": {}
+  "dependencies": {
+    "@polymer/gen-typescript-declarations": "^1.2.2",
+    "@polymer/iron-a11y-keys-behavior": "^3.0.0-pre.18",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.18",
+    "@polymer/iron-icons": "^3.0.0-pre.18",
+    "@polymer/iron-selector": "^3.0.0-pre.18",
+    "@polymer/paper-icon-button": "^3.0.0-pre.18",
+    "@polymer/polymer": "^3.0.0"
+  },
+  "devDependencies": {
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.18",
+    "@polymer/iron-image": "^3.0.0-pre.18",
+    "@polymer/iron-test-helpers": "^3.0.0-pre.18",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "eslint": "^4.12.1",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-html": "^4.0.3",
+    "polymer-cli": "^1.7.2",
+    "wct-browser-legacy": "^1.0.0"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "type-detect": "1.0.0"
+  }
 }
