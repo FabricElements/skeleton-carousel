@@ -4,6 +4,7 @@
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
 
 <dom-module id="skeleton-carousel">
   <template>
@@ -274,6 +275,7 @@
      */
     class SkeletonCarousel extends Polymer.mixinBehaviors([
       Polymer.IronA11yKeysBehavior,
+      Polymer.GestureEventListeners,
     ], Polymer.Element) {
       /**
        * @return {string}
@@ -527,6 +529,12 @@
       connectedCallback() {
         super.connectedCallback();
         const container = this.shadowRoot.querySelector('slot');
+
+        // Allow vertical scrolling
+        const carousel = this.shadowRoot.querySelector('#carousel');
+        Polymer.Gestures.addListener(carousel, 'track', this._drag.bind(this));
+        this.setScrollDirection('all', carousel);
+
         new Polymer.FlattenedNodesObserver(container, () => {
           this._children = Polymer.FlattenedNodesObserver.getFlattenedNodes(this)
             .filter((n) =>
