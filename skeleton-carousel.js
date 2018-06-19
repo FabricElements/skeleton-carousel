@@ -912,8 +912,7 @@ class SkeletonCarousel extends mixinBehaviors([
       const percentage = this._calcPercentage(baseSelected);
       if (direction === 'horizontal') finalX = percentage;
       if (direction === 'vertical') finalY = percentage;
-    }
-    else {
+    } else {
       // add baseSelected to the original value of the drag value
       _x = baseSelected + _x;
       _y = baseSelected + _y;
@@ -959,7 +958,6 @@ class SkeletonCarousel extends mixinBehaviors([
   _computeContainerHeight(direction, total) {
     let height = 'auto';
     if (direction === 'vertical') height = this._calcPercentage(total);
-
     return `height: ${height};`;
   }
 

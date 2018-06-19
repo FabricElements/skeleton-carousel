@@ -27,7 +27,7 @@
     "type": "git",
     "url": "git@github.com:FabricElements/skeleton-carousel.git"
   },
-  "version": "3.0.0",
+  "version": "3.0.1",
   "license": "BSD-3-Clause",
   "scripts": {
     "lint": "npm run lint:javascript && polymer lint",
