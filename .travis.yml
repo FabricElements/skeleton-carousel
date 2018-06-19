@@ -1,15 +1,32 @@
-notifications:
-  email: false
 language: node_js
-sudo: false
-node_js: 8
+node_js: '9'
+sudo: 'false'
+cache:
+  directories:
+    - node_modules
+dist: trusty
 addons:
   firefox: latest
+  chrome: stable
   apt:
     sources:
       - google-chrome
     packages:
       - google-chrome-stable
+notifications:
+  email: false
 before_script:
+  - npm install -g polymer-cli
   - npm run lint
-script: xvfb-run npm run test
+ - >-
+    npm run update-types && git diff --exit-code || (echo -e
+    '\n\033[31mERROR:\033[0m Typings are stale. Please run "npm run
+    update-types".' && false)
+  - >-
+    npm run format && git diff --exit-code || (echo -e '\n\033[31mERROR:\033[0m
+    Project is not formatted. Please run "npm run format".' && false)
+script:
+  - xvfb-run polymer test --skip-plugin sauce
+  - >-
+    if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then polymer test -s 'default';
+    fi
