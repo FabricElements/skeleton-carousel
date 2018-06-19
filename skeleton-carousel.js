@@ -372,6 +372,7 @@ class SkeletonCarousel extends mixinBehaviors([
         type: Object,
         notify: true,
         readOnly: true,
+        computed: '_computeSelectedItem(selected, _children)',
       },
       /**
        * The user is swiping
@@ -562,6 +563,18 @@ class SkeletonCarousel extends mixinBehaviors([
   }
 
   /**
+   * Computed the selected item
+   *
+   * @param {number} selected
+   * @param {array} children
+   * @return {object}
+   * @private
+   */
+  _computeSelectedItem(selected, children) {
+    return children[selected];
+  }
+
+  /**
    * Children change observer
    *
    * @param {array} children
@@ -663,8 +676,6 @@ class SkeletonCarousel extends mixinBehaviors([
    */
   _selectedObserver(newValue, oldValue) {
     this._lazyContent(newValue);
-    let selectedChild = this._children[newValue];
-    this._setSelectedItem(selectedChild);
     if (newValue < --this.total) {
       this._lazyContent(++newValue);
     }
