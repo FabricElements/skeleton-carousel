@@ -381,7 +381,7 @@
             type: Object,
             notify: true,
             readOnly: true,
-            computed: '_computeSelectedItem(selected, _children)'
+            computed: '_computeSelectedItem(selected, _children)',
           },
           /**
            * The user is swiping
@@ -568,8 +568,9 @@
       /**
        * Computed the selected item
        *
-       * @param {array} children
        * @param {number} selected
+       * @param {array} children
+       * @return {object}
        * @private
        */
       _computeSelectedItem(selected, children) {
