@@ -25,6 +25,3 @@ before_script:
     update-types".' && false)
 script:
   - xvfb-run polymer test --skip-plugin sauce
-  - >-
-    if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then polymer test -s 'default';
-    fi
