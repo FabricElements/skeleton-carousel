@@ -634,7 +634,8 @@ class SkeletonCarousel extends mixinBehaviors([
   next() {
     if (this.disabled) return;
     const element = this.shadowRoot.querySelector('#container');
-    if (this.selected < --this.total || this.loop) {
+    let total = this.total;
+    if (this.selected < --total || this.loop) {
       this._setAnimating(true);
       element.selectNext();
     }
@@ -676,7 +677,8 @@ class SkeletonCarousel extends mixinBehaviors([
    */
   _selectedObserver(newValue, oldValue) {
     this._lazyContent(newValue);
-    if (newValue < --this.total) {
+    let total = this.total;
+    if (newValue < --total) {
       this._lazyContent(++newValue);
     }
     // Reset auto
