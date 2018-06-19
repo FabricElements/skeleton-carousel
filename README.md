@@ -21,7 +21,7 @@
 ## Installation
 
 ```shell
-$ npm install FabricElements/skeleton-carousel
+$ npm install @fabricelements/skeleton-carousel --save
 ```
 
 ## Examples
