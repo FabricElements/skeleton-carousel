@@ -2,12 +2,14 @@
  * @license
  * Copyright FabricElements. All Rights Reserved.
  */
+/* eslint-disable max-len */
+/* eslint-disable-next-line max-len */
 import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {IronA11yKeysBehavior} from '@polymer/iron-a11y-keys-behavior/iron-a11y-keys-behavior.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/iron-icons/iron-icons.js';
+import './icons/carousel.js';
 import {FlattenedNodesObserver} from '@polymer/polymer/lib/utils/flattened-nodes-observer.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
@@ -473,7 +475,7 @@ class SkeletonCarousel extends mixinBehaviors([
        */
       _iconPrev: {
         type: String,
-        value: 'icons:arrow-back',
+        value: 'carousel:arrow-back',
         readOnly: true,
         computed: '_computeIconPrev(direction)',
       },
@@ -482,7 +484,7 @@ class SkeletonCarousel extends mixinBehaviors([
        */
       _iconNext: {
         type: String,
-        value: 'icons:arrow-forward',
+        value: 'carousel:arrow-forward',
         readOnly: true,
         computed: '_computeIconNext(direction)',
       },
@@ -663,8 +665,8 @@ class SkeletonCarousel extends mixinBehaviors([
    */
   _iconDot(item, selected) {
     item--;
-    let icon = 'icons:radio-button-unchecked';
-    if (Number(item) === Number(selected)) icon = 'icons:radio-button-checked';
+    let icon = 'carousel:radio-button-unchecked';
+    if (Number(item) === Number(selected)) icon = 'carousel:radio-button-checked';
     return icon;
   }
 
@@ -877,8 +879,8 @@ class SkeletonCarousel extends mixinBehaviors([
    * @private
    */
   _computeIconPrev(direction) {
-    if (direction === 'vertical') return 'icons:arrow-upward';
-    return 'icons:arrow-back';
+    if (direction === 'vertical') return 'carousel:arrow-upward';
+    return 'carousel:arrow-back';
   }
 
   /**
@@ -889,8 +891,8 @@ class SkeletonCarousel extends mixinBehaviors([
    * @private
    */
   _computeIconNext(direction) {
-    if (direction === 'vertical') return 'icons:arrow-downward';
-    return 'icons:arrow-forward';
+    if (direction === 'vertical') return 'carousel:arrow-downward';
+    return 'carousel:arrow-forward';
   }
 
   /**
