@@ -3,8 +3,8 @@
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="./icons/carousel.html">
 
 <dom-module id="skeleton-carousel">
   <template>
@@ -484,7 +484,7 @@
            */
           _iconPrev: {
             type: String,
-            value: 'icons:arrow-back',
+            value: 'carousel:arrow-back',
             readOnly: true,
             computed: '_computeIconPrev(direction)',
           },
@@ -493,7 +493,7 @@
            */
           _iconNext: {
             type: String,
-            value: 'icons:arrow-forward',
+            value: 'carousel:arrow-forward',
             readOnly: true,
             computed: '_computeIconNext(direction)',
           },
@@ -673,8 +673,10 @@
        */
       _iconDot(item, selected) {
         item--;
-        let icon = 'icons:radio-button-unchecked';
-        if (Number(item) === Number(selected)) icon = 'icons:radio-button-checked';
+        let icon = 'carousel:radio-button-unchecked';
+        if (Number(item) === Number(selected)) {
+          icon = 'carousel:radio-button-checked';
+        }
         return icon;
       }
 
@@ -886,8 +888,8 @@
        * @private
        */
       _computeIconPrev(direction) {
-        if (direction === 'vertical') return 'icons:arrow-upward';
-        return 'icons:arrow-back';
+        if (direction === 'vertical') return 'carousel:arrow-upward';
+        return 'carousel:arrow-back';
       }
 
       /**
@@ -898,8 +900,8 @@
        * @private
        */
       _computeIconNext(direction) {
-        if (direction === 'vertical') return 'icons:arrow-downward';
-        return 'icons:arrow-forward';
+        if (direction === 'vertical') return 'carousel:arrow-downward';
+        return 'carousel:arrow-forward';
       }
 
       /**
