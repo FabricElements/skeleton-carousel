@@ -1,9 +1,7 @@
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
-const $_documentContainer = document.createElement('div');
-$_documentContainer.setAttribute('style', 'display: none;');
-
-$_documentContainer.innerHTML = `<iron-iconset-svg size="24" name="carousel">
+const styleElement = document.createElement('template');
+styleElement.innerHTML = `<iron-iconset-svg size="24" name="carousel">
 <svg>
   <defs>
     <g id="arrow-back">
@@ -27,4 +25,4 @@ $_documentContainer.innerHTML = `<iron-iconset-svg size="24" name="carousel">
 </svg>
 </iron-iconset-svg>`;
 
-document.head.appendChild($_documentContainer);
+document.head.appendChild(styleElement.content);

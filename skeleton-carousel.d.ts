@@ -8,6 +8,8 @@
  *   skeleton-carousel.js
  */
 
+/// <reference path="icons/carousel.d.ts" />
+
 /**
  * `skeleton-carousel`
  */
