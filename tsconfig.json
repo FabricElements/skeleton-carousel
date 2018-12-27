@@ -1,25 +1,29 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "esnext",
+    "module": "es2015",
     "moduleResolution": "node",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2017", "dom", "dom.iterable"],
+    "declaration": true,
     "strict": true,
+    "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
     "stripInternal": true,
-    "inlineSources": false,
+    "inlineSources": true,
     "inlineSourceMap": false,
+    "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": false,
     "skipLibCheck": true,
     "alwaysStrict": false,
     "allowJs": true,
     "pretty": true,
-    "removeComments": false
+    "removeComments": false,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "*.ts"

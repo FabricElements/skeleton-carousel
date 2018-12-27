@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 /**
  * @license
- * Copyright Entango Technologies. All Rights Reserved.
+ * Copyright FabricElements. All Rights Reserved.
  */
 import { IronA11yKeysBehavior } from "@polymer/iron-a11y-keys-behavior/iron-a11y-keys-behavior.js";
 import "@polymer/iron-flex-layout/iron-flex-layout.js";
@@ -19,10 +19,7 @@ import { FlattenedNodesObserver } from "@polymer/polymer/lib/utils/flattened-nod
 import * as Gestures from "@polymer/polymer/lib/utils/gestures.js";
 import { setPassiveTouchGestures } from "@polymer/polymer/lib/utils/settings";
 import "./icons/carousel.js";
-class SkeletonCarousel extends mixinBehaviors([
-    IronA11yKeysBehavior,
-    GestureEventListeners
-], LitElement) {
+class SkeletonCarousel extends mixinBehaviors([IronA11yKeysBehavior, GestureEventListeners], LitElement) {
     /**
      * Lit-Element Constructor
      */
@@ -116,28 +113,28 @@ class SkeletonCarousel extends mixinBehaviors([
              */
             direction: {
                 type: String,
-                value: "horizontal"
+                value: "horizontal",
             },
             /**
              * Show navigation dotsArray
              */
             dots: {
                 type: Boolean,
-                value: false
+                value: false,
             },
             /**
              * Show navigation next/prev buttons
              */
             nav: {
                 type: Boolean,
-                value: false
+                value: false,
             },
             /**
              * Change slides automatically
              */
             auto: {
                 type: Boolean,
-                value: false
+                value: false,
             },
             /**
              * Determines if the carousel should be looped.
@@ -146,253 +143,283 @@ class SkeletonCarousel extends mixinBehaviors([
              */
             loop: {
                 type: Boolean,
-                value: false
+                value: false,
             },
             disabled: {
                 type: Boolean,
-                value: false
-            }
+                value: false,
+            },
         };
     }
     render() {
         return html `
-    <!--suppress CssInvalidPseudoSelector -->
-    <!--suppress CssUnresolvedCustomProperty -->
-    <!--suppress CssUnresolvedCustomPropertySet -->
-    <style>
-      :host {
-        display: block;
-        position: relative;
-        overflow: hidden;
-        contain: content;
-        box-sizing: border-box;
-        @apply --layout-flex-auto;
-        @apply --skeleton-carousel;
-        min-height: var(--skeleton-carousel-min-height, 300px);
-      }
+      <!--suppress CssInvalidPseudoSelector -->
+      <!--suppress CssUnresolvedCustomProperty -->
+      <!--suppress CssUnresolvedCustomPropertySet -->
+      <style is="custom-style">
+        :host {
+          display: block;
+          position: relative;
+          overflow: hidden;
+          contain: content;
+          box-sizing: border-box;
+          @apply --layout-flex-auto;
+          @apply --skeleton-carousel;
+          min-height: var(--skeleton-carousel-min-height, 300px);
+        }
 
-      :host([direction="horizontal"]) {
-        @apply --layout-vertical;
-      }
+        :host([direction="horizontal"]) {
+          @apply --layout-vertical;
+        }
 
-      :host([alt][direction="horizontal"]) {
-        @apply --layout-vertical-reverse;
-      }
+        :host([alt][direction="horizontal"]) {
+          @apply --layout-vertical-reverse;
+        }
 
-      :host([direction="vertical"]) {
-        @apply --layout-inline;
-        @apply --layout-horizontal;
-      }
+        :host([direction="vertical"]) {
+          @apply --layout-inline;
+          @apply --layout-horizontal;
+        }
 
-      :host([alt][direction="vertical"]) {
-        @apply --layout-horizontal-reverse;
-      }
+        :host([alt][direction="vertical"]) {
+          @apply --layout-horizontal-reverse;
+        }
 
-      :host,
-      #carousel *,
-      #container ::slotted(*) {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        outline: none;
-        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-      }
+        :host,
+        #carousel *,
+        #container ::slotted(*) {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          outline: none;
+          -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+        }
 
-      #carousel,
-      #items,
-      #container {
-        display: block;
-        position: relative;
-        width: 100%;
-        @apply --layout-flex-auto;
-      }
+        #carousel,
+        #items,
+        #container {
+          display: block;
+          position: relative;
+          width: 100%;
+          @apply --layout-flex-auto;
+        }
 
-      #carousel,
-      #container {
-        @apply --layout-vertical;
-      }
+        #carousel,
+        #container {
+          @apply --layout-vertical;
+        }
 
-      #carousel {
-        overflow: hidden;
-        z-index: 0;
-      }
+        #carousel {
+          overflow: hidden;
+          z-index: 0;
+        }
 
-      #items {
-        position: relative;
-        transform: translate3d(0%, 0%, 0);
-        will-change: transform;
-      }
+        #items {
+          position: relative;
+          transform: translate3d(0%, 0%, 0);
+          will-change: transform;
+        }
 
-      :host([direction="horizontal"]) #items {
-        @apply --layout-vertical;
-      }
+        :host([direction="horizontal"]) #items {
+          @apply --layout-vertical;
+        }
 
-      :host([direction="vertical"]) #items {
-        @apply --layout-fit;
-      }
+        :host([direction="vertical"]) #items {
+          @apply --layout-fit;
+        }
 
-      #container {
-        @apply --layout-inline;
-        @apply --skeleton-carousel-container;
-      }
+        #container {
+          @apply --layout-inline;
+          @apply --skeleton-carousel-container;
+        }
 
-      :host([direction="horizontal"]) #container {
-        @apply --layout-horizontal;
-        @apply --skeleton-carousel-container-horizontal;
-      }
+        :host([direction="horizontal"]) #container {
+          @apply --layout-horizontal;
+          @apply --skeleton-carousel-container-horizontal;
+        }
 
-      :host([direction="vertical"]) #container {
-        @apply --layout-vertical;
-        @apply --layout-wrap;
-        @apply --skeleton-carousel-container-vertical;
-      }
+        :host([direction="vertical"]) #container {
+          @apply --layout-vertical;
+          @apply --layout-wrap;
+          @apply --skeleton-carousel-container-vertical;
+        }
 
-      #container ::slotted(*) {
-        display: block;
-        position: relative;
-        overflow: hidden;
-        @apply --layout-vertical;
-        @apply --layout-flex-auto;
-        min-width: 100%;
-        max-width: 100%;
-        width: 100%;
-        will-change: auto;
-        opacity: .8;
-        @apply --skeleton-carousel-item;
-      }
+        #container ::slotted(*) {
+          display: block;
+          position: relative;
+          overflow: hidden;
+          @apply --layout-vertical;
+          @apply --layout-flex-auto;
+          min-width: 100%;
+          max-width: 100%;
+          width: 100%;
+          will-change: auto;
+          opacity: 0.8;
+          @apply --skeleton-carousel-item;
+        }
 
-      #container ::slotted(.selected) {
-        opacity: 1;
-        @apply --skeleton-carousel-item-selected;
-      }
+        #container ::slotted(.selected) {
+          opacity: 1;
+          @apply --skeleton-carousel-item-selected;
+        }
 
-      /*
+        /*
       * Controls
       */
-      #controls {
-        display: block;
-        padding: .5rem;
-        z-index: 1;
-        @apply --layout-center-center;
-        @apply --layout-center-justified;
-        @apply --skeleton-carousel-controls;
-      }
+        #controls {
+          display: block;
+          padding: 0.5rem;
+          z-index: 1;
+          @apply --layout-center-center;
+          @apply --layout-center-justified;
+          @apply --skeleton-carousel-controls;
+        }
 
-      :host([direction="horizontal"]) #controls {
-        @apply --skeleton-carousel-controls-horizontal;
-      }
+        :host([direction="horizontal"]) #controls {
+          @apply --skeleton-carousel-controls-horizontal;
+        }
 
-      :host([direction="vertical"]) #controls {
-        @apply --skeleton-carousel-controls-vertical;
-      }
+        :host([direction="vertical"]) #controls {
+          @apply --skeleton-carousel-controls-vertical;
+        }
 
-      :host([direction="horizontal"]) #controls,
-      :host([direction="horizontal"]) #dots {
-        @apply --layout-horizontal;
-      }
+        :host([direction="horizontal"]) #controls,
+        :host([direction="horizontal"]) #dots {
+          @apply --layout-horizontal;
+        }
 
-      :host([direction="vertical"]) #controls,
-      :host([direction="vertical"]) #dots {
-        @apply --layout-vertical;
-      }
+        :host([direction="vertical"]) #controls,
+        :host([direction="vertical"]) #dots {
+          @apply --layout-vertical;
+        }
 
-      paper-icon-button {
-        border-radius: 50%;
-      }
+        paper-icon-button {
+          border-radius: 50%;
+        }
 
-      #dots {
-        @apply --layout-flex-auto;
-        @apply --layout-center-center;
-        @apply --skeleton-carousel-dots;
-      }
+        #dots {
+          @apply --layout-flex-auto;
+          @apply --layout-center-center;
+          @apply --skeleton-carousel-dots;
+        }
 
-      #dots paper-icon-button {
-        color: var(--skeleton-carousel-dot-color, var(--paper-grey-900));
-        opacity: .4;
-        @apply --skeleton-carousel-dot;
-      }
+        #dots paper-icon-button {
+          color: var(--skeleton-carousel-dot-color, var(--paper-grey-900));
+          opacity: 0.4;
+          @apply --skeleton-carousel-dot;
+        }
 
-      #dots paper-icon-button.selected {
-        opacity: 1;
-        @apply --skeleton-carousel-dot-selected;
-      }
+        #dots paper-icon-button.selected {
+          opacity: 1;
+          @apply --skeleton-carousel-dot-selected;
+        }
 
-      #dots paper-icon-button[disabled] {
-        opacity: .4;
-        @apply --skeleton-carousel-dot-disabled;
-      }
+        #dots paper-icon-button[disabled] {
+          opacity: 0.4;
+          @apply --skeleton-carousel-dot-disabled;
+        }
 
-      #prev,
-      #next {
-        color: var(--skeleton-carousel-nav-color, var(--paper-grey-900));
-      }
+        #prev,
+        #next {
+          color: var(--skeleton-carousel-nav-color, var(--paper-grey-900));
+        }
 
-      #prev,
-      #next {
-        @apply --skeleton-carousel-nav;
-      }
+        #prev,
+        #next {
+          @apply --skeleton-carousel-nav;
+        }
 
-      #prev[disabled],
-      #next[disabled] {
-        color: var(--skeleton-carousel-nav-disabled-color, var(--paper-grey-600));
-        @apply --skeleton-carousel-nav-disabled;
-      }
+        #prev[disabled],
+        #next[disabled] {
+          color: var(
+            --skeleton-carousel-nav-disabled-color,
+            var(--paper-grey-600)
+          );
+          @apply --skeleton-carousel-nav-disabled;
+        }
 
-      #prev {
-        @apply --skeleton-carousel-nav-prev;
-      }
+        #prev {
+          @apply --skeleton-carousel-nav-prev;
+        }
 
-      #next {
-        @apply --skeleton-carousel-nav-next;
-      }
+        #next {
+          @apply --skeleton-carousel-nav-next;
+        }
 
-      [hidden] {
-        display: none !important;
-      }
+        [hidden] {
+          display: none !important;
+        }
 
-      /* Apply transition */
-      #items,
-      #container ::slotted(*),
-      paper-icon-button {
-        -webkit-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
-        -moz-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
-        -ms-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
-        -o-transition: all 300ms cubic-bezier(.51, .92, .24, 1);
-        transition: all 300ms cubic-bezier(.51, .92, .24, 1);
-        @apply --skeleton-carousel-transition;
-      }
+        /* Apply transition */
+        #items,
+        #container ::slotted(*),
+        paper-icon-button {
+          -webkit-transition: all 300ms cubic-bezier(0.51, 0.92, 0.24, 1);
+          -moz-transition: all 300ms cubic-bezier(0.51, 0.92, 0.24, 1);
+          -ms-transition: all 300ms cubic-bezier(0.51, 0.92, 0.24, 1);
+          -o-transition: all 300ms cubic-bezier(0.51, 0.92, 0.24, 1);
+          transition: all 300ms cubic-bezier(0.51, 0.92, 0.24, 1);
+          @apply --skeleton-carousel-transition;
+        }
 
-      :host[swiping] #items {
-        -webkit-transition: all 300ms linear;
-        -moz-transition: all 300ms linear;
-        -ms-transition: all 300ms linear;
-        -o-transition: all 300ms linear;
-        transition: all 300ms linear;
-      }
-    </style>
-    <div id="carousel">
-      <div id="items">
-        <iron-selector id="container" selected="${this.selected}" fallback-selection="0" selected-class="selected"
-         .style="${this._containerHeight()}">
-          <slot></slot>
-        </iron-selector>
+        :host[swiping] #items {
+          -webkit-transition: all 300ms linear;
+          -moz-transition: all 300ms linear;
+          -ms-transition: all 300ms linear;
+          -o-transition: all 300ms linear;
+          transition: all 300ms linear;
+        }
+      </style>
+      <div id="carousel">
+        <div id="items">
+          <iron-selector
+            id="container"
+            selected="${this.selected}"
+            fallback-selection="0"
+            selected-class="selected"
+            .style="${this._containerHeight()}"
+          >
+            <slot></slot>
+          </iron-selector>
+        </div>
       </div>
-    </div>
-    <nav id="controls" ?hidden="${!this._computeControls(this.dots, this.nav, this.total)}">
-      <paper-icon-button .icon="${this.iconPrev}" id="prev" @tap="${this.prev}"
-        ?disabled="${!this._showPrev(this.disabled, this.selected, this.loop)}" ?hidden="${!this.nav}">
-      </paper-icon-button>
-        <iron-selector @tap="${this._iconSelect}" id="dots" selected="${this.selected}" fallback-selection="0"
-          selected-class="selected" ?hidden="${!this.dotsArray}" tabindex="-1">
+      <nav
+        id="controls"
+        ?hidden="${!this._computeControls(this.dots, this.nav, this.total)}"
+      >
+        <paper-icon-button
+          .icon="${this.iconPrev}"
+          id="prev"
+          @tap="${this.prev}"
+          ?disabled="${!this._showPrev(this.disabled, this.selected, this.loop)}"
+          ?hidden="${!this.nav}"
+        >
+        </paper-icon-button>
+        <iron-selector
+          @tap="${this._iconSelect}"
+          id="dots"
+          selected="${this.selected}"
+          fallback-selection="0"
+          selected-class="selected"
+          ?hidden="${!this.dotsArray}"
+          tabindex="-1"
+        >
           ${this.dotsArray.map((dot) => html `
-              <paper-icon-button icon="${this._iconDot(dot, this.selected)}"
-                ?disabled="${this.disabled}"></paper-icon-button>
-            `)}
+                  <paper-icon-button
+                    icon="${this._iconDot(dot, this.selected)}"
+                    ?disabled="${this.disabled}"
+                  ></paper-icon-button>
+                `)}
         </iron-selector>
-        <paper-icon-button .icon="${this.iconNext}" id="next" @tap="${this.next}"
-          ?disabled="${!this._showNext(this.disabled, this.total, this.selected, this.loop)}" ?hidden="${!this.nav}">
+        <paper-icon-button
+          .icon="${this.iconNext}"
+          id="next"
+          @tap="${this.next}"
+          ?disabled="${!this._showNext(this.disabled, this.total, this.selected, this.loop)}"
+          ?hidden="${!this.nav}"
+        >
         </paper-icon-button>
       </nav>
     `;
@@ -484,8 +511,10 @@ class SkeletonCarousel extends mixinBehaviors([
         /**
          * Translate swipe observer
          */
-        if (changedProps.has("direction") || changedProps.has("selected") ||
-            changedProps.has("_X") || changedProps.has("_Y")) {
+        if (changedProps.has("direction") ||
+            changedProps.has("selected") ||
+            changedProps.has("_X") ||
+            changedProps.has("_Y")) {
             // Set up fake x and y values so it doesn't re-trigger update
             let _XFAUX = this._X;
             let _YFAUX = this._Y;
@@ -902,3 +931,4 @@ __decorate([
     property()
 ], SkeletonCarousel.prototype, "_Y", void 0);
 window.customElements.define("skeleton-carousel", SkeletonCarousel);
+//# sourceMappingURL=skeleton-carousel.js.map
