@@ -1,3 +1,6 @@
+// 20180906065541
+// https://raw.githubusercontent.com/FabricElements/skeleton-auth/master/.eslintrc.json
+
 {
   "extends": [
     "eslint:recommended",
@@ -14,7 +17,8 @@
     "jasmine": true
   },
   "plugins": [
-    "html"
+    "html",
+    "prettier"
   ],
   "rules": {
     "brace-style": "off",
@@ -52,6 +56,17 @@
         "ignoreTemplateLiterals": true,
         "ignoreUrls": true,
         "ignorePattern": "^import\\s.+\\sfrom\\s.+;$"
+      }
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": {
+          "objects": "always",
+          "arrays": "ignore",
+          "functions": "ignore",
+          "typeLiterals": "ignore"
+        }
       }
     ]
   },

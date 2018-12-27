@@ -6,7 +6,7 @@
   "rules": {
     "file-header": [
       true,
-      "Copyright Entango Technologies\\."
+      "Copyright FabricElements\\."
     ],
     // -- Strict errors --
     // These lint rules are likely always a good idea.
