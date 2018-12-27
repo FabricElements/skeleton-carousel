@@ -1,0 +1,7 @@
+{
+  "name": "Skeleton Carousel",
+  "short_name": "Skeleton Carousel",
+  "description": "Description",
+  "start_url": "/",
+  "display": "standalone"
+}

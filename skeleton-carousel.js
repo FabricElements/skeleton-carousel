@@ -1,37 +1,161 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 /**
  * @license
- * Copyright FabricElements. All Rights Reserved.
+ * Copyright Entango Technologies. All Rights Reserved.
  */
-/* eslint-disable max-len */
-/* eslint-disable-next-line max-len */
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {IronA11yKeysBehavior} from '@polymer/iron-a11y-keys-behavior/iron-a11y-keys-behavior.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/iron-selector/iron-selector.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import './icons/carousel.js';
-import {FlattenedNodesObserver} from '@polymer/polymer/lib/utils/flattened-nodes-observer.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import * as Gestures from '@polymer/polymer/lib/utils/gestures.js';
-
-/**
- * `skeleton-carousel`
- *
- * @customElement
- * @polymer
- * @demo demo/index.html
- */
+import { IronA11yKeysBehavior } from "@polymer/iron-a11y-keys-behavior/iron-a11y-keys-behavior.js";
+import "@polymer/iron-flex-layout/iron-flex-layout.js";
+import "@polymer/iron-selector/iron-selector.js";
+import { html, LitElement, property } from "@polymer/lit-element";
+import "@polymer/paper-icon-button/paper-icon-button.js";
+import { mixinBehaviors } from "@polymer/polymer/lib/legacy/class.js";
+import { GestureEventListeners } from "@polymer/polymer/lib/mixins/gesture-event-listeners";
+import { FlattenedNodesObserver } from "@polymer/polymer/lib/utils/flattened-nodes-observer.js";
+import * as Gestures from "@polymer/polymer/lib/utils/gestures.js";
+import { setPassiveTouchGestures } from "@polymer/polymer/lib/utils/settings";
+import "./icons/carousel.js";
 class SkeletonCarousel extends mixinBehaviors([
-  IronA11yKeysBehavior,
-  GestureEventListeners,
-], PolymerElement) {
-  /**
-   * Template element
-   * @return {!HTMLTemplateElement}
-   */
-  static get template() {
-    return html`
+    IronA11yKeysBehavior,
+    GestureEventListeners
+], LitElement) {
+    /**
+     * Lit-Element Constructor
+     */
+    constructor() {
+        super();
+        /**
+         * Indicates if the carousel is been animated (Transition)
+         */
+        this.animating = false;
+        /**
+         * Disable keyboard navigation
+         */
+        this.disableKeys = false;
+        /**
+         * tabindex
+         */
+        this.tabindex = 0;
+        /**
+         * Show navigation controls
+         */
+        this.controls = false;
+        /**
+         * Change slides automatically
+         */
+        this.auto = false;
+        /**
+         * Carousel direction (horizontal or vertical)
+         */
+        this.direction = "horizontal";
+        /**
+         * Disables component
+         */
+        this.disabled = false;
+        /**
+         * Disable swipe functionality
+         */
+        this.disableSwipe = false;
+        /**
+         * Auto play interval time in milliseconds
+         */
+        this.duration = 4000;
+        /**
+         * Selected slide index
+         */
+        this.selected = 0;
+        /**
+         * The user is swiping
+         */
+        this.swiping = false;
+        /**
+         * Total number of slides
+         */
+        this.total = 0;
+        /**
+         * Children elements
+         */
+        this.children = [];
+        /**
+         * Returns an array with the slides.
+         * This will be used to create the dot controls.
+         */
+        this.dotsArray = [];
+        /**
+         * Icon for the previous button
+         */
+        this.iconPrev = "carousel:arrow-back";
+        /**
+         * Icon for the next button
+         */
+        this.iconNext = "carousel:arrow-forward";
+        /**
+         * X Axis position (0 - 1)
+         */
+        this._X = 0;
+        /**
+         * Y Axis position (0 - 1)
+         */
+        this._Y = 0;
+        // Force all event listeners for gestures to be passive
+        setPassiveTouchGestures(true);
+    }
+    /**
+     * Lit-Element doesn't seem to allow variable variable declaration in index.html
+     * to change the properties if declared with typescript decorators... So some
+     * variables are declared traditionally.
+     */
+    static get properties() {
+        return {
+            /**
+             * Carousel direction (horizontal or vertical)
+             */
+            direction: {
+                type: String,
+                value: "horizontal"
+            },
+            /**
+             * Show navigation dotsArray
+             */
+            dots: {
+                type: Boolean,
+                value: false
+            },
+            /**
+             * Show navigation next/prev buttons
+             */
+            nav: {
+                type: Boolean,
+                value: false
+            },
+            /**
+             * Change slides automatically
+             */
+            auto: {
+                type: Boolean,
+                value: false
+            },
+            /**
+             * Determines if the carousel should be looped.
+             * This affects the controls and the drag and drop functionality.
+             * Set to `true` if you need to loop the slides.
+             */
+            loop: {
+                type: Boolean,
+                value: false
+            },
+            disabled: {
+                type: Boolean,
+                value: false
+            }
+        };
+    }
+    render() {
+        return html `
     <!--suppress CssInvalidPseudoSelector -->
     <!--suppress CssUnresolvedCustomProperty -->
     <!--suppress CssUnresolvedCustomPropertySet -->
@@ -248,749 +372,533 @@ class SkeletonCarousel extends mixinBehaviors([
         transition: all 300ms linear;
       }
     </style>
-
     <div id="carousel">
       <div id="items">
-        <iron-selector id="container" selected="{{selected}}" fallback-selection="0" selected-class="selected" style$="[[_containerHeight]]">
+        <iron-selector id="container" selected="${this.selected}" fallback-selection="0" selected-class="selected"
+         .style="${this._containerHeight()}">
           <slot></slot>
         </iron-selector>
       </div>
     </div>
-    <nav id="controls" hidden$="[[!_controls]]">
-      <paper-icon-button icon$="[[_iconPrev]]" id="prev" on-tap="prev" disabled$="[[!showPrev]]" hidden$="[[!nav]]"></paper-icon-button>
-      <iron-selector id="dots" selected="{{selected}}" fallback-selection="0" selected-class="selected" hidden$="[[!dots]]" tabindex="-1">
-        <template is="dom-repeat" items="[[_dots]]">
-          <paper-icon-button icon="[[_iconDot(item, selected)]]" disabled$="[[disabled]]"></paper-icon-button>
-        </template>
-      </iron-selector>
-      <paper-icon-button icon$="[[_iconNext]]" id="next" on-tap="next" disabled$="[[!showNext]]" hidden$="[[!nav]]"></paper-icon-button>
-    </nav>
-`;
-  }
-
-  /**
-   * @return {string}
-   */
-  static get is() {
-    return 'skeleton-carousel';
-  }
-
-  /**
-   * @return {object}
-   */
-  static get properties() {
-    return {
-      /**
-       * Indicates if the carousel is been animated (Transition)
-       */
-      animating: {
-        type: Boolean,
-        value: false,
-        readOnly: true,
-        reflectToAttribute: true,
-        notify: true,
-      },
-      /**
-       * Change slides automatically
-       */
-      auto: {
-        type: Boolean,
-        value: false,
-        observer: '_autoAnimate',
-      },
-      /**
-       * Carousel direction (horizontal or vertical)
-       */
-      direction: {
-        type: String,
-        value: 'horizontal',
-        reflectToAttribute: true,
-      },
-      /**
-       * Disables component
-       */
-      disabled: {
-        type: Boolean,
-        value: false,
-      },
-      /**
-       * Show navigation dots
-       */
-      dots: {
-        type: Boolean,
-        value: false,
-      },
-      /**
-       * Disable swipe functionality
-       */
-      disableSwipe: {
-        type: Boolean,
-        value: false,
-      },
-      /**
-       * Disable keyboard navigation
-       */
-      disableKeys: {
-        type: Boolean,
-        value: false,
-      },
-      /**
-       * Auto play interval time in milliseconds
-       */
-      duration: {
-        type: Number,
-        value: 4000,
-      },
-      /**
-       * Determines if the carousel should be looped.
-       * This affects the controls and the drag and drop functionality.
-       * Set to `true` if you need to loop the slides.
-       */
-      loop: {
-        type: Boolean,
-        value: false,
-      },
-      /**
-       * Show navigation next/prev buttons
-       */
-      nav: {
-        type: Boolean,
-        value: false,
-      },
-      /**
-       * Selected slide index
-       */
-      selected: {
-        type: Number,
-        value: 0,
-        notify: true,
-        reflectToAttribute: true,
-        observer: '_selectedObserver',
-      },
-      /**
-       * Selected item
-       */
-      selectedItem: {
-        type: Object,
-        notify: true,
-        readOnly: true,
-        computed: '_computeSelectedItem(selected, _children)',
-      },
-      /**
-       * The user is swiping
-       */
-      swiping: {
-        type: Boolean,
-        value: false,
-        notify: true,
-        readOnly: true,
-        reflectToAttribute: true,
-      },
-      /**
-       * tabindex
-       */
-      tabindex: {
-        type: Number,
-        value: 0,
-        reflectToAttribute: true,
-      },
-      /**
-       * Total number of slides
-       */
-      total: {
-        type: Number,
-        value: 0,
-        notify: true,
-        reflectToAttribute: true,
-        readOnly: true,
-      },
-      /**
-       * Returns true when the carousel has reached the last slide.
-       */
-      end: {
-        type: Boolean,
-        value: false,
-        notify: true,
-        readOny: true,
-        reflectToAttribute: true,
-        computed: '_computeEnd(total, selected)',
-      },
-      /**
-       * Determines if the next button should be displayed.
-       */
-      showNext: {
-        type: Boolean,
-        value: false,
-        computed: '_computeShowNext(disabled, total, selected, loop)',
-        notify: true,
-        reflectToAttribute: true,
-        readOnly: true,
-      },
-      /**
-       * Determines if the previous button should be displayed.
-       */
-      showPrev: {
-        type: Boolean,
-        value: false,
-        computed: '_computeShowPrev(disabled, selected, loop)',
-        notify: true,
-        reflectToAttribute: true,
-        readOnly: true,
-      },
-      /**
-       * Auto interval
-       */
-      _autoInterval: {
-        type: Object,
-      },
-      /**
-       * Children elements
-       */
-      _children: {
-        type: Array,
-        value: [],
-        observer: '_childrenObserver',
-      },
-      /**
-       * Show navigation controls
-       */
-      _controls: {
-        type: Boolean,
-        value: false,
-        readOnly: true,
-        computed: '_computeControls(dots, nav, total)',
-      },
-      /**
-       * Returns an array with the slides.
-       * This will be used to create the dot controls.
-       */
-      _dots: {
-        type: Array,
-        computed: '_computeDots(total)',
-        readOnly: true,
-        value: [],
-      },
-      /**
-       * Icon for the previous button
-       */
-      _iconPrev: {
-        type: String,
-        value: 'carousel:arrow-back',
-        readOnly: true,
-        computed: '_computeIconPrev(direction)',
-      },
-      /**
-       * Icon for the next button
-       */
-      _iconNext: {
-        type: String,
-        value: 'carousel:arrow-forward',
-        readOnly: true,
-        computed: '_computeIconNext(direction)',
-      },
-      /**
-       * Icon for the next button
-       */
-      _containerHeight: {
-        type: String,
-        value: 'height: 100%;',
-        computed: '_computeContainerHeight(direction, total)',
-        readOnly: true,
-      },
-      /**
-       * X Axis position (0 - 1)
-       */
-      _x: {
-        type: Number,
-        value: 0,
-      },
-      /**
-       * Y Axis position (0 - 1)
-       */
-      _y: {
-        type: Number,
-        value: 0,
-      },
-    };
-  }
-
-  /**
-   * Ready event
-   */
-  connectedCallback() {
-    super.connectedCallback();
-    const container = this.shadowRoot.querySelector('slot');
-
-    // Allow vertical scrolling
-    const carousel = this.shadowRoot.querySelector('#carousel');
-    Gestures.addListener(carousel, 'track', this._drag.bind(this));
-    this.setScrollDirection('all', carousel);
-
-    new FlattenedNodesObserver(container, () => {
-      this._children = FlattenedNodesObserver.getFlattenedNodes(this)
-        .filter((n) =>
-          n.nodeType === Node.ELEMENT_NODE
-          && n.nodeName !== 'DOM-REPEAT'
-          && n.nodeName !== 'TEMPLATE');
-    });
-    // Handle transition end
-    const items = this.shadowRoot.querySelector('#items');
-    items.addEventListener('transitionend', (e) => {
-      e.preventDefault();
-      if (this.swiping || e.propertyName !== 'transform') {
-        return;
-      }
-      this._setAnimating(false);
-    });
-  }
-
-  /**
-   * @return {Array}
-   */
-  static get observers() {
-    return [
-      '_translateObserver(direction, selected, _x, _y)',
-    ];
-  }
-
-  /**
-   * Key bindings
-   * @return {object}
-   */
-  get keyBindings() {
-    return {
-      'left up': '_prevKey',
-      'right down': '_nextKey',
-    };
-  }
-
-  /**
-   * Computed the selected item
-   *
-   * @param {number} selected
-   * @param {array} children
-   * @return {object}
-   * @private
-   */
-  _computeSelectedItem(selected, children) {
-    return children[selected];
-  }
-
-  /**
-   * Children change observer
-   *
-   * @param {array} children
-   * @private
-   */
-  _childrenObserver(children) {
-    this._setTotal(children.length);
-    this._lazyContent(0);
-    if (children.length >= 1) this._lazyContent(1);
-  }
-
-  /**
-   * Go to the previous slide with keybindings
-   *
-   * @param {object} event
-   * @private
-   * @return {*}
-   */
-  _prevKey(event) {
-    if (this.disableKeys || this.disabled) return;
-    event.preventDefault();
-    return this.prev();
-  }
-
-  /**
-   * Go to the next slide with keybindings
-   *
-   * @param {object} event
-   * @private
-   * @return {*}
-   */
-  _nextKey(event) {
-    if (this.disableKeys || this.disabled) return;
-    event.preventDefault();
-    return this.next();
-  }
-
-  /**
-   * Observer on auto to turn on and off the feature
-   *
-   * @param {boolean} auto
-   * @private
-   */
-  _autoAnimate(auto) {
-    if (auto) {
-      this._autoInterval = setInterval(() => {
-        this.next();
-      }, this.duration);
-    } else {
-      clearInterval(this._autoInterval);
+    <nav id="controls" ?hidden="${!this._computeControls(this.dots, this.nav, this.total)}">
+      <paper-icon-button .icon="${this.iconPrev}" id="prev" @tap="${this.prev}"
+        ?disabled="${!this._showPrev(this.disabled, this.selected, this.loop)}" ?hidden="${!this.nav}">
+      </paper-icon-button>
+        <iron-selector @tap="${this._iconSelect}" id="dots" selected="${this.selected}" fallback-selection="0"
+          selected-class="selected" ?hidden="${!this.dotsArray}" tabindex="-1">
+          ${this.dotsArray.map((dot) => html `
+              <paper-icon-button icon="${this._iconDot(dot, this.selected)}"
+                ?disabled="${this.disabled}"></paper-icon-button>
+            `)}
+        </iron-selector>
+        <paper-icon-button .icon="${this.iconNext}" id="next" @tap="${this.next}"
+          ?disabled="${!this._showNext(this.disabled, this.total, this.selected, this.loop)}" ?hidden="${!this.nav}">
+        </paper-icon-button>
+      </nav>
+    `;
     }
-  }
-
-  /**
-   * Go to next slide
-   */
-  next() {
-    if (this.disabled) return;
-    const element = this.shadowRoot.querySelector('#container');
-    let total = this.total;
-    if (this.selected < --total || this.loop) {
-      this._setAnimating(true);
-      element.selectNext();
-    }
-  }
-
-  /**
-   * Go to previous slide
-   */
-  prev() {
-    if (this.disabled) return;
-    const element = this.shadowRoot.querySelector('#container');
-    if (this.selected > 0 || this.loop) {
-      this._setAnimating(true);
-      element.selectPrevious();
-    }
-  }
-
-  /**
-   * Switch the icon if the item is selected
-   *
-   * @param {number} item
-   * @param {number} selected
-   * @return {string}
-   * @private
-   */
-  _iconDot(item, selected) {
-    item--;
-    let icon = 'carousel:radio-button-unchecked';
-    if (Number(item) === Number(selected)) icon = 'carousel:radio-button-checked';
-    return icon;
-  }
-
-  /**
-   * Listen for changes on the selected item
-   *
-   * @param {number} newValue
-   * @param {number} oldValue
-   * @private
-   */
-  _selectedObserver(newValue, oldValue) {
-    this._lazyContent(newValue);
-    let total = this.total;
-    if (newValue < --total) {
-      this._lazyContent(++newValue);
-    }
-    // Reset auto
-    this._autoAnimate(false);
-    this._autoAnimate(this.auto);
-  }
-
-  /**
-   * Lazy load content for the given slider number
-   * Replaces 'data-src' attribute to 'src'.
-   *
-   * @param {number} selected
-   * @private
-   */
-  _lazyContent(selected) {
-    const child = this._children[selected];
-    if (!child) return;
-    // lazy load first level content
-    if (child.hasAttribute('data-src')) {
-      child.src = child.getAttribute('data-src');
-      child.removeAttribute('data-src');
-    }
-    // Lazy load child content
-    const content = child.querySelectorAll('[data-src]');
-    if (content.length <= 0) return;
-    let i = 0;
-    for (i; i < content.length; ++i) {
-      content[i].src = content[i].getAttribute('data-src');
-      content[i].removeAttribute('data-src');
-    }
-  }
-
-  /**
-   * Determine if it should show the next button
-   *
-   * @param {boolean} disabled
-   * @param {number} total
-   * @param {number} selected
-   * @param {boolean} loop
-   * @return {boolean}
-   * @private
-   */
-  _computeShowNext(disabled, total, selected, loop) {
-    if (disabled) return false;
-    if (loop) return true;
-    return selected < --total;
-  }
-
-  /**
-   * Determine if it should show the next button
-   *
-   * @param {boolean} disabled
-   * @param {number} selected
-   * @param {boolean} loop
-   * @return {boolean}
-   * @private
-   */
-  _computeShowPrev(disabled, selected, loop) {
-    if (disabled) return false;
-    if (loop) return true;
-    return selected > 0;
-  }
-
-  /**
-   * Returns the dots array
-   *
-   * @param {number} total
-   * @return {Array}
-   * @private
-   */
-  _computeDots(total) {
-    let array = [];
-    if (total <= 0) return array;
-    let i = 1;
-    total = ++total;
-    for (i; i < total; ++i) {
-      array.push(i);
-    }
-    return array;
-  }
-
-  /**
-   * Determines if the current item is the last one on the list
-   *
-   * @param {number} total
-   * @param {number} selected
-   * @return {boolean}
-   * @private
-   */
-  _computeEnd(total, selected) {
-    const status = selected === --total;
-    if (status) this._event('end');
-    return status;
-  }
-
-  /**
-   * Returns a valid value
-   *
-   * @param {number} value
-   * @return {*}
-   * @private
-   */
-  _normalize(value) {
-    if (value < 0) {
-      value = 0;
-    } else if (value > 1) {
-      value = 1;
-    }
-    return value;
-  }
-
-  /**
-   * Returns the percentage that will to position the icon
-   *
-   * @param {number|string} value
-   * @return {string}
-   * @private
-   */
-  _calcPercentage(value) {
-    value = value.toFixed(2);
-    return `${value * 100}%`;
-  }
-
-  /**
-   * Listen for track and move the container
-   *
-   * @param {object} event
-   * @private
-   */
-  _drag(event) {
-    if (this.disableSwipe || this.disabled) {
-      // Reset selected to original in case is changed while dragging
-      this._x = 0;
-      this._y = 0;
-      this._setSwiping(false);
-      return;
-    }
-    const width = this.offsetWidth;
-    const height = this.offsetHeight;
-    const x = event.detail.ddx ? event.detail.ddx : 0;
-    const y = event.detail.ddy ? event.detail.ddy : 0;
-    let finalX = x / width;
-    let finalY = y / height;
-    let finalLeft = 0;
-    let finalTop = 0;
-
-    if (this.direction === 'horizontal') finalLeft = this._x + finalX;
-    if (this.direction === 'vertical') finalTop = this._y + finalY;
-
-    let finalPositionLeft = Number(finalLeft);
-    let finalPositionTop = Number(finalTop);
-    // Prevent drag to the wrong direction if is not available
-    if (!this.showPrev) {
-      if (finalPositionLeft > 0) {
-        finalPositionLeft = 0;
-      }
-      if (finalPositionTop > 0) {
-        finalPositionTop = 0;
-      }
-    }
-    if (!this.showNext) {
-      if (finalPositionLeft < 0) {
-        finalPositionLeft = 0;
-      }
-      if (finalPositionTop < 0) {
-        finalPositionTop = 0;
-      }
-    }
-    switch (event.detail.state) {
-      case 'track':
-        this._autoAnimate(false);
-        this._x = finalPositionLeft;
-        this._y = finalPositionTop;
-        this._setSwiping(true);
-        break;
-      case 'end':
-        this._autoAnimate(this.auto);
-        this._x = 0;
-        this._y = 0;
-        this._setSwiping(false);
-        if (finalPositionLeft >= 0.1 || finalPositionTop >= 0.1) {
-          this.prev();
+    /**
+     * Events triggered when the element is first updated
+     *
+     * @param {PropertyValues} initProperties
+     */
+    firstUpdated(initProperties) {
+        super.firstUpdated(initProperties);
+        const container = this.shadowRoot.querySelector("slot");
+        // Allow vertical scrolling
+        const carousel = this.shadowRoot.querySelector("#carousel");
+        Gestures.addListener(carousel, "track", this._drag.bind(this));
+        this.setScrollDirection("all", carousel);
+        this.children = FlattenedNodesObserver.getFlattenedNodes(container)
+            // @ts-ignore
+            .filter((n) => {
+            return n.nodeType === Node.ELEMENT_NODE;
+        });
+        // Handle transition end
+        const items = this.shadowRoot.querySelector("#items");
+        items.addEventListener("transitionend", (e) => {
+            e.preventDefault();
+            if (this.swiping || e.propertyName !== "transform") {
+                return;
+            }
+            this.animating = false;
+        });
+        /**
+         * Compute directional icons
+         *
+         * @param {string|null} direction
+         * @return {string}
+         * @private
+         */
+        if (initProperties.has("direction")) {
+            if (this.direction === "vertical") {
+                this.iconPrev = "carousel:arrow-upward";
+                this.iconNext = "carousel:arrow-downward";
+            }
+            else {
+                this.iconPrev = "carousel:arrow-back";
+                this.iconNext = "carousel:arrow-forward";
+            }
         }
-        else if (finalPositionLeft <= -0.1 || finalPositionTop <= -0.1) {
-          this.next();
+        if (initProperties.has("auto")) {
+            if (this.auto) {
+                this.autoInterval = setInterval(() => {
+                    this.next();
+                }, this.duration);
+            }
+            else {
+                clearInterval(this.autoInterval);
+            }
         }
-        break;
     }
-  }
-
-  /**
-   * Compute icon previews
-   *
-   * @param {string|null} direction
-   * @return {string}
-   * @private
-   */
-  _computeIconPrev(direction) {
-    if (direction === 'vertical') return 'carousel:arrow-upward';
-    return 'carousel:arrow-back';
-  }
-
-  /**
-   * Compute icon next
-   *
-   * @param {string|null} direction
-   * @return {string}
-   * @private
-   */
-  _computeIconNext(direction) {
-    if (direction === 'vertical') return 'carousel:arrow-downward';
-    return 'carousel:arrow-forward';
-  }
-
-  /**
-   * Translate swipe observer
-   *
-   * @param {string} direction
-   * @param {number} selected
-   * @param {number} _x
-   * @param {number} _y
-   * @private
-   */
-  _translateObserver(direction, selected, _x, _y) {
-    if (_x !== 0 || _y !== 0) {
-      this._setAnimating(true);
+    /**
+     * Updating element on any variable change
+     *
+     * @param {PropertyValues} changedProps
+     */
+    updated(changedProps) {
+        /**
+         * Children change observer
+         */
+        if (changedProps.has("children")) {
+            this.total = this.children.length;
+            this._lazyContent(0);
+            if (this.children.length >= 1) {
+                this._lazyContent(1);
+            }
+        }
+        /**
+         * Calculates this.dotsArray array
+         */
+        if (changedProps.has("total")) {
+            let array = [];
+            if (this.total <= 0) {
+                this.dotsArray = array;
+            }
+            let i = 1;
+            for (i; i <= this.total; ++i) {
+                array.push(i);
+            }
+            this.dotsArray = array;
+        }
+        /**
+         * Translate swipe observer
+         */
+        if (changedProps.has("direction") || changedProps.has("selected") ||
+            changedProps.has("_X") || changedProps.has("_Y")) {
+            // Set up fake x and y values so it doesn't re-trigger update
+            let _XFAUX = this._X;
+            let _YFAUX = this._Y;
+            if (_XFAUX !== 0 || _YFAUX !== 0) {
+                this.animating = true;
+            }
+            let finalX = 0;
+            let finalY = 0;
+            let baseSelected = -Math.abs(this.selected);
+            if (this.selected <= 0) {
+                baseSelected = 0;
+            }
+            if (_XFAUX === 0 && _YFAUX === 0) {
+                const percentage = this._calcPercentage(baseSelected);
+                if (this.direction === "horizontal") {
+                    finalX = percentage;
+                }
+                if (this.direction === "vertical") {
+                    finalY = percentage;
+                }
+            }
+            else {
+                // add baseSelected to the original value of the drag value
+                _XFAUX = baseSelected + this._X;
+                _YFAUX = baseSelected + this._Y;
+                if (this.direction === "horizontal") {
+                    finalX = this._calcPercentage(_XFAUX);
+                }
+                if (this.direction === "vertical") {
+                    finalY = this._calcPercentage(_YFAUX);
+                }
+            }
+            const element = this.shadowRoot.querySelector("#items");
+            let transform = "";
+            if (this.direction === "horizontal") {
+                transform = `translateX(${finalX})`;
+            }
+            if (this.direction === "vertical") {
+                transform = `translateY(${finalY})`;
+            }
+            element.style.transform = transform;
+        }
+        /**
+         * Observer on auto to turn on and off the feature
+         */
+        if (changedProps.has("auto")) {
+            if (this.auto) {
+                this.autoInterval = setInterval(() => {
+                    this.next();
+                }, this.duration);
+            }
+            else {
+                clearInterval(this.autoInterval);
+            }
+        }
+        /**
+         * Listen for changes on the selected item
+         */
+        if (changedProps.has("selected")) {
+            this._lazyContent(this.selected);
+            // New selected variable so not to trigger another update
+            let selectFaux = this.selected;
+            let total = this.total;
+            if (selectFaux < --total) {
+                this._lazyContent(++selectFaux);
+            }
+            // Reset auto
+            this.auto = false;
+            // Calculate selected item
+            this.selectedItem = this.children[this.selected];
+        }
     }
-    let finalX = 0;
-    let finalY = 0;
-    let baseSelected = -Math.abs(selected);
-    if (selected <= 0) baseSelected = 0;
-    if (_x === 0 && _y === 0) {
-      const percentage = this._calcPercentage(baseSelected);
-      if (direction === 'horizontal') finalX = percentage;
-      if (direction === 'vertical') finalY = percentage;
-    } else {
-      // add baseSelected to the original value of the drag value
-      _x = baseSelected + _x;
-      _y = baseSelected + _y;
-      if (direction === 'horizontal') {
-        finalX = this._calcPercentage(_x);
-      }
-      if (direction === 'vertical') {
-        finalY = this._calcPercentage(_y);
-      }
+    // KeyBindings not working
+    //
+    // /**
+    //  * Key bindings
+    //  * @return {object}
+    //  */
+    // get keyBindings() {
+    //   return {
+    //     'left up': '_prevKey',
+    //     'right down': '_nextKey',
+    //   };
+    // }
+    // /**
+    //  * Go to the previous slide with keybindings
+    //  *
+    //  * @param {object} event
+    //  * @private
+    //  * @return {*}
+    //  */
+    // _prevKey(event: any) {
+    //   if (this.disableKeys || this.disabled) return;
+    //   event.preventDefault();
+    //   return this.prev();
+    // }
+    //
+    // /**
+    //  * Go to the next slide with keybindings
+    //  *
+    //  * @param {object} event
+    //  * @private
+    //  * @return {*}
+    //  */
+    // _nextKey(event: any) {
+    //   if (this.disableKeys || this.disabled) return;
+    //   event.preventDefault();
+    //   return this.next();
+    // }
+    /**
+     * Go to next slide
+     *
+     * (The iron-selector selectNext() not working)
+     */
+    next() {
+        if (this.disabled) {
+            return;
+        }
+        let total = this.total;
+        if (this.selected === this.children.length - 1) {
+            this.selected = 0;
+        }
+        else if (this.selected < --total || this.loop) {
+            this.animating = true;
+            this.selected++;
+        }
     }
-
-    const element = this.shadowRoot.querySelector('#items');
-    let transform = '';
-    if (direction === 'horizontal') {
-      transform = `translateX(${finalX})`;
+    /**
+     * Go to previous slide
+     *
+     * (The iron-selector selectPrevious() not working)
+     */
+    prev() {
+        if (this.disabled) {
+            return;
+        }
+        if (this.selected === 0) {
+            this.selected = this.children.length - 1;
+        }
+        else if (this.selected > 0 || this.loop) {
+            this.animating = true;
+            this.selected--;
+        }
     }
-    if (direction === 'vertical') {
-      transform = `translateY(${finalY})`;
+    /**
+     * Alter the selected slide and image to match the tapped dot
+     */
+    _iconSelect(dot) {
+        const element = this.shadowRoot.querySelector("#dots");
+        // Have to use TS-IGNORE, if used in function such as in firstUpdated it doesn't
+        // contain the updated classList
+        const children = FlattenedNodesObserver.getFlattenedNodes(element)
+            // @ts-ignore
+            .filter((n) => {
+            return n.nodeType === Node.ELEMENT_NODE;
+        });
+        // Toggle the current selected class
+        children.forEach((node) => {
+            if (node.classList.contains("selected")) {
+                node.classList.toggle("selected");
+            }
+        });
+        // Toggle the tapped selected class
+        dot.target.classList.toggle("selected");
+        const childrenAct = FlattenedNodesObserver.getFlattenedNodes(element)
+            // @ts-ignore
+            .filter((n) => {
+            return n.nodeType === Node.ELEMENT_NODE;
+        });
+        // Alter the selected attribute to match the newly selected dot
+        childrenAct.forEach((node, index) => {
+            if (node.classList.contains("selected")) {
+                this.selected = index;
+            }
+        });
     }
-    element.style.transform = transform;
-  }
-
-  /**
-   * Compute translate swipe
-   *
-   * @param {number} position
-   * @param {number} selected
-   * @return {number}
-   * @private
-   */
-  _returnDragPosition(position, selected) {
-    return position - selected;
-  }
-
-  /**
-   * Compute items container height
-   *
-   * @param {string} direction
-   * @param {number} total
-   * @return {string}
-   * @private
-   */
-  _computeContainerHeight(direction, total) {
-    let height = 'auto';
-    if (direction === 'vertical') height = this._calcPercentage(total);
-    return `height: ${height};`;
-  }
-
-  /**
-   * Compute Controls
-   * Returns true if needs to display the control.s
-   *
-   * @param {boolean} dots
-   * @param {boolean} nav
-   * @param {number} total
-   * @return {boolean}
-   * @private
-   */
-  _computeControls(dots, nav, total) {
-    return total > 1 && (dots || nav);
-  }
-
-  /**
-   * Fire event
-   *
-   * @param {string} name
-   * @param {null|string|boolean} detail
-   * @private
-   */
-  _event(name, detail = '') {
-    this.dispatchEvent(new CustomEvent(name, {
-      detail: detail, bubbles: true, composed: true,
-    }));
-  }
+    /**
+     * Calculate Container Height
+     */
+    _containerHeight() {
+        let height = "auto";
+        if (this.direction === "vertical") {
+            height = this._calcPercentage(this.total);
+        }
+        return `height: ${height};`;
+    }
+    /**
+     * Returns the percentage that will to position the icon
+     *
+     * @param {number|string} value
+     * @return {string}
+     */
+    _calcPercentage(value) {
+        const decimalValue = value.toFixed(2);
+        return `${decimalValue * 100}%`;
+    }
+    /**
+     * Switch the icon if the item is selected
+     *
+     * @param {number} item
+     * @param {number} selected
+     * @return {string}
+     */
+    _iconDot(item, selected) {
+        let itemRe = item;
+        --itemRe;
+        let icon = "carousel:radio-button-unchecked";
+        if (Number(itemRe) === Number(selected)) {
+            icon = "carousel:radio-button-checked";
+        }
+        return icon;
+    }
+    /**
+     * Lazy load content for the given slider number
+     * Replaces 'data-src' attribute to 'src'.
+     *
+     * @param {number} selected
+     */
+    _lazyContent(selected) {
+        const child = this.children[selected];
+        if (!child) {
+            return;
+        }
+        // lazy load first level content
+        if (child.hasAttribute("data-src")) {
+            child.src = child.getAttribute("data-src");
+            child.removeAttribute("data-src");
+        }
+        // Lazy load child content
+        const content = child.querySelectorAll("[data-src]");
+        if (content.length <= 0) {
+            return;
+        }
+        let i = 0;
+        for (i; i < content.length; ++i) {
+            content[i].src = content[i].getAttribute("data-src");
+            content[i].removeAttribute("data-src");
+        }
+    }
+    /**
+     * Listen for track and move the container
+     *
+     * @param {object} event
+     */
+    _drag(event) {
+        if (this.disableSwipe || this.disabled) {
+            // Reset selected to original in case is changed while dragging
+            this._X = 0;
+            this._Y = 0;
+            this.swiping = false;
+            return;
+        }
+        const width = this.offsetWidth;
+        const height = this.offsetHeight;
+        const x = event.detail.ddx ? event.detail.ddx : 0;
+        const y = event.detail.ddy ? event.detail.ddy : 0;
+        let finalX = x / width;
+        let finalY = y / height;
+        let finalLeft = 0;
+        let finalTop = 0;
+        if (this.direction === "horizontal") {
+            finalLeft = this._X + finalX;
+        }
+        if (this.direction === "vertical") {
+            finalTop = this._Y + finalY;
+        }
+        let finalPositionLeft = Number(finalLeft);
+        let finalPositionTop = Number(finalTop);
+        // Prevent drag to the wrong direction if is not available
+        if (!this._showPrev(this.disabled, this.selected, this.loop)) {
+            if (finalPositionLeft > 0) {
+                finalPositionLeft = 0;
+            }
+            if (finalPositionTop > 0) {
+                finalPositionTop = 0;
+            }
+        }
+        if (!this._showNext(this.disabled, this.total, this.selected, this.loop)) {
+            if (finalPositionLeft < 0) {
+                finalPositionLeft = 0;
+            }
+            if (finalPositionTop < 0) {
+                finalPositionTop = 0;
+            }
+        }
+        switch (event.detail.state) {
+            case "track":
+                this.auto = false;
+                this._X = finalPositionLeft;
+                this._Y = finalPositionTop;
+                this.swiping = true;
+                break;
+            case "end":
+                // this.auto = this.auto;
+                this._X = 0;
+                this._Y = 0;
+                this.swiping = false;
+                if (finalPositionLeft >= 0.1 || finalPositionTop >= 0.1) {
+                    this.prev();
+                }
+                else if (finalPositionLeft <= -0.1 || finalPositionTop <= -0.1) {
+                    this.next();
+                }
+                break;
+        }
+    }
+    /**
+     * Determine if it should show the next button
+     *
+     * @param {boolean} disabled
+     * @param {number} total
+     * @param {number} selected
+     * @param {boolean} loop
+     * @return {boolean}
+     */
+    _showNext(disabled, total, selected, loop) {
+        let totalRe = total;
+        if (disabled) {
+            return false;
+        }
+        if (loop) {
+            return true;
+        }
+        return selected < --totalRe;
+    }
+    /**
+     * Determine if it should show the 'previous' button
+     *
+     * @param {boolean} disabled
+     * @param {number} selected
+     * @param {boolean} loop
+     * @return {boolean}
+     */
+    _showPrev(disabled, selected, loop) {
+        if (disabled) {
+            return false;
+        }
+        if (loop) {
+            return true;
+        }
+        return selected > 0;
+    }
+    /**
+     * Compute Controls
+     * Returns true if needs to display the controls
+     *
+     * @param {boolean} dots
+     * @param {boolean} nav
+     * @param {number} total
+     * @return {boolean}
+     */
+    _computeControls(dots, nav, total) {
+        return total > 1 && (dots || nav);
+    }
 }
-
-window.customElements.define('skeleton-carousel', SkeletonCarousel);
+__decorate([
+    property({ reflect: true })
+], SkeletonCarousel.prototype, "animating", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "disableKeys", void 0);
+__decorate([
+    property({ reflect: true })
+], SkeletonCarousel.prototype, "tabindex", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "controls", void 0);
+__decorate([
+    property({ type: Object })
+], SkeletonCarousel.prototype, "selectedItem", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "auto", void 0);
+__decorate([
+    property({ reflect: true })
+], SkeletonCarousel.prototype, "direction", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "disabled", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "disableSwipe", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "duration", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "selected", void 0);
+__decorate([
+    property({ reflect: true })
+], SkeletonCarousel.prototype, "swiping", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "total", void 0);
+__decorate([
+    property({ type: Object })
+], SkeletonCarousel.prototype, "autoInterval", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "children", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "dotsArray", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "iconPrev", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "iconNext", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "_X", void 0);
+__decorate([
+    property()
+], SkeletonCarousel.prototype, "_Y", void 0);
+window.customElements.define("skeleton-carousel", SkeletonCarousel);

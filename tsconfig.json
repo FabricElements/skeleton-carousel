@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["es2017", "dom"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "stripInternal": true,
+    "inlineSources": false,
+    "inlineSourceMap": false,
+    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": false,
+    "skipLibCheck": true,
+    "alwaysStrict": false,
+    "allowJs": true,
+    "pretty": true,
+    "removeComments": false
+  },
+  "include": [
+    "*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "shards.ts"
+  ]
+}

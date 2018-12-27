@@ -2,20 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport"
-        content="width=device-width, height=device-height, minimum-scale=1, maximum-scale=1, initial-scale=1, user-scalable=no">
-
-  <title>demo</title>
-
-  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <title>Skeleton Carousel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="My App description">
   <script type="module">
-    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-    import '@polymer/iron-demo-helpers/demo-snippet';
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '@polymer/iron-demo-helpers/demo-snippet.js';
     import '@polymer/iron-flex-layout/iron-flex-layout.js';
     import '@polymer/iron-image/iron-image.js';
-    import '@polymer/polymer/lib/elements/dom-repeat.js';
-    import '@polymer/polymer/lib/elements/dom-bind.js';
-    import '../skeleton-carousel.js';
   </script>
 
   <custom-style>
@@ -53,10 +47,10 @@
 </head>
 <body>
 <div class="vertical-section-container centered">
-  <h3>Basic demo</h3>
+  <h3>Basic skeleton-carousel demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-carousel dots nav>
+      <skeleton-carousel direction="horizontal" dots nav>
         <div>
           <iron-image
             placeholder="https://source.unsplash.com/category/nature/10x10"
@@ -95,46 +89,7 @@
   <h3>Basic demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-carousel dots nav direction="vertical">
-        <div>
-          <iron-image
-            placeholder="https://source.unsplash.com/category/nature/10x10"
-            data-src="https://source.unsplash.com/category/nature/500x300"
-            sizing="cover"
-            preload=""
-            fade="">
-          </iron-image>
-          <h3>Title 1</h3>
-        </div>
-        <div>
-          <iron-image
-            placeholder="https://source.unsplash.com/category/food/10x10"
-            data-src="https://source.unsplash.com/category/food/500x300"
-            sizing="cover"
-            preload=""
-            fade="">
-          </iron-image>
-          <h3>Title 2</h3>
-        </div>
-        <div>
-          <iron-image
-            placeholder="https://source.unsplash.com/category/buildings/10x10"
-            data-src="https://source.unsplash.com/category/buildings/500x300"
-            sizing="cover"
-            preload=""
-            fade="">
-          </iron-image>
-          <h3>Title 3</h3>
-        </div>
-      </skeleton-carousel>
-    </template>
-  </demo-snippet>
-</div>
-<div class="vertical-section-container centered">
-  <h3>Basic skeleton-carousel loop demo</h3>
-  <demo-snippet>
-    <template>
-      <skeleton-carousel dots nav loop>
+      <skeleton-carousel direction="vertical" dots nav>
         <div>
           <iron-image
             placeholder="https://source.unsplash.com/category/nature/10x10"
@@ -173,7 +128,7 @@
   <h3>Basic skeleton-carousel autoplay demo</h3>
   <demo-snippet>
     <template>
-      <skeleton-carousel dots nav loop auto>
+      <skeleton-carousel direction="horizontal" dots nav loop>
         <div>
           <iron-image
             placeholder="https://source.unsplash.com/category/nature/10x10"
@@ -209,17 +164,53 @@
   </demo-snippet>
 </div>
 <div class="vertical-section-container centered">
-  <h3>dom-repeat demo</h3>
+  <h3>Basic skeleton-carousel autoplay demo</h3>
   <demo-snippet>
     <template>
-      <demo-element></demo-element>
+      <skeleton-carousel direction="horizontal" dots nav loop auto>
+        <div>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/nature/10x10"
+            data-src="https://source.unsplash.com/category/nature/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
+          <h3>Title 1</h3>
+        </div>
+        <div>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/food/10x10"
+            data-src="https://source.unsplash.com/category/food/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
+          <h3>Title 2</h3>
+        </div>
+        <div>
+          <iron-image
+            placeholder="https://source.unsplash.com/category/buildings/10x10"
+            data-src="https://source.unsplash.com/category/buildings/500x300"
+            sizing="cover"
+            preload=""
+            fade="">
+          </iron-image>
+          <h3>Title 3</h3>
+        </div>
+      </skeleton-carousel>
     </template>
   </demo-snippet>
 </div>
+<div class="vertical-section-container centered">
+  <h3>dom-map demo</h3>
+  <demo-snippet>
+    <demo-element></demo-element>
+  </demo-snippet>
+</div>
 <script type="module">
-  import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+  import {html, LitElement} from '@polymer/lit-element';
   import '@polymer/iron-flex-layout/iron-flex-layout.js';
-
   /**
    * `demo-element`
    *
@@ -228,13 +219,39 @@
    * @polymer
    * @demo demo/index.html
    */
-  class DemoElement extends PolymerElement {
+  class DemoElement extends LitElement {
+    /**
+     * Define properties
+     *
+     * @return {object}
+     */
+    static get properties() {
+      return {
+        images: {
+          type: Array,
+        },
+      };
+    }
+    /**
+     * Define images from properties
+     *
+     * @return {object}
+     */
+    constructor() {
+      super();
+      this.images =  ['https://source.unsplash.com/category/nature/500x300',
+        'https://source.unsplash.com/category/buildings/500x300',
+        'https://source.unsplash.com/category/food/500x300']
+    }
     /**
      * Template element
-     * @return {!HTMLTemplateElement}
+     * @return {TemplateResult | void}
      */
-    static get template() {
+    render() {
       return html`
+      <!--suppress CssInvalidPseudoSelector -->
+      <!--suppress CssUnresolvedCustomProperty -->
+      <!--suppress CssUnresolvedCustomPropertySet -->
       <style>
         :host {
           display: block;
@@ -245,32 +262,25 @@
           @apply --layout-flex-auto;
         }
       </style>
-      <skeleton-carousel dots nav>
-        <template is="dom-repeat" items="{{images}}">
-          <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
-                      data-src$="[[item]]"
-                      sizing="cover"
-                      preload=""
-                      fade=""></iron-image>
-        </template>
+      <skeleton-carousel direction="horizontal" dots nav>
+        ${this.images.map((img) =>
+          html`
+            <iron-image placeholder="https://source.unsplash.com/category/nature/10x10"
+              data-src="${img}"
+              sizing="cover"
+              preload=""
+              fade=""></iron-image>
+        `)}
       </skeleton-carousel>
     `;
     }
-
-    /**
-     * @return {object}
-     */
-    static get properties() {
-      return {
-        images: {
-          type: Array,
-          value: ['https://source.unsplash.com/category/nature/500x300', 'https://source.unsplash.com/category/buildings/500x300', 'https://source.unsplash.com/category/food/500x300'],
-        },
-      };
-    }
   }
-
   window.customElements.define('demo-element', DemoElement);
 </script>
+<noscript>
+  Please enable JavaScript to view this website.
+</noscript>
+<script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+<script type="module" src="../skeleton-carousel.js"></script>
 </body>
 </html>
